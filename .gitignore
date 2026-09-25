@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dataset files
+data/raw/
+data/downloads/
+
+# Model checkpoints
+checkpoints/*.pt
+checkpoints/*.pth
+checkpoints/*.ckpt
+
+# Generated results
+results/*.csv
+results/*.json
+results/*.png
+results/*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db
