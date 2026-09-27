@@ -31,7 +31,11 @@ SEED = 42
 
 NUM_CLASSES = 10
 
-TRAIN_SIZE = 45_000
+# TRAIN_SIZE = 45_000
+# VAL_SIZE = 5_000
+# TEST_SIZE = 10_000
+
+TRAIN_SIZE = 20_000
 VAL_SIZE = 5_000
 TEST_SIZE = 10_000
 
@@ -54,10 +58,15 @@ PIN_MEMORY = torch.cuda.is_available()
 # We will freeze the final values after baseline testing.
 # ---------------------------------------------------------
 
+# INITIAL_BATCH_SIZE = 32
+# INITIAL_LEARNING_RATE = 0.01
+
 INITIAL_BATCH_SIZE = 32
 INITIAL_LEARNING_RATE = 0.01
 
-EPOCHS = 50
+# EPOCHS = 50
+
+EPOCHS = 10
 
 OPTIMIZER = "sgd"
 MOMENTUM = 0.9
@@ -86,7 +95,9 @@ GROUP_NORM_GROUPS = 8
 # We define these now but DO NOT use adaptive training yet.
 # ---------------------------------------------------------
 
-BATCH_SIZE_OPTIONS = [16, 32, 64, 128, 256]
+# BATCH_SIZE_OPTIONS = [16, 32, 64, 128, 256]
+
+BATCH_SIZE_OPTIONS = [16, 32, 64, 128]
 
 MIN_BATCH_SIZE = min(BATCH_SIZE_OPTIONS)
 MAX_BATCH_SIZE = max(BATCH_SIZE_OPTIONS)

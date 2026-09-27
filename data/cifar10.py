@@ -4,6 +4,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader, Subset
 from torchvision import datasets, transforms
+from sklearn.model_selection import train_test_split
 
 from config import (
     CIFAR10_MEAN,
