@@ -1,4 +1,4 @@
-
+import json
 import math
 import time
 from pathlib import Path
@@ -11,10 +11,8 @@ class Trainer:
     """
     Shared training and validation engine.
 
-    This trainer is intentionally independent of the
-    adaptive batch-size and learning-rate controllers.
-
-    Later, all four experiments will use this same trainer.
+    This trainer is used by the fixed baseline now and will later
+    be reused by the adaptive batch-size and learning-rate experiments.
     """
 
     def __init__(
@@ -26,6 +24,7 @@ class Trainer:
         results_dir,
         checkpoint_dir,
         run_name,
+        run_metadata=None,
     ):
         self.model = model
         self.criterion = criterion
@@ -35,92 +34,104 @@ class Trainer:
         self.results_dir = Path(results_dir)
         self.checkpoint_dir = Path(checkpoint_dir)
 
-        self.results_dir.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
-
-        self.checkpoint_dir.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
+        self.results_dir.mkdir(parents=True, exist_ok=True)
+        self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
         self.run_name = run_name
+        self.run_metadata = run_metadata or {}
 
         self.history = []
-
-        # Counts the total number of optimizer updates.
         self.optimizer_updates = 0
 
         self.best_val_loss = float("inf")
-
         self.best_epoch = None
-
 
     def _synchronize_device(self):
         """
-        Synchronize CUDA before timing operations.
+        Synchronize CUDA before/after timed sections.
 
-        GPU work is asynchronous, so synchronization gives
-        more meaningful wall-clock measurements.
+        CUDA operations are asynchronous, so synchronization gives
+        more meaningful wall-clock timing.
         """
-
         if self.device.type == "cuda":
             torch.cuda.synchronize()
-
 
     @staticmethod
     def _compute_gradient_norm(model):
         """
-        Compute the global L2 norm of the gradients.
+        Compute the global L2 norm of all model gradients.
 
-        This is the quantity we will later use to construct
-        our gradient-norm stability measure.
+        One gradient norm is recorded for each optimizer update.
         """
-
-        squared_norm_sum = 0.0
+        total_squared_norm = None
 
         for parameter in model.parameters():
+            if parameter.grad is None:
+                continue
 
-            if parameter.grad is not None:
+            grad = parameter.grad.detach()
+            squared_norm = torch.sum(grad * grad)
 
-                grad_norm = (
-                    parameter.grad
-                    .detach()
-                    .norm(2)
-                    .item()
-                )
+            if total_squared_norm is None:
+                total_squared_norm = squared_norm
+            else:
+                total_squared_norm = total_squared_norm + squared_norm
 
-                squared_norm_sum += (
-                    grad_norm ** 2
-                )
+        if total_squared_norm is None:
+            return 0.0
 
-        return math.sqrt(
-            squared_norm_sum
+        return torch.sqrt(total_squared_norm).item()
+
+    @staticmethod
+    def _gradient_statistics(gradient_norms, epsilon=1e-12):
+        """
+        Calculate epoch-level statistics from per-batch gradient norms.
+
+        CV = standard deviation / (mean + epsilon)
+
+        We refer to this value as the gradient-norm stability measure.
+        A lower CV means the gradient norms varied less during the epoch.
+        """
+        if not gradient_norms:
+            return {
+                "mean": 0.0,
+                "std": 0.0,
+                "cv": 0.0,
+            }
+
+        mean = sum(gradient_norms) / len(gradient_norms)
+
+        variance = (
+            sum(
+                (value - mean) ** 2
+                for value in gradient_norms
+            )
+            / len(gradient_norms)
         )
 
+        std = math.sqrt(variance)
 
-    def train_one_epoch(
-        self,
-        train_loader,
-    ):
-        """
-        Train the model for one complete epoch.
-        """
+        cv = std / (mean + epsilon)
 
+        return {
+            "mean": mean,
+            "std": std,
+            "cv": cv,
+        }
+
+    def train_one_epoch(self, train_loader):
+        """
+        Train the model for one epoch.
+        """
         self.model.train()
 
         running_loss = 0.0
-
         correct = 0
-
         total_samples = 0
 
         gradient_norms = []
 
-
         for images, labels in train_loader:
-
             images = images.to(
                 self.device,
                 non_blocking=True,
@@ -131,78 +142,36 @@ class Trainer:
                 non_blocking=True,
             )
 
+            self.optimizer.zero_grad(set_to_none=True)
 
-            # ---------------------------------------------
-            # Reset gradients
-            # ---------------------------------------------
-
-            self.optimizer.zero_grad(
-                set_to_none=True
-            )
-
-
-            # ---------------------------------------------
-            # Forward pass
-            # ---------------------------------------------
-
-            outputs = self.model(
-                images
-            )
-
+            outputs = self.model(images)
 
             loss = self.criterion(
                 outputs,
                 labels,
             )
 
-
-            # ---------------------------------------------
-            # Backward pass
-            # ---------------------------------------------
-
             loss.backward()
 
-
-            # ---------------------------------------------
-            # Record gradient norm
-            # ---------------------------------------------
-
-            gradient_norm = (
-                self._compute_gradient_norm(
-                    self.model
-                )
+            gradient_norm = self._compute_gradient_norm(
+                self.model
             )
 
             gradient_norms.append(
                 gradient_norm
             )
 
-
-            # ---------------------------------------------
-            # Update model parameters
-            # ---------------------------------------------
-
             self.optimizer.step()
 
             self.optimizer_updates += 1
 
-
-            # ---------------------------------------------
-            # Statistics
-            # ---------------------------------------------
-
             batch_size = labels.size(0)
 
             running_loss += (
-                loss.item()
-                * batch_size
+                loss.item() * batch_size
             )
 
-
-            predictions = outputs.argmax(
-                dim=1
-            )
-
+            predictions = outputs.argmax(dim=1)
 
             correct += (
                 predictions
@@ -211,17 +180,11 @@ class Trainer:
                 .item()
             )
 
-
-            total_samples += (
-                batch_size
-            )
-
+            total_samples += batch_size
 
         train_loss = (
-            running_loss
-            / total_samples
+            running_loss / total_samples
         )
-
 
         train_accuracy = (
             100.0
@@ -229,48 +192,30 @@ class Trainer:
             / total_samples
         )
 
-
-        if gradient_norms:
-
-            average_gradient_norm = (
-                sum(gradient_norms)
-                / len(gradient_norms)
-            )
-
-        else:
-
-            average_gradient_norm = 0.0
-
+        gradient_stats = self._gradient_statistics(
+            gradient_norms
+        )
 
         return {
             "loss": train_loss,
             "accuracy": train_accuracy,
-            "gradient_norm": (
-                average_gradient_norm
-            ),
+            "gradient_norm_mean": gradient_stats["mean"],
+            "gradient_norm_std": gradient_stats["std"],
+            "gradient_norm_cv": gradient_stats["cv"],
         }
 
-
     @torch.no_grad()
-    def validate(
-        self,
-        val_loader,
-    ):
+    def validate(self, val_loader):
         """
         Evaluate the model on the validation set.
         """
-
         self.model.eval()
 
         running_loss = 0.0
-
         correct = 0
-
         total_samples = 0
 
-
         for images, labels in val_loader:
-
             images = images.to(
                 self.device,
                 non_blocking=True,
@@ -281,31 +226,20 @@ class Trainer:
                 non_blocking=True,
             )
 
-
-            outputs = self.model(
-                images
-            )
-
+            outputs = self.model(images)
 
             loss = self.criterion(
                 outputs,
                 labels,
             )
 
-
             batch_size = labels.size(0)
 
-
             running_loss += (
-                loss.item()
-                * batch_size
+                loss.item() * batch_size
             )
 
-
-            predictions = outputs.argmax(
-                dim=1
-            )
-
+            predictions = outputs.argmax(dim=1)
 
             correct += (
                 predictions
@@ -314,17 +248,11 @@ class Trainer:
                 .item()
             )
 
-
-            total_samples += (
-                batch_size
-            )
-
+            total_samples += batch_size
 
         val_loss = (
-            running_loss
-            / total_samples
+            running_loss / total_samples
         )
-
 
         val_accuracy = (
             100.0
@@ -332,12 +260,10 @@ class Trainer:
             / total_samples
         )
 
-
         return {
             "loss": val_loss,
             "accuracy": val_accuracy,
         }
-
 
     def save_checkpoint(
         self,
@@ -345,63 +271,83 @@ class Trainer:
         val_loss,
     ):
         """
-        Save the best validation-loss checkpoint.
+        Save the checkpoint with the lowest validation loss.
         """
-
         checkpoint_path = (
             self.checkpoint_dir
             / f"{self.run_name}_best.pt"
         )
 
-
         checkpoint = {
             "epoch": epoch,
-            "model_state_dict": (
-                self.model.state_dict()
-            ),
-            "optimizer_state_dict": (
-                self.optimizer.state_dict()
-            ),
+            "model_state_dict": self.model.state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
             "val_loss": val_loss,
-            "optimizer_updates": (
-                self.optimizer_updates
-            ),
+            "optimizer_updates": self.optimizer_updates,
+            "run_metadata": self.run_metadata,
         }
-
 
         torch.save(
             checkpoint,
             checkpoint_path,
         )
 
-
         return checkpoint_path
-
 
     def save_history(self):
         """
-        Save training history to CSV.
+        Save epoch-level training history as CSV.
         """
-
         results_path = (
             self.results_dir
             / f"{self.run_name}.csv"
         )
 
-
         dataframe = pd.DataFrame(
             self.history
         )
-
 
         dataframe.to_csv(
             results_path,
             index=False,
         )
 
-
         return results_path
 
+    def save_metadata(
+        self,
+        extra_metadata=None,
+    ):
+        """
+        Save experiment configuration and hardware/software
+        information as JSON.
+        """
+        metadata = dict(
+            self.run_metadata
+        )
+
+        if extra_metadata:
+            metadata.update(
+                extra_metadata
+            )
+
+        metadata_path = (
+            self.results_dir
+            / f"{self.run_name}_metadata.json"
+        )
+
+        with open(
+            metadata_path,
+            "w",
+            encoding="utf-8",
+        ) as file:
+            json.dump(
+                metadata,
+                file,
+                indent=4,
+            )
+
+        return metadata_path
 
     def fit(
         self,
@@ -411,17 +357,20 @@ class Trainer:
         batch_size,
     ):
         """
-        Train and validate for multiple epochs.
+        Train and validate the model for multiple epochs.
         """
-
         print(
             "\nStarting fixed baseline training"
         )
 
-        print(
-            "=" * 70
-        )
+        print("=" * 78)
 
+        # Save initial configuration before training begins.
+        self.save_metadata(
+            {
+                "status": "started",
+            }
+        )
 
         self._synchronize_device()
 
@@ -429,40 +378,23 @@ class Trainer:
             time.perf_counter()
         )
 
-
         for epoch in range(
             1,
             epochs + 1,
         ):
-
             self._synchronize_device()
 
             epoch_start_time = (
                 time.perf_counter()
             )
 
-
-            # ---------------------------------------------
-            # Training
-            # ---------------------------------------------
-
-            train_metrics = (
-                self.train_one_epoch(
-                    train_loader
-                )
+            train_metrics = self.train_one_epoch(
+                train_loader
             )
 
-
-            # ---------------------------------------------
-            # Validation
-            # ---------------------------------------------
-
-            val_metrics = (
-                self.validate(
-                    val_loader
-                )
+            val_metrics = self.validate(
+                val_loader
             )
-
 
             self._synchronize_device()
 
@@ -471,165 +403,107 @@ class Trainer:
                 - epoch_start_time
             )
 
-
             current_lr = (
                 self.optimizer
                 .param_groups[0]["lr"]
             )
 
-
-            # ---------------------------------------------
-            # Save epoch statistics
-            # ---------------------------------------------
-
             epoch_record = {
-
                 "epoch": epoch,
-
-                "train_loss": (
-                    train_metrics["loss"]
-                ),
-
-                "train_accuracy": (
-                    train_metrics[
-                        "accuracy"
-                    ]
-                ),
-
-                "val_loss": (
-                    val_metrics["loss"]
-                ),
-
-                "val_accuracy": (
-                    val_metrics[
-                        "accuracy"
-                    ]
-                ),
-
-                "gradient_norm": (
-                    train_metrics[
-                        "gradient_norm"
-                    ]
-                ),
-
-                "learning_rate": (
-                    current_lr
-                ),
-
-                "batch_size": (
-                    batch_size
-                ),
-
-                "optimizer_updates": (
-                    self.optimizer_updates
-                ),
-
-                "epoch_time_seconds": (
-                    epoch_time
-                ),
+                "train_loss": train_metrics["loss"],
+                "train_accuracy": train_metrics["accuracy"],
+                "val_loss": val_metrics["loss"],
+                "val_accuracy": val_metrics["accuracy"],
+                "gradient_norm_mean": train_metrics[
+                    "gradient_norm_mean"
+                ],
+                "gradient_norm_std": train_metrics[
+                    "gradient_norm_std"
+                ],
+                "gradient_norm_cv": train_metrics[
+                    "gradient_norm_cv"
+                ],
+                "learning_rate": current_lr,
+                "batch_size": batch_size,
+                "optimizer_updates": self.optimizer_updates,
+                "epoch_time_seconds": epoch_time,
             }
-
 
             self.history.append(
                 epoch_record
             )
 
-
-            # ---------------------------------------------
-            # Save best model
-            # ---------------------------------------------
-
             if (
                 val_metrics["loss"]
                 < self.best_val_loss
             ):
-
                 self.best_val_loss = (
                     val_metrics["loss"]
                 )
 
                 self.best_epoch = epoch
 
-
-                checkpoint_path = (
-                    self.save_checkpoint(
-                        epoch=epoch,
-                        val_loss=(
-                            val_metrics[
-                                "loss"
-                            ]
-                        ),
-                    )
+                self.save_checkpoint(
+                    epoch=epoch,
+                    val_loss=val_metrics["loss"],
                 )
 
-
-                best_marker = (
-                    "  <-- best"
-                )
+                best_marker = "  <-- best"
 
             else:
-
-                checkpoint_path = None
-
                 best_marker = ""
 
-
-            # ---------------------------------------------
-            # Save CSV after every epoch
-            # ---------------------------------------------
-
+            # Save after every epoch so partial runs are not lost.
             self.save_history()
-
-
-            # ---------------------------------------------
-            # Console output
-            # ---------------------------------------------
 
             print(
                 f"Epoch {epoch:02d}/{epochs:02d} | "
-                f"Train Loss: "
-                f"{train_metrics['loss']:.4f} | "
-                f"Train Acc: "
-                f"{train_metrics['accuracy']:.2f}% | "
-                f"Val Loss: "
-                f"{val_metrics['loss']:.4f} | "
-                f"Val Acc: "
-                f"{val_metrics['accuracy']:.2f}%"
+                f"Train Loss: {train_metrics['loss']:.4f} | "
+                f"Train Acc: {train_metrics['accuracy']:.2f}% | "
+                f"Val Loss: {val_metrics['loss']:.4f} | "
+                f"Val Acc: {val_metrics['accuracy']:.2f}%"
                 f"{best_marker}"
             )
 
+            print(
+                f"             "
+                f"Grad Mean: "
+                f"{train_metrics['gradient_norm_mean']:.4f} | "
+                f"Grad Std: "
+                f"{train_metrics['gradient_norm_std']:.4f} | "
+                f"Grad CV: "
+                f"{train_metrics['gradient_norm_cv']:.4f}"
+            )
 
             print(
                 f"             "
-                f"Grad Norm: "
-                f"{train_metrics['gradient_norm']:.4f} | "
                 f"LR: {current_lr:.6f} | "
+                f"Batch: {batch_size} | "
                 f"Updates: {self.optimizer_updates:,} | "
                 f"Time: {epoch_time:.2f}s"
             )
 
-
         self._synchronize_device()
-
 
         total_training_time = (
             time.perf_counter()
             - training_start_time
         )
 
+        results_path = self.save_history()
 
-        results_path = (
-            self.save_history()
+        metadata_path = self.save_metadata(
+            {
+                "status": "completed",
+                "best_epoch": self.best_epoch,
+                "best_validation_loss": self.best_val_loss,
+                "total_optimizer_updates": self.optimizer_updates,
+                "total_training_time_seconds": total_training_time,
+            }
         )
 
-
-        print(
-            "=" * 70
-        )
-
-        print(
-            "Training complete"
-        )
+        print("=" * 78)
+        print("Training complete")
 
         print(
             f"Best epoch: "
@@ -657,8 +531,10 @@ class Trainer:
         )
 
         print(
-            "=" * 70
+            f"Metadata saved to: "
+            f"{metadata_path}"
         )
 
+        print("=" * 78)
 
         return self.history
