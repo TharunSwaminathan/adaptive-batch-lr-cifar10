@@ -96,9 +96,9 @@ PIN_MEMORY = torch.cuda.is_available()
 # They are not yet the final experimental hyperparameters.
 # ---------------------------------------------------------
 
-INITIAL_BATCH_SIZE = 64
+INITIAL_BATCH_SIZE = 32
 
-INITIAL_LEARNING_RATE = 0.1
+INITIAL_LEARNING_RATE = 0.01
 
 # Main experiment training budget.
 #
