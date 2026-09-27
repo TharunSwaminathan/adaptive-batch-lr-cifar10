@@ -1,16 +1,16 @@
-# Evaluation 接入说明
+# Evaluation Integration Guide
 
-本目录只负责评估，不启动训练，也不修改 optimizer。所有 accuracy、precision、recall、F1 输入/输出使用 **0–1**；展示百分比时乘以 100。时间单位为秒。泛化差距单独以**百分点**返回。
+This directory handles evaluation only. It does not start training or modify the optimizer. All accuracy, precision, recall, and F1 inputs and outputs use **fractions between 0 and 1**; multiply by 100 to display percentages. Times are measured in seconds. The generalization gap is returned in **percentage points**.
 
-## 文件与功能
+## Files and Features
 
-- `metrics.py`：测试 loss、accuracy、macro precision/recall/F1、各类别指标、训练计时、目标达成时间、更新次数、泛化差距。
-- `confusion_matrix.py`：保存原始计数或按真实类别归一化的混淆矩阵。
-- `plots.py`：多个策略的 train/validation loss 和 accuracy，分别以 epoch 和累计时间为横轴。
+- `metrics.py`: Test loss, accuracy, macro precision/recall/F1, per-class metrics, training timing, time to target accuracy, optimizer update counts, and generalization gap.
+- `confusion_matrix.py`: Saves confusion matrices as raw counts or normalized by true-class support.
+- `plots.py`: Compares training/validation loss and accuracy across strategies, using epochs and cumulative elapsed time as the horizontal axes.
 
-从项目根目录导入这些模块，不要直接运行本目录里的文件。
+Import these modules from the project root rather than running the files in this directory directly.
 
-## 测试集评估
+## Test Set Evaluation
 
 ```python
 import json
@@ -18,7 +18,7 @@ from pathlib import Path
 from evaluation import evaluate_model, generalization_gap
 from evaluation.confusion_matrix import plot_confusion_matrix
 
-# model 已加载按验证集选出的 checkpoint，并已放到 device。
+# Load the checkpoint selected using validation performance and move model to device.
 result = evaluate_model(model, data.get_test_loader(), device)
 print(f"Test accuracy: {result['accuracy']:.2%}")
 print(f"Macro F1: {result['macro_f1']:.4f}")
@@ -37,27 +37,27 @@ plot_confusion_matrix(
 )
 ```
 
-`evaluate_model` 使用无类别权重的交叉熵，按实际样本数平均，支持最后一个不足 batch size 的批次。它自动使用 eval/no_grad，并恢复调用前各子模块的 train/eval 状态。空数据集和非有限 loss 会报错。分类指标固定包含全部十类，无法定义的 precision/recall/F1 记为 0。
+`evaluate_model` uses cross entropy without class weights and averages loss over the actual number of samples, including an incomplete final batch. It automatically uses evaluation mode and disables gradient computation, then restores each module's original training/evaluation state. Empty datasets and non-finite loss values raise errors. Classification metrics include all ten classes by default; undefined precision, recall, and F1 values are set to zero.
 
-## 训练历史接口（交给 Dev 接入）
+## Training History Interface (for Dev to Integrate)
 
-每个 epoch 验证结束后追加一个字典：
+Append one dictionary after validation at the end of each epoch:
 
 ```python
 history.append({
-    "epoch": epoch,                         # 从 1 开始
-    "train_loss": train_loss,               # 按样本平均
-    "val_loss": val_loss,                   # 按样本平均
+    "epoch": epoch,                         # Starts at 1
+    "train_loss": train_loss,               # Average over samples
+    "val_loss": val_loss,                   # Average over samples
     "train_acc": train_accuracy,            # 0–1
     "val_acc": val_accuracy,                # 0–1
-    "elapsed_seconds": timer.elapsed_seconds,  # 从训练开始累计
-    "optimizer_updates": epoch_updates,     # 仅本轮实际 optimizer.step 次数
+    "elapsed_seconds": timer.elapsed_seconds,  # Cumulative since training started
+    "optimizer_updates": epoch_updates,     # Actual optimizer steps in this epoch only
 })
 ```
 
-`optimizer_updates` 必须在真正执行参数更新时累加，不能直接拿 batch 数或 `ceil(N / batch_size)` 代替。梯度累积和 AMP 跳过更新时尤其要注意。该字段为每轮计数，汇总函数将其相加。
+Increment `optimizer_updates` only when a parameter update actually occurs. Do not substitute the batch count or `ceil(N / batch_size)`. This distinction matters with gradient accumulation and updates skipped by AMP. This field is a per-epoch count; the summary function adds the counts together.
 
-计时器使用方式如下（训练和验证部分由公共训练器提供）：
+Use the timer as follows, with training and validation provided by the shared trainer:
 
 ```python
 from evaluation import TrainingTimer, summarize_training
@@ -66,11 +66,11 @@ from evaluation.plots import plot_training_curves
 timer = TrainingTimer(device)
 history = []
 with timer.measure():
-    # 在这里执行完整 epoch 循环：训练、验证、追加上述 history 行。
-    # 验证完成后读取 timer.elapsed_seconds。
+    # Run the complete epoch loop here: train, validate, and append a history row.
+    # Read timer.elapsed_seconds after validation.
     ...
 
-# history 填充后执行：
+# Run after history has been populated:
 summary = summarize_training(
     history,
     total_training_seconds=timer.total_seconds,
@@ -79,24 +79,24 @@ summary = summarize_training(
 plot_training_curves({"adaptive_lr": history}, "results/adaptive_lr/curves.png")
 ```
 
-这是集成模板，不是独立训练脚本。计时包含循环内的数据读取、训练、验证和其他操作；不应把下载数据、最终测试和绘图放进计时区域。所有策略保持相同计时边界。CUDA/MPS 在读取时间时同步，避免遗漏尚未完成的设备计算。
+This is an integration template, not a standalone training script. Timing includes data loading, training, validation, and other operations inside the loop. Keep dataset downloads, final testing, and plotting outside the timed region. Use the same timing boundaries for all strategies. CUDA/MPS work is synchronized when reading elapsed time so that pending device computation is included.
 
-`summary` 包含：
+`summary` contains:
 
-- `training_time_seconds`：完整计时区域耗时。
-- `optimizer_updates`：实际更新总次数。
-- `epoch_to_target` / `time_to_target_seconds`：**首次**达到目标准确率的验证 epoch 及累计时间；从未达到时均为 `None`（JSON 中为 null）。这是 epoch 结束时的测量精度，不是批次级精度。
-- `target_accuracy` / `target_split`：目标值与使用的数据集（validation）。
+- `training_time_seconds`: Total duration of the timed region.
+- `optimizer_updates`: Total number of actual optimizer updates.
+- `epoch_to_target` / `time_to_target_seconds`: The **first** validation epoch that reaches the target accuracy and its cumulative elapsed time. Both are `None` (`null` in JSON) if the target is never reached. Measurements have end-of-epoch resolution, not batch-level resolution.
+- `target_accuracy` / `target_split`: The target value and the dataset split used to measure it (`validation`).
 
-比较多个策略时传入 `{"fixed_fixed": history_a, "adaptive_batch": history_b, "adaptive_lr": history_c, "adaptive_combined": history_d}`。不同策略允许有不同 epoch 数。
+To compare multiple strategies, pass `{"fixed_fixed": history_a, "adaptive_batch": history_b, "adaptive_lr": history_c, "adaptive_combined": history_d}`. Strategies may have different numbers of epochs.
 
-## 泛化差距
+## Generalization Gap
 
 ```python
-# train_eval_loader 使用原训练子集，但关闭随机裁剪、翻转等数据增强。
+# Use the original training subset with random cropping, flipping, and other augmentation disabled.
 train_result = evaluate_model(model, train_eval_loader, device)
 gap = generalization_gap(train_result["accuracy"], result["accuracy"])
 print(f"Generalization gap: {gap:.2f} percentage points")
 ```
 
-必须用同一个 checkpoint 对两个数据集评估。当前 `get_train_loader()` 有随机增强，不适合作为这里的公平训练评估 loader；请由数据/训练模块负责人提供无随机增强的训练子集 loader。不要使用训练过程中权重不断变化时累计的 train accuracy 计算最终泛化差距。差距为负时保留负值。
+Evaluate both datasets using the same checkpoint. The current `get_train_loader()` applies random augmentation, so it is not suitable for this training-set evaluation. The data/training module owner should provide a loader for the training subset with random augmentation disabled. Do not use training accuracy accumulated while model weights were changing to calculate the final generalization gap. Preserve negative gap values when they occur.
