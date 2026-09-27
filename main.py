@@ -96,10 +96,9 @@ def main():
     # -----------------------------------------------------
 
     run_name = (
-        f"pilot_fixedBatch"
-        f"{INITIAL_BATCH_SIZE}"
-        f"_fixedLR"
-        f"{INITIAL_LEARNING_RATE}"
+        f"fixed_fixed"
+        f"_batch{INITIAL_BATCH_SIZE}"
+        f"_lr{INITIAL_LEARNING_RATE}"
         f"_seed{SEED}"
     )
 
@@ -115,7 +114,7 @@ def main():
 
     run_metadata = {
         "run_name": run_name,
-        "experiment_type": "fixed_batch_fixed_lr_pilot",
+        "experiment_type": "fixed_batch_fixed_lr",
         "created_utc": datetime.now(
             timezone.utc
         ).isoformat(),

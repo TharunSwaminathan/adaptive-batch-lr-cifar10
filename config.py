@@ -100,9 +100,11 @@ INITIAL_BATCH_SIZE = 32
 
 INITIAL_LEARNING_RATE = 0.01
 
-# First real training test:
-# run only 5 epochs so that we can measure GPU runtime.
-EPOCHS = 5
+# Main experiment training budget.
+#
+# All primary experiments will use the same epoch budget
+# so that their training behavior can be compared fairly.
+EPOCHS = 20
 
 OPTIMIZER = "sgd"
 
@@ -232,7 +234,7 @@ def print_config():
     )
 
     print(
-        f"Pilot epochs:        {EPOCHS}"
+    f"Experiment epochs:   {EPOCHS}"
     )
 
     print(
