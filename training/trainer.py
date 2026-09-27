@@ -427,6 +427,7 @@ class Trainer:
                 "batch_size": batch_size,
                 "optimizer_updates": self.optimizer_updates,
                 "epoch_time_seconds": epoch_time,
+                "elapsed_seconds": time.perf_counter() - training_start_time,
             }
 
             self.history.append(
@@ -489,6 +490,7 @@ class Trainer:
             time.perf_counter()
             - training_start_time
         )
+        self.total_training_seconds = total_training_time
 
         results_path = self.save_history()
 

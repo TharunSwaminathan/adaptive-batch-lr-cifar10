@@ -28,7 +28,7 @@ from config import (
 from data.cifar10 import CIFAR10DataModule
 from models.custom_cnn import CustomCNN
 from training.trainer import Trainer
-
+from evaluation.eval_pipeline import run_evaluation
 
 def main():
     # -----------------------------------------------------
@@ -143,7 +143,7 @@ def main():
         "python_version": sys.version,
         "platform": platform.platform(),
 
-        "pytorch_version": torch.__version__,
+        "pytorch_version": str(torch.__version__),
         "cuda_runtime": cuda_runtime,
     }
 
@@ -166,11 +166,24 @@ def main():
     # Fixed baseline pilot
     # -----------------------------------------------------
 
-    trainer.fit(
+    history = trainer.fit(
         train_loader=train_loader,
         val_loader=val_loader,
         epochs=EPOCHS,
         batch_size=INITIAL_BATCH_SIZE,
+    )
+
+    evaluation_result = run_evaluation(
+        model=model,
+        data_loader=val_loader,
+        device=DEVICE,
+        history=history,
+        total_training_seconds=trainer.total_training_seconds,
+        checkpoint_path=CHECKPOINT_DIR / f"{run_name}_best.pt",
+        output_dir=RESULTS_DIR / run_name,
+        run_name=run_name,
+        split="validation",
+        target_accuracy=0.80,
     )
 
 
