@@ -355,17 +355,42 @@ class Trainer:
         val_loader,
         epochs,
         batch_size,
+        batch_controller=None,
+        train_loader_factory=None,
     ):
         """
         Train and validate the model for multiple epochs.
+
+        If a batch controller is supplied, its decision is made after
+        validation and any batch-size change is applied to the next epoch.
         """
-        print(
-            "\nStarting fixed baseline training"
-        )
+        if batch_controller is not None:
+            if train_loader_factory is None:
+                raise ValueError(
+                    "train_loader_factory is required when "
+                    "batch_controller is used."
+                )
+
+            if batch_controller.current_batch_size != batch_size:
+                raise ValueError(
+                    "batch_size must match the controller's "
+                    "initial batch size."
+                )
+
+        current_train_loader = train_loader
+        current_batch_size = batch_size
+
+        if batch_controller is None:
+            print(
+                "\nStarting fixed baseline training"
+            )
+        else:
+            print(
+                "\nStarting adaptive batch training"
+            )
 
         print("=" * 78)
 
-        # Save initial configuration before training begins.
         self.save_metadata(
             {
                 "status": "started",
@@ -389,7 +414,7 @@ class Trainer:
             )
 
             train_metrics = self.train_one_epoch(
-                train_loader
+                current_train_loader
             )
 
             val_metrics = self.validate(
@@ -408,6 +433,16 @@ class Trainer:
                 .param_groups[0]["lr"]
             )
 
+            controller_decision = None
+
+            if batch_controller is not None:
+                controller_decision = batch_controller.step(
+                    val_loss=val_metrics["loss"],
+                    gradient_norm_cv=train_metrics[
+                        "gradient_norm_cv"
+                    ],
+                )
+
             epoch_record = {
                 "epoch": epoch,
                 "train_loss": train_metrics["loss"],
@@ -424,11 +459,41 @@ class Trainer:
                     "gradient_norm_cv"
                 ],
                 "learning_rate": current_lr,
-                "batch_size": batch_size,
+                "batch_size": current_batch_size,
                 "optimizer_updates": self.optimizer_updates,
                 "epoch_time_seconds": epoch_time,
                 "elapsed_seconds": time.perf_counter() - training_start_time,
             }
+
+            if controller_decision is not None:
+                epoch_record.update(
+                    {
+                        "next_batch_size": controller_decision[
+                            "next_batch_size"
+                        ],
+                        "batch_changed": controller_decision[
+                            "batch_changed"
+                        ],
+                        "batch_stability_score": controller_decision[
+                            "stability_score"
+                        ],
+                        "batch_is_stable": controller_decision[
+                            "is_stable"
+                        ],
+                        "batch_plateau_detected": controller_decision[
+                            "plateau_detected"
+                        ],
+                        "batch_no_improve_epochs": controller_decision[
+                            "no_improve_epochs"
+                        ],
+                        "batch_cooldown_remaining": controller_decision[
+                            "cooldown_remaining"
+                        ],
+                        "batch_controller_reason": controller_decision[
+                            "reason"
+                        ],
+                    }
+                )
 
             self.history.append(
                 epoch_record
@@ -454,7 +519,6 @@ class Trainer:
             else:
                 best_marker = ""
 
-            # Save after every epoch so partial runs are not lost.
             self.save_history()
 
             print(
@@ -479,10 +543,48 @@ class Trainer:
             print(
                 f"             "
                 f"LR: {current_lr:.6f} | "
-                f"Batch: {batch_size} | "
+                f"Batch: {current_batch_size} | "
                 f"Updates: {self.optimizer_updates:,} | "
                 f"Time: {epoch_time:.2f}s"
             )
+
+            if controller_decision is not None:
+                stability_score = controller_decision[
+                    "stability_score"
+                ]
+
+                stability_text = (
+                    "N/A"
+                    if stability_score is None
+                    else f"{stability_score:.4f}"
+                )
+
+                print(
+                    f"             "
+                    f"Batch Controller | "
+                    f"Stability: {stability_text} | "
+                    f"Plateau: "
+                    f"{controller_decision['plateau_detected']} | "
+                    f"Next Batch: "
+                    f"{controller_decision['next_batch_size']} | "
+                    f"Reason: "
+                    f"{controller_decision['reason']}"
+                )
+
+            if (
+                controller_decision is not None
+                and controller_decision["batch_changed"]
+            ):
+                next_batch_size = controller_decision[
+                    "next_batch_size"
+                ]
+
+                if epoch < epochs:
+                    current_train_loader = train_loader_factory(
+                        next_batch_size
+                    )
+
+                current_batch_size = next_batch_size
 
         self._synchronize_device()
 
@@ -494,14 +596,28 @@ class Trainer:
 
         results_path = self.save_history()
 
+        completion_metadata = {
+            "status": "completed",
+            "best_epoch": self.best_epoch,
+            "best_validation_loss": self.best_val_loss,
+            "total_optimizer_updates": self.optimizer_updates,
+            "total_training_time_seconds": total_training_time,
+        }
+
+        if batch_controller is not None:
+            completion_metadata.update(
+                {
+                    "final_batch_size_used": self.history[-1][
+                        "batch_size"
+                    ],
+                    "final_batch_size_selected": (
+                        batch_controller.current_batch_size
+                    ),
+                }
+            )
+
         metadata_path = self.save_metadata(
-            {
-                "status": "completed",
-                "best_epoch": self.best_epoch,
-                "best_validation_loss": self.best_val_loss,
-                "total_optimizer_updates": self.optimizer_updates,
-                "total_training_time_seconds": total_training_time,
-            }
+            completion_metadata
         )
 
         print("=" * 78)
@@ -527,6 +643,12 @@ class Trainer:
             f"{total_training_time:.2f} seconds"
         )
 
+        if batch_controller is not None:
+            print(
+                f"Final batch size used: "
+                f"{self.history[-1]['batch_size']}"
+            )
+
         print(
             f"Results saved to: "
             f"{results_path}"
@@ -540,3 +662,4 @@ class Trainer:
         print("=" * 78)
 
         return self.history
+
