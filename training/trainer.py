@@ -355,12 +355,22 @@ class Trainer:
         val_loader,
         epochs,
         batch_size,
+        lr_controller=None,
     ):
+        """Train and validate, optionally updating LR after each validation.
+
+        learning_rate records the LR used for the completed epoch.
+        Controller diagnostics and next_learning_rate describe the decision
+        for the following epoch. Batch size stays fixed in this loop.
         """
-        Train and validate the model for multiple epochs.
-        """
+        if lr_controller is not None:
+            if lr_controller.optimizer is not self.optimizer:
+                raise ValueError("LR controller must use the trainer's optimizer")
+            lr_controller.set_batch_size(batch_size)
         print(
-            "\nStarting fixed baseline training"
+            "\nStarting adaptive LR training"
+            if lr_controller is not None and lr_controller.mode == "adaptive"
+            else "\nStarting fixed baseline training"
         )
 
         print("=" * 78)
@@ -429,6 +439,22 @@ class Trainer:
                 "epoch_time_seconds": epoch_time,
                 "elapsed_seconds": time.perf_counter() - training_start_time,
             }
+
+            if lr_controller is not None:
+                next_lr = lr_controller.update(
+                    val_loss=val_metrics["loss"],
+                    val_accuracy=val_metrics["accuracy"] / 100.0,
+                    batch_size=batch_size,
+                )
+                epoch_record["next_learning_rate"] = next_lr
+                if lr_controller.mode == "adaptive":
+                    info = lr_controller.last_info
+                    for key in (
+                        "lr_base", "decay_multiplier", "actual_learning_rate",
+                        "plateau_counter", "worsening_counter", "cooldown_counter",
+                        "lr_change_reason", "warmup_active", "next_warmup_factor",
+                    ):
+                        epoch_record[key] = info[key]
 
             self.history.append(
                 epoch_record
