@@ -36,4 +36,4 @@ The CIFAR-100 normalization statistics in the teammate notebook were calculated 
 
 ## Packaging note
 
-Final submission archives should omit downloaded dataset files, `.git` history, and Python cache directories. These files are not required to run the source code and would unnecessarily increase the archive size.
+This distributed ZIP intentionally omits downloaded dataset files, `.git` history, and Python cache directories. Those files are not needed to run the source code and would greatly increase archive size.
