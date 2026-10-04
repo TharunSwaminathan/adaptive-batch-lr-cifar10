@@ -44,6 +44,7 @@ class CIFAR100DataModule:
     def __init__(self, data_dir=DATA_DIR):
         self.data_dir = data_dir
         self.train_dataset = None
+        self.train_eval_dataset = None
         self.val_dataset = None
         self.test_dataset = None
         self.train_indices = None
@@ -96,6 +97,7 @@ class CIFAR100DataModule:
         self.train_indices = train_idx.tolist()
         self.val_indices = val_idx.tolist()
         self.train_dataset = Subset(train_aug, self.train_indices)
+        self.train_eval_dataset = Subset(train_eval, self.train_indices)
         self.val_dataset = Subset(train_eval, self.val_indices)
 
     def _ensure_test_dataset(self):
@@ -117,6 +119,17 @@ class CIFAR100DataModule:
             pin_memory=PIN_MEMORY,
             worker_init_fn=seed_worker,
             generator=self.train_generator,
+        )
+
+    def get_train_eval_loader(self, batch_size=256):
+        """Return the training subset with evaluation-only transforms."""
+        return DataLoader(
+            self.train_eval_dataset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=NUM_WORKERS,
+            pin_memory=PIN_MEMORY,
+            worker_init_fn=seed_worker,
         )
 
     def get_val_loader(self, batch_size=256):

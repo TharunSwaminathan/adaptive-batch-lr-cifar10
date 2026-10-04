@@ -6,6 +6,7 @@ from experiments.primary_protocol import (
     E4_CONFIG,
     PRIMARY_CONFIGS,
     batch_scaled_lr,
+    protocol_fingerprint,
     validate_primary_protocol,
 )
 from training.lr_controller import LRController
@@ -30,6 +31,13 @@ class PrimaryProtocolTests(unittest.TestCase):
             0.007071067811865476,
             places=14,
         )
+
+    def test_protocol_fingerprint_is_stable_and_experiment_specific(self):
+        first = protocol_fingerprint(PRIMARY_CONFIGS["E1"])
+        second = protocol_fingerprint(dict(PRIMARY_CONFIGS["E1"]))
+        self.assertEqual(first, second)
+        self.assertEqual(len(first), 64)
+        self.assertNotEqual(first, protocol_fingerprint(PRIMARY_CONFIGS["E4"]))
 
     def test_real_lr_controller_uses_batch_scaling(self):
         parameter = torch.nn.Parameter(torch.tensor([1.0]))

@@ -4,6 +4,9 @@ This module is the single source of truth for the primary comparison.
 E4 is fully specified independently; it is not created by merging E2/E3.
 """
 
+import hashlib
+import json
+
 PRIMARY_SEED = 42
 PRIMARY_EPOCHS = 40
 
@@ -104,6 +107,17 @@ PRIMARY_CONFIGS = {
     "E4": E4_CONFIG,
 }
 
+
+
+def protocol_fingerprint(config):
+    """Return a stable SHA-256 fingerprint for one experiment config."""
+    canonical = json.dumps(
+        config,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 def batch_scaled_lr(
     batch_size,

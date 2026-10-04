@@ -7,6 +7,7 @@ from pathlib import Path
 
 from config import RESULTS_DIR
 from experiments.datasets import DATASETS
+from experiments.primary_protocol import PRIMARY_CONFIGS, protocol_fingerprint
 
 EXPERIMENTS = ("E1", "E2", "E3", "E4")
 
@@ -18,8 +19,17 @@ def latest_manifest(dataset, experiment):
         raise FileNotFoundError(f"No completed primary run found for {dataset}/{experiment}")
     path = candidates[-1]
     data = json.loads(path.read_text(encoding="utf-8"))
-    if data.get("status") != "completed" or data.get("epochs_completed") != 40:
+    expected = PRIMARY_CONFIGS[experiment]
+    if data.get("status") != "completed" or data.get("epochs_completed") != expected["epochs"]:
         raise ValueError(f"Invalid primary manifest: {path}")
+    if data.get("is_pilot"):
+        raise ValueError(f"Pilot manifest found in primary results: {path}")
+    if data.get("experiment") != experiment or data.get("dataset") != dataset:
+        raise ValueError(f"Manifest identity mismatch: {path}")
+    if data.get("seed") != expected["seed"]:
+        raise ValueError(f"Manifest seed mismatch: {path}")
+    if data.get("protocol_fingerprint") != protocol_fingerprint(expected):
+        raise ValueError(f"Manifest protocol mismatch: {path}")
     return path, data
 
 

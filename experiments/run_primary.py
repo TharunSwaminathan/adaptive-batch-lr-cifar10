@@ -21,7 +21,11 @@ from config import (
 )
 from evaluation.eval_pipeline import run_evaluation
 from experiments.datasets import DATASETS, dataset_settings
-from experiments.primary_protocol import PRIMARY_CONFIGS, validate_primary_protocol
+from experiments.primary_protocol import (
+    PRIMARY_CONFIGS,
+    protocol_fingerprint,
+    validate_primary_protocol,
+)
 from models.custom_cnn import CustomCNN
 from training.batch_controller import AdaptiveBatchController
 from training.lr_controller import LRController
@@ -168,6 +172,7 @@ def run_primary(experiment, dataset, *, pilot_epochs=None):
         "is_pilot": is_pilot,
         "seed": seed,
         "protocol": cfg,
+        "protocol_fingerprint": protocol_fingerprint(cfg),
         "normalization": (
             "CIFAR-10 fixed project statistics"
             if dataset == "cifar10"
@@ -250,6 +255,10 @@ def run_primary(experiment, dataset, *, pilot_epochs=None):
     manifest = {
         "experiment": experiment,
         "dataset": dataset,
+        "seed": seed,
+        "protocol": cfg,
+        "protocol_fingerprint": protocol_fingerprint(cfg),
+        "git_commit": metadata["git_commit"],
         "status": "completed",
         "is_pilot": is_pilot,
         "epochs_completed": len(history),
