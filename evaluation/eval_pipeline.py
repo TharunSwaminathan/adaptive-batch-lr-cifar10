@@ -6,7 +6,7 @@ from pathlib import Path
 import torch
 from torch.torch_version import TorchVersion
 
-from .metrics import evaluate_model, summarize_training
+from .metrics import CIFAR10_CLASSES, evaluate_model, summarize_training
 from .confusion_matrix import plot_confusion_matrix
 from .plots import plot_training_curves
 
@@ -54,11 +54,13 @@ def run_evaluation(
     run_name,
     split="validation",
     target_accuracy=0.80,
+    class_names=CIFAR10_CLASSES,
 ):
     """Save training summaries, curves and checkpoint evaluation results.
 
     history must use the current Trainer's record format.
     Target accuracy is always measured on validation history.
+    class_names must follow dataset label-index order; defaults to CIFAR-10.
 
     Loads checkpoint weights into the supplied model and leaves those
     weights loaded. Use after training, not inside the training loop.
@@ -85,7 +87,7 @@ def run_evaluation(
     model.load_state_dict(checkpoint["model_state_dict"])
     model.to(device)
 
-    metrics = evaluate_model(model, data_loader, device)
+    metrics = evaluate_model(model, data_loader, device, class_names=class_names)
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -102,6 +104,7 @@ def run_evaluation(
         {
             "split": split,
             "checkpoint_epoch": checkpoint["epoch"],
+            "class_names": list(class_names),
             **metrics,
         },
         output_dir / f"{split}_metrics.json",
@@ -112,16 +115,14 @@ def run_evaluation(
         output_dir / "training_curves.png",
     )
 
-    for normalize in (False, True):
-        suffix = "_normalized" if normalize else ""
-
-        plot_confusion_matrix(
-            metrics["y_true"],
-            metrics["y_pred"],
-            output_dir / f"{split}_confusion_matrix{suffix}.png",
-            normalize=normalize,
-            title=f"{split.capitalize()} confusion matrix{suffix.replace('_', ' ')}",
-        )
+    plot_confusion_matrix(
+        metrics["y_true"],
+        metrics["y_pred"],
+        output_dir / f"{split}_confusion_matrix_normalized.png",
+        normalize=True,
+        class_names=class_names,
+        title=f"{split.capitalize()} confusion matrix (normalized)",
+    )
 
     print(f"Evaluated checkpoint: epoch {checkpoint['epoch']}")
     print(f"{split.capitalize()} accuracy: {metrics['accuracy']:.2%}")

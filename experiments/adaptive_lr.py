@@ -3,6 +3,7 @@
 From the project root:
     python -m experiments.adaptive_lr --epochs 10 --batch-size 32
     python -m experiments.adaptive_lr --reference-lr 0.01 --alpha 0.5
+    python -m experiments.adaptive_lr --dataset cifar100 --epochs 30
 
 --lr is an alias for --reference-lr: it is the LR at --reference-batch-size,
 not necessarily the actual starting LR. Initial LR includes batch scaling
@@ -28,6 +29,7 @@ from config import (
     OPTIMIZER, RESULTS_DIR, SEED, WEIGHT_DECAY, get_device_name, set_seed,
 )
 from data.cifar10 import CIFAR10DataModule
+from data.cifar100 import CIFAR100DataModule
 from evaluation.eval_pipeline import run_evaluation
 from models.custom_cnn import CustomCNN
 from training.lr_controller import LRController
@@ -36,6 +38,8 @@ from training.trainer import Trainer
 
 def parse_arguments(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--dataset", choices=("cifar10", "cifar100"), default="cifar10",
+                        help="Dataset to train and validate on (default: cifar10)")
     parser.add_argument("--epochs", type=int, default=EPOCHS)
     parser.add_argument("--batch-size", type=int, default=INITIAL_BATCH_SIZE)
     parser.add_argument("--seed", type=int, default=SEED)
@@ -79,7 +83,15 @@ def run_adaptive_experiment(args):
     if OPTIMIZER.lower() != "sgd":
         raise ValueError(f"Unsupported optimizer: {OPTIMIZER}")
     set_seed(args.seed)
-    model = CustomCNN().to(DEVICE)
+    dataset_name = getattr(args, "dataset", "cifar10")
+    dataset_options = {
+        "cifar10": (CIFAR10DataModule, 10, "CIFAR-10"),
+        "cifar100": (CIFAR100DataModule, 100, "CIFAR-100"),
+    }
+    if dataset_name not in dataset_options:
+        raise ValueError(f"Unsupported dataset: {dataset_name}")
+    data_module, num_classes, dataset_label = dataset_options[dataset_name]
+    model = CustomCNN(num_classes=num_classes).to(DEVICE)
     optimizer = torch.optim.SGD(
         model.parameters(), lr=args.reference_lr,
         momentum=MOMENTUM, weight_decay=WEIGHT_DECAY,
@@ -94,13 +106,20 @@ def run_adaptive_experiment(args):
     controller = LRController(optimizer, mode="adaptive", **controller_settings)
     initial_lr = controller.set_batch_size(args.batch_size)
 
-    data = CIFAR10DataModule()
+    data = data_module()
+    # The validation Subset wraps the dataset carrying its ordered class names.
+    class_names = list(data.val_dataset.dataset.classes)
+    if len(class_names) != num_classes:
+        raise ValueError("Dataset class names do not match the model output size")
     # Keep the shared config.SEED data split; vary shuffle/model seed explicitly.
     data.train_generator.manual_seed(args.seed)
     train_loader = data.get_train_loader(args.batch_size)
     val_loader = data.get_val_loader(batch_size=256)
 
     run_name = f"adaptive_lr_batch{args.batch_size}_refLR{args.reference_lr}_seed{args.seed}"
+    # Preserve existing CIFAR-10 paths used by the final-results report.
+    if dataset_name != "cifar10":
+        run_name = f"{dataset_name}_{run_name}"
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S_%fZ")
     run_dir = Path(args.output_dir) / run_name / run_id
@@ -109,7 +128,8 @@ def run_adaptive_experiment(args):
         "run_name": run_name, "run_id": run_id,
         "experiment_type": "fixed_batch_adaptive_lr",
         "created_utc": started_at.isoformat(), "output_dir": str(run_dir),
-        "model": "CustomCNN", "dataset": "CIFAR-10",
+        "model": "CustomCNN", "dataset": dataset_label,
+        "num_classes": num_classes, "class_names": class_names,
         "training_samples": len(train_loader.dataset),
         "validation_samples": len(val_loader.dataset),
         "test_set_used_during_training": False,
@@ -124,6 +144,7 @@ def run_adaptive_experiment(args):
         "cuda_runtime": torch.version.cuda if DEVICE.type == "cuda" else None,
     }
     print(f"Results directory: {run_dir}")
+    print(f"Dataset: {dataset_label}; classes: {num_classes}")
     print(f"Fixed batch: {args.batch_size}; initial scaled LR: {initial_lr:.8f}; epochs: {args.epochs}")
     trainer = Trainer(
         model=model, criterion=torch.nn.CrossEntropyLoss(), optimizer=optimizer,
@@ -149,6 +170,7 @@ def run_adaptive_experiment(args):
         total_training_seconds=trainer.total_training_seconds,
         checkpoint_path=run_dir / f"{run_name}_best.pt", output_dir=run_dir,
         run_name=run_name, split="validation", target_accuracy=args.target_accuracy,
+        class_names=class_names,
     )
     trainer.save_metadata({
         "status": "completed", "evaluation_status": "completed",
