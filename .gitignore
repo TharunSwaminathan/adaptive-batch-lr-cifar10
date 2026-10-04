@@ -1,32 +1,29 @@
 # Python
 __pycache__/
 *.py[cod]
-*.egg-info/
-
-# Virtual environments
-venv/
+.pytest_cache/
 .venv/
-env/
-
-# IDE
-.vscode/
-.idea/
+venv/
 
 # Jupyter
 .ipynb_checkpoints/
 
 # Downloaded datasets
-data/raw/
 data/downloads/
 
-# Model checkpoints (all nesting levels)
-checkpoints/**/*.pt
-checkpoints/**/*.pth
-checkpoints/**/*.ckpt
+# Generated experiment outputs
+results/*
+!results/README.md
+checkpoints/*
+!checkpoints/README.md
+*.pt
+*.pth
 
-# Generated results
-results/**
-
-# OS files
+# OS/editor
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
+
+# Local packages
+*.zip

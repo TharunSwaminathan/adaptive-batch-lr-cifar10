@@ -31,7 +31,7 @@ def normalization_layer(num_channels):
 
 class CustomCNN(nn.Module):
     """
-    CNN used for the CIFAR-10 study and CIFAR-100 extension.
+    CNN shared by the CIFAR-10 and CIFAR-100 primary experiments.
 
     Architecture:
         Conv(32)

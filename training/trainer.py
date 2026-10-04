@@ -471,6 +471,9 @@ class Trainer:
                 )
 
             if lr_controller is not None:
+                # Record the exact batch-size value supplied to the LR adapter.
+                # In E4 this must be the batch controller's next_batch_size.
+                epoch_record["lr_batch_size_input"] = next_batch_size
                 epoch_record["next_learning_rate"] = next_lr
 
                 if lr_decision is not None:
@@ -584,6 +587,7 @@ class Trainer:
 
         completion_metadata = {
             "status": "completed",
+            "epochs_completed": len(self.history),
             "best_epoch": self.best_epoch,
             "best_validation_loss": self.best_val_loss,
             "total_optimizer_updates": self.optimizer_updates,
@@ -616,7 +620,8 @@ class Trainer:
 
         print("=" * 78)
         print("Training complete")
-        print(f"Best epoch: {self.best_epoch}")
+        print(f"Epochs completed: {len(self.history)}")
+        print(f"Best checkpoint epoch: {self.best_epoch}")
         print(f"Best validation loss: {self.best_val_loss:.4f}")
         print(f"Total optimizer updates: {self.optimizer_updates:,}")
         print(
@@ -641,4 +646,3 @@ class Trainer:
         print("=" * 78)
 
         return self.history
-

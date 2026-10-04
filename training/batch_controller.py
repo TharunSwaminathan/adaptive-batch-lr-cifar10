@@ -5,7 +5,7 @@ import math
 
 class AdaptiveBatchController:
     """
-    Adaptive batch-size controller for the E2 experiment.
+    Adaptive batch-size controller used by E2 and E4.
 
     The controller increases the training batch size when:
 
@@ -115,6 +115,7 @@ class AdaptiveBatchController:
         self.no_improve_epochs = 0
 
         self.cooldown_remaining = 0
+        self.decision_history = []
 
 
     def _next_batch_size(self):
@@ -319,38 +320,16 @@ class AdaptiveBatchController:
                 "gradients_not_stable"
             )
 
-        return {
-            "previous_batch_size": (
-                previous_batch_size
-            ),
-
-            "next_batch_size": (
-                self.current_batch_size
-            ),
-
-            "batch_changed": (
-                batch_changed
-            ),
-
-            "stability_score": (
-                stability_score
-            ),
-
-            "is_stable": (
-                is_stable
-            ),
-
-            "plateau_detected": (
-                plateau_detected
-            ),
-
-            "no_improve_epochs": (
-                self.no_improve_epochs
-            ),
-
-            "cooldown_remaining": (
-                self.cooldown_remaining
-            ),
-
+        decision = {
+            "previous_batch_size": previous_batch_size,
+            "next_batch_size": self.current_batch_size,
+            "batch_changed": batch_changed,
+            "stability_score": stability_score,
+            "is_stable": is_stable,
+            "plateau_detected": plateau_detected,
+            "no_improve_epochs": self.no_improve_epochs,
+            "cooldown_remaining": self.cooldown_remaining,
             "reason": reason,
         }
+        self.decision_history.append(dict(decision))
+        return decision
