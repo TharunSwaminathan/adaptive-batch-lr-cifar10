@@ -1,0 +1,23 @@
+{
+    "dataset": "CIFAR-100",
+    "experiment": "E1",
+    "num_classes": 100,
+    "training_samples": 45000,
+    "validation_samples": 5000,
+    "test_set_used_during_training": false,
+    "epochs": 20,
+    "seed": 42,
+    "optimizer": "SGD",
+    "momentum": 0.9,
+    "weight_decay": 0.0005,
+    "rerun_reason": "Original CIFAR-100 validation-selected checkpoint files were lost. This is a frozen-settings reconstruction run performed before final CIFAR-100 test evaluation.",
+    "batch_size": 32,
+    "learning_rate": 0.01,
+    "batch_policy": "fixed",
+    "learning_rate_policy": "fixed",
+    "status": "completed",
+    "best_epoch": 19,
+    "best_validation_loss": 2.769782876586914,
+    "total_optimizer_updates": 28140,
+    "total_training_time_seconds": 845.9228223
+}
