@@ -21,14 +21,12 @@ from config import (
     OPTIMIZER,
     RESULTS_DIR,
     SEED,
-    TRAIN_SIZE,
-    VAL_SIZE,
     WEIGHT_DECAY,
     get_device_name,
     set_seed,
 )
 
-from data.cifar10 import CIFAR10DataModule
+from experiments.datasets import add_dataset_argument, dataset_settings, dataset_run_name
 from models.custom_cnn import CustomCNN
 from training.trainer import Trainer
 
@@ -93,6 +91,7 @@ def run_fixed_experiment(
     epochs,
     seed,
     overwrite=False,
+    dataset="cifar10",
 ):
     """
     Run one fixed-batch, fixed-learning-rate experiment.
@@ -104,6 +103,8 @@ def run_fixed_experiment(
         f"_lr{INITIAL_LEARNING_RATE}"
         f"_seed{seed}"
     )
+
+    run_name = dataset_run_name(dataset, run_name)
 
     print("\n" + "#" * 78)
     print(f"Experiment: {run_name}")
@@ -147,7 +148,14 @@ def run_fixed_experiment(
     # experiment.
     # -----------------------------------------------------
 
-    data = CIFAR10DataModule()
+    data_module, num_classes, dataset_label = dataset_settings(dataset)
+    data = data_module()
+    data.train_generator.manual_seed(seed)
+    class_names = list(data.val_dataset.dataset.classes)
+    if len(class_names) != num_classes:
+        raise ValueError("Dataset class names do not match model output size")
+    train_size = len(data.train_dataset)
+    val_size = len(data.val_dataset)
 
     train_loader = data.get_train_loader(
         batch_size=batch_size
@@ -165,7 +173,7 @@ def run_fixed_experiment(
     # Fresh model
     # -----------------------------------------------------
 
-    model = CustomCNN().to(
+    model = CustomCNN(num_classes=num_classes).to(
         DEVICE
     )
 
@@ -204,10 +212,12 @@ def run_fixed_experiment(
         ).isoformat(),
 
         "model": "CustomCNN",
-        "dataset": "CIFAR-10",
+        "dataset": dataset_label,
+        "num_classes": num_classes,
+        "class_names": class_names,
 
-        "training_samples": TRAIN_SIZE,
-        "validation_samples": VAL_SIZE,
+        "training_samples": train_size,
+        "validation_samples": val_size,
 
         "test_set_used_during_training": False,
 
@@ -256,6 +266,8 @@ def run_fixed_experiment(
     # Print experiment settings
     # -----------------------------------------------------
 
+    print(f"Dataset:             {dataset_label}; classes: {num_classes}")
+
     print(
         f"Device:              "
         f"{get_device_name()}"
@@ -263,12 +275,12 @@ def run_fixed_experiment(
 
     print(
         f"Training samples:    "
-        f"{TRAIN_SIZE:,}"
+        f"{train_size:,}"
     )
 
     print(
         f"Validation samples:  "
-        f"{VAL_SIZE:,}"
+        f"{val_size:,}"
     )
 
     print(
@@ -344,7 +356,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description=(
             "Run fixed-batch, fixed-learning-rate "
-            "CIFAR-10 experiments."
+            "CIFAR-10/CIFAR-100 experiments."
         )
     )
 
@@ -384,6 +396,7 @@ def parse_arguments():
         ),
     )
 
+    add_dataset_argument(parser)
     return parser.parse_args()
 
 
@@ -440,6 +453,7 @@ def main():
             epochs=args.epochs,
             seed=args.seed,
             overwrite=args.overwrite,
+            dataset=args.dataset,
         )
 
     print("\n" + "=" * 78)

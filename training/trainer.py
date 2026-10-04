@@ -355,68 +355,90 @@ class Trainer:
         val_loader,
         epochs,
         batch_size,
+        batch_controller=None,
+        train_loader_factory=None,
         lr_controller=None,
     ):
-        """Train and validate, optionally updating LR after each validation.
-
-        learning_rate records the LR used for the completed epoch.
-        Controller diagnostics and next_learning_rate describe the decision
-        for the following epoch. Batch size stays fixed in this loop.
         """
+        Train and validate the model for multiple epochs.
+
+        Optional controllers make decisions after validation and apply them
+        to the following epoch.
+        """
+        if batch_controller is not None:
+            if train_loader_factory is None:
+                raise ValueError(
+                    "train_loader_factory is required when "
+                    "batch_controller is used."
+                )
+
+            if batch_controller.current_batch_size != batch_size:
+                raise ValueError(
+                    "batch_size must match the controller's "
+                    "initial batch size."
+                )
+
         if lr_controller is not None:
             if lr_controller.optimizer is not self.optimizer:
-                raise ValueError("LR controller must use the trainer's optimizer")
+                raise ValueError(
+                    "LR controller must use the trainer's optimizer."
+                )
+
             lr_controller.set_batch_size(batch_size)
-        print(
-            "\nStarting adaptive LR training"
-            if lr_controller is not None and lr_controller.mode == "adaptive"
-            else "\nStarting fixed baseline training"
-        )
+
+        current_train_loader = train_loader
+        current_batch_size = batch_size
+
+        if batch_controller is not None and lr_controller is not None:
+            print("\nStarting adaptive batch + adaptive LR training")
+        elif batch_controller is not None:
+            print("\nStarting adaptive batch training")
+        elif lr_controller is not None:
+            print("\nStarting adaptive LR training")
+        else:
+            print("\nStarting fixed baseline training")
 
         print("=" * 78)
 
-        # Save initial configuration before training begins.
-        self.save_metadata(
-            {
-                "status": "started",
-            }
-        )
-
+        self.save_metadata({"status": "started"})
         self._synchronize_device()
+        training_start_time = time.perf_counter()
 
-        training_start_time = (
-            time.perf_counter()
-        )
-
-        for epoch in range(
-            1,
-            epochs + 1,
-        ):
+        for epoch in range(1, epochs + 1):
             self._synchronize_device()
+            epoch_start_time = time.perf_counter()
 
-            epoch_start_time = (
-                time.perf_counter()
-            )
-
-            train_metrics = self.train_one_epoch(
-                train_loader
-            )
-
-            val_metrics = self.validate(
-                val_loader
-            )
+            train_metrics = self.train_one_epoch(current_train_loader)
+            val_metrics = self.validate(val_loader)
 
             self._synchronize_device()
+            epoch_time = time.perf_counter() - epoch_start_time
 
-            epoch_time = (
-                time.perf_counter()
-                - epoch_start_time
-            )
+            current_lr = self.optimizer.param_groups[0]["lr"]
 
-            current_lr = (
-                self.optimizer
-                .param_groups[0]["lr"]
-            )
+            batch_decision = None
+            next_batch_size = current_batch_size
+
+            if batch_controller is not None:
+                batch_decision = batch_controller.step(
+                    val_loss=val_metrics["loss"],
+                    gradient_norm_cv=train_metrics["gradient_norm_cv"],
+                )
+                next_batch_size = batch_decision["next_batch_size"]
+
+            lr_decision = None
+
+            if lr_controller is not None:
+                next_lr = lr_controller.update(
+                    val_loss=val_metrics["loss"],
+                    val_accuracy=val_metrics["accuracy"] / 100.0,
+                    batch_size=next_batch_size,
+                )
+
+                if lr_controller.mode == "adaptive":
+                    lr_decision = dict(lr_controller.last_info)
+            else:
+                next_lr = current_lr
 
             epoch_record = {
                 "epoch": epoch,
@@ -424,50 +446,51 @@ class Trainer:
                 "train_accuracy": train_metrics["accuracy"],
                 "val_loss": val_metrics["loss"],
                 "val_accuracy": val_metrics["accuracy"],
-                "gradient_norm_mean": train_metrics[
-                    "gradient_norm_mean"
-                ],
-                "gradient_norm_std": train_metrics[
-                    "gradient_norm_std"
-                ],
-                "gradient_norm_cv": train_metrics[
-                    "gradient_norm_cv"
-                ],
+                "gradient_norm_mean": train_metrics["gradient_norm_mean"],
+                "gradient_norm_std": train_metrics["gradient_norm_std"],
+                "gradient_norm_cv": train_metrics["gradient_norm_cv"],
                 "learning_rate": current_lr,
-                "batch_size": batch_size,
+                "batch_size": current_batch_size,
                 "optimizer_updates": self.optimizer_updates,
                 "epoch_time_seconds": epoch_time,
                 "elapsed_seconds": time.perf_counter() - training_start_time,
             }
 
+            if batch_decision is not None:
+                epoch_record.update(
+                    {
+                        "next_batch_size": batch_decision["next_batch_size"],
+                        "batch_changed": batch_decision["batch_changed"],
+                        "batch_stability_score": batch_decision["stability_score"],
+                        "batch_is_stable": batch_decision["is_stable"],
+                        "batch_plateau_detected": batch_decision["plateau_detected"],
+                        "batch_no_improve_epochs": batch_decision["no_improve_epochs"],
+                        "batch_cooldown_remaining": batch_decision["cooldown_remaining"],
+                        "batch_controller_reason": batch_decision["reason"],
+                    }
+                )
+
             if lr_controller is not None:
-                next_lr = lr_controller.update(
-                    val_loss=val_metrics["loss"],
-                    val_accuracy=val_metrics["accuracy"] / 100.0,
-                    batch_size=batch_size,
-                )
                 epoch_record["next_learning_rate"] = next_lr
-                if lr_controller.mode == "adaptive":
-                    info = lr_controller.last_info
+
+                if lr_decision is not None:
                     for key in (
-                        "lr_base", "decay_multiplier", "actual_learning_rate",
-                        "plateau_counter", "worsening_counter", "cooldown_counter",
-                        "lr_change_reason", "warmup_active", "next_warmup_factor",
+                        "lr_base",
+                        "decay_multiplier",
+                        "actual_learning_rate",
+                        "plateau_counter",
+                        "worsening_counter",
+                        "cooldown_counter",
+                        "lr_change_reason",
+                        "warmup_active",
+                        "next_warmup_factor",
                     ):
-                        epoch_record[key] = info[key]
+                        epoch_record[key] = lr_decision[key]
 
-            self.history.append(
-                epoch_record
-            )
+            self.history.append(epoch_record)
 
-            if (
-                val_metrics["loss"]
-                < self.best_val_loss
-            ):
-                self.best_val_loss = (
-                    val_metrics["loss"]
-                )
-
+            if val_metrics["loss"] < self.best_val_loss:
+                self.best_val_loss = val_metrics["loss"]
                 self.best_epoch = epoch
 
                 self.save_checkpoint(
@@ -476,11 +499,9 @@ class Trainer:
                 )
 
                 best_marker = "  <-- best"
-
             else:
                 best_marker = ""
 
-            # Save after every epoch so partial runs are not lost.
             self.save_history()
 
             print(
@@ -494,75 +515,129 @@ class Trainer:
 
             print(
                 f"             "
-                f"Grad Mean: "
-                f"{train_metrics['gradient_norm_mean']:.4f} | "
-                f"Grad Std: "
-                f"{train_metrics['gradient_norm_std']:.4f} | "
-                f"Grad CV: "
-                f"{train_metrics['gradient_norm_cv']:.4f}"
+                f"Grad Mean: {train_metrics['gradient_norm_mean']:.4f} | "
+                f"Grad Std: {train_metrics['gradient_norm_std']:.4f} | "
+                f"Grad CV: {train_metrics['gradient_norm_cv']:.4f}"
             )
 
             print(
                 f"             "
                 f"LR: {current_lr:.6f} | "
-                f"Batch: {batch_size} | "
+                f"Batch: {current_batch_size} | "
                 f"Updates: {self.optimizer_updates:,} | "
                 f"Time: {epoch_time:.2f}s"
             )
 
+            if batch_decision is not None:
+                stability_score = batch_decision["stability_score"]
+
+                stability_text = (
+                    "N/A"
+                    if stability_score is None
+                    else f"{stability_score:.4f}"
+                )
+
+                print(
+                    f"             "
+                    f"Batch Controller | "
+                    f"Stability: {stability_text} | "
+                    f"Plateau: {batch_decision['plateau_detected']} | "
+                    f"Next Batch: {batch_decision['next_batch_size']} | "
+                    f"Reason: {batch_decision['reason']}"
+                )
+
+            if lr_controller is not None:
+                if lr_decision is not None:
+                    print(
+                        f"             "
+                        f"LR Controller | "
+                        f"Next LR: {next_lr:.6f} | "
+                        f"Reason: {lr_decision['lr_change_reason']}"
+                    )
+                else:
+                    print(
+                        f"             "
+                        f"LR Controller | "
+                        f"Next LR: {next_lr:.6f}"
+                    )
+
+            if (
+                batch_decision is not None
+                and batch_decision["batch_changed"]
+            ):
+                if epoch < epochs:
+                    current_train_loader = train_loader_factory(
+                        next_batch_size
+                    )
+
+                current_batch_size = next_batch_size
+
         self._synchronize_device()
 
         total_training_time = (
-            time.perf_counter()
-            - training_start_time
+            time.perf_counter() - training_start_time
         )
+
         self.total_training_seconds = total_training_time
 
         results_path = self.save_history()
 
-        metadata_path = self.save_metadata(
-            {
-                "status": "completed",
-                "best_epoch": self.best_epoch,
-                "best_validation_loss": self.best_val_loss,
-                "total_optimizer_updates": self.optimizer_updates,
-                "total_training_time_seconds": total_training_time,
-            }
-        )
+        completion_metadata = {
+            "status": "completed",
+            "best_epoch": self.best_epoch,
+            "best_validation_loss": self.best_val_loss,
+            "total_optimizer_updates": self.optimizer_updates,
+            "total_training_time_seconds": total_training_time,
+        }
+
+        if batch_controller is not None:
+            completion_metadata.update(
+                {
+                    "final_batch_size_used": self.history[-1]["batch_size"],
+                    "final_batch_size_selected": (
+                        batch_controller.current_batch_size
+                    ),
+                }
+            )
+
+        if lr_controller is not None:
+            completion_metadata.update(
+                {
+                    "final_learning_rate_used": (
+                        self.history[-1]["learning_rate"]
+                    ),
+                    "final_learning_rate_selected": (
+                        self.optimizer.param_groups[0]["lr"]
+                    ),
+                }
+            )
+
+        metadata_path = self.save_metadata(completion_metadata)
 
         print("=" * 78)
         print("Training complete")
-
-        print(
-            f"Best epoch: "
-            f"{self.best_epoch}"
-        )
-
-        print(
-            f"Best validation loss: "
-            f"{self.best_val_loss:.4f}"
-        )
-
-        print(
-            f"Total optimizer updates: "
-            f"{self.optimizer_updates:,}"
-        )
-
+        print(f"Best epoch: {self.best_epoch}")
+        print(f"Best validation loss: {self.best_val_loss:.4f}")
+        print(f"Total optimizer updates: {self.optimizer_updates:,}")
         print(
             f"Total training time: "
             f"{total_training_time:.2f} seconds"
         )
 
-        print(
-            f"Results saved to: "
-            f"{results_path}"
-        )
+        if batch_controller is not None:
+            print(
+                f"Final batch size used: "
+                f"{self.history[-1]['batch_size']}"
+            )
 
-        print(
-            f"Metadata saved to: "
-            f"{metadata_path}"
-        )
+        if lr_controller is not None:
+            print(
+                f"Final learning rate used: "
+                f"{self.history[-1]['learning_rate']:.6f}"
+            )
 
+        print(f"Results saved to: {results_path}")
+        print(f"Metadata saved to: {metadata_path}")
         print("=" * 78)
 
         return self.history

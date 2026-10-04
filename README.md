@@ -184,3 +184,56 @@ and controller accuracy inputs use fractions (0–1). The pipeline converts thes
 units and converts cumulative update counts into per-epoch counts for evaluation.
 An interrupted run may contain only partial output. All files for one run share
 the same directory.
+
+
+## Dataset Selection Across Experiments
+
+All four training runners accept `--dataset cifar10` (default) or
+`--dataset cifar100`. Model outputs, ordered evaluation class names, and
+metadata follow the selected dataset. CIFAR-100 run names have a `cifar100_`
+prefix to keep checkpoints and results separate from CIFAR-10.
+
+The existing data modules use 20,000 training / 5,000 validation images for
+CIFAR-10 and 45,000 training / 5,000 validation images for CIFAR-100. Both keep
+the official 10,000-image test set separate from training and model selection.
+Missing data is downloaded to `data/downloads/`.
+
+Run from the project root in an environment with PyTorch and torchvision:
+
+```bash
+python -m experiments.fixed_fixed --dataset cifar100 --batch-sizes 32
+python -m experiments.adaptive_batch --dataset cifar100
+python -m experiments.adaptive_lr --dataset cifar100 --reference-lr 0.1
+python -m experiments.adaptive_combined --dataset cifar100
+```
+
+The example reference LR of 0.1 matches the current shared configuration and
+combined runner. For a short check, add `--epochs 3 --pilot` to adaptive batch
+or combined; fixed and adaptive LR accept `--epochs 3` directly.
+
+The reporting-only runner also accepts `--dataset cifar100`:
+
+```bash
+python -m experiments.generate_final_results --dataset cifar100
+```
+
+It requires completed validation and final-test artifacts; it does not create
+them or run training. For CIFAR-100, E1/E2 validation artifacts retain the
+existing `fixed_validation_evaluation/<run_name>/` and
+`adaptive_batch_validation_evaluation/<run_name>/` layouts, using the prefixed
+run names. Final-test artifacts belong in
+`results/cifar100_final_test_evaluation/<timestamp>/E1/` through `E4/`.
+Reports default to `results/cifar100_final_report_assets/`. E3/E4 report lookup
+uses the reference LR in `config.INITIAL_LEARNING_RATE`, so use matching LRs
+when generating a four-experiment report.
+
+
+Adaptive batch training now calls the shared `evaluation.run_evaluation`
+pipeline after training. It evaluates the best validation-loss checkpoint and
+prints checkpoint accuracy and macro F1. Evaluation artifacts are saved under
+`results/adaptive_batch_validation_evaluation/<run_name>/`: `validation_metrics.json`,
+`evaluation_history.json`, `training_summary.json`, `training_curves.png`, and
+`validation_confusion_matrix_normalized.png`. Training CSV/metadata stay in
+`results/`, and checkpoints stay in `checkpoints/`. The metadata records
+`evaluation_status` separately from training completion. CIFAR-100 uses its
+ordered 100 class names; evaluation does not use the test set.

@@ -98,13 +98,13 @@ PIN_MEMORY = torch.cuda.is_available()
 
 INITIAL_BATCH_SIZE = 32
 
-INITIAL_LEARNING_RATE = 0.1
+INITIAL_LEARNING_RATE = 0.01
 
 # Main experiment training budget.
 #
 # All primary experiments will use the same epoch budget
 # so that their training behavior can be compared fairly.
-EPOCHS =30
+EPOCHS =80
 
 OPTIMIZER = "sgd"
 

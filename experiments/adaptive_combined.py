@@ -33,13 +33,11 @@ from config import (
     OPTIMIZER,
     RESULTS_DIR,
     SEED,
-    TRAIN_SIZE,
-    VAL_SIZE,
     WEIGHT_DECAY,
     get_device_name,
     set_seed,
 )
-from data.cifar10 import CIFAR10DataModule
+from experiments.datasets import add_dataset_argument, dataset_settings, dataset_run_name
 from evaluation.eval_pipeline import run_evaluation
 from models.custom_cnn import CustomCNN
 from training.batch_controller import AdaptiveBatchController
@@ -70,7 +68,7 @@ LR_PLATEAU_PATIENCE = 5
 LR_WORSENING_PATIENCE = 3
 LR_COOLDOWN_EPOCHS = 2
 LR_WARMUP_EPOCHS = 5
-LR_MIN = 1e-5
+LR_MIN = 1e-6
 LR_MIN_DELTA_LOSS = 1e-3
 LR_MIN_DELTA_ACC = 0.002
 
@@ -115,7 +113,7 @@ def parse_arguments(argv=None):
     parser = argparse.ArgumentParser(
         description=(
             "Run E4: adaptive batch size + adaptive learning rate "
-            "on CIFAR-10."
+            "on CIFAR-10/CIFAR-100."
         )
     )
 
@@ -152,6 +150,7 @@ def parse_arguments(argv=None):
         help="Root directory for E4 outputs.",
     )
 
+    add_dataset_argument(parser)
     args = parser.parse_args(argv)
 
     if args.epochs <= 0:
@@ -171,13 +170,20 @@ def parse_arguments(argv=None):
 
 def run_experiment(args):
     """Run E4 and evaluate the best validation checkpoint."""
+    dataset = getattr(args, "dataset", "cifar10")
     validate_frozen_settings()
     set_seed(args.seed)
 
     # -----------------------------------------------------
     # Data
     # -----------------------------------------------------
-    data = CIFAR10DataModule()
+    data_module, num_classes, dataset_label = dataset_settings(dataset)
+    data = data_module()
+    class_names = list(data.val_dataset.dataset.classes)
+    if len(class_names) != num_classes:
+        raise ValueError("Dataset class names do not match model output size")
+    train_size = len(data.train_dataset)
+    val_size = len(data.val_dataset)
 
     # The split itself remains fixed by config.SEED. This seed controls
     # model initialization and the persistent training-shuffle generator.
@@ -196,7 +202,7 @@ def run_experiment(args):
     # -----------------------------------------------------
     # Model + optimizer
     # -----------------------------------------------------
-    model = CustomCNN().to(DEVICE)
+    model = CustomCNN(num_classes=num_classes).to(DEVICE)
     criterion = nn.CrossEntropyLoss()
     optimizer = build_optimizer(model)
 
@@ -249,6 +255,8 @@ def run_experiment(args):
     if args.pilot:
         run_name += f"_pilot{args.epochs}"
 
+    run_name = dataset_run_name(dataset, run_name)
+
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S_%fZ")
     run_dir = Path(args.output_dir) / run_name / run_id
@@ -268,9 +276,11 @@ def run_experiment(args):
         "created_utc": started_at.isoformat(),
         "output_dir": str(run_dir),
         "model": "CustomCNN",
-        "dataset": "CIFAR-10",
-        "training_samples": TRAIN_SIZE,
-        "validation_samples": VAL_SIZE,
+        "dataset": dataset_label,
+        "num_classes": num_classes,
+        "class_names": class_names,
+        "training_samples": train_size,
+        "validation_samples": val_size,
         "test_set_used_during_training": False,
         "seed": args.seed,
         "data_split_seed": SEED,
@@ -321,8 +331,9 @@ def run_experiment(args):
     print("=" * 78)
     print(f"Results directory:    {run_dir}")
     print(f"Device:               {get_device_name()}")
-    print(f"Training samples:     {TRAIN_SIZE:,}")
-    print(f"Validation samples:   {VAL_SIZE:,}")
+    print(f"Dataset:              {dataset_label}; classes: {num_classes}")
+    print(f"Training samples:     {train_size:,}")
+    print(f"Validation samples:   {val_size:,}")
     print(f"Epochs:               {args.epochs}")
     print(f"Initial batch:        {INITIAL_BATCH_SIZE}")
     print(f"Allowed batches:      {ADAPTIVE_BATCH_OPTIONS}")
@@ -397,6 +408,7 @@ def run_experiment(args):
         run_name=run_name,
         split="validation",
         target_accuracy=TARGET_ACCURACY,
+        class_names=class_names,
     )
 
     trainer.save_metadata(

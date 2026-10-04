@@ -28,8 +28,7 @@ from config import (
     DEVICE, EPOCHS, INITIAL_BATCH_SIZE, MOMENTUM, NORMALIZATION,
     OPTIMIZER, RESULTS_DIR, SEED, WEIGHT_DECAY, get_device_name, set_seed,
 )
-from data.cifar10 import CIFAR10DataModule
-from data.cifar100 import CIFAR100DataModule
+from experiments.datasets import dataset_settings
 from evaluation.eval_pipeline import run_evaluation
 from models.custom_cnn import CustomCNN
 from training.lr_controller import LRController
@@ -48,11 +47,11 @@ def parse_arguments(argv=None):
     parser.add_argument("--alpha", type=float, default=0.5)
     parser.add_argument("--lr-factor", type=float, default=0.5)
     parser.add_argument("--plateau-patience", type=int, default=5)
-    parser.add_argument("--worsening-patience", type=int, default=3)
+    parser.add_argument("--worsening-patience", type=int, default=5)
     parser.add_argument("--cooldown-epochs", type=int, default=2)
     parser.add_argument("--warmup-epochs", type=int, default=0,
                         help="Linear LR warmup epochs; 0 disables warmup")
-    parser.add_argument("--min-lr", type=float, default=1e-5)
+    parser.add_argument("--min-lr", type=float, default=1e-8)
     parser.add_argument("--min-delta-loss", type=float, default=1e-3)
     parser.add_argument("--min-delta-acc", type=float, default=0.002)
     parser.add_argument("--target-accuracy", type=float, default=0.80)
@@ -84,13 +83,7 @@ def run_adaptive_experiment(args):
         raise ValueError(f"Unsupported optimizer: {OPTIMIZER}")
     set_seed(args.seed)
     dataset_name = getattr(args, "dataset", "cifar10")
-    dataset_options = {
-        "cifar10": (CIFAR10DataModule, 10, "CIFAR-10"),
-        "cifar100": (CIFAR100DataModule, 100, "CIFAR-100"),
-    }
-    if dataset_name not in dataset_options:
-        raise ValueError(f"Unsupported dataset: {dataset_name}")
-    data_module, num_classes, dataset_label = dataset_options[dataset_name]
+    data_module, num_classes, dataset_label = dataset_settings(dataset_name)
     model = CustomCNN(num_classes=num_classes).to(DEVICE)
     optimizer = torch.optim.SGD(
         model.parameters(), lr=args.reference_lr,

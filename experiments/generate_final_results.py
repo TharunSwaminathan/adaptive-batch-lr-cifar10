@@ -17,6 +17,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from experiments.datasets import add_dataset_argument, dataset_settings, dataset_run_name
+
 from config import (
     CHECKPOINT_DIR,
     INITIAL_LEARNING_RATE,
@@ -56,7 +58,8 @@ def newest_subdir(root):
     return dirs[0]
 
 
-def resolve_artifacts():
+def resolve_artifacts(dataset="cifar10"):
+    dataset_settings(dataset)
     e1_name = (
         f"fixed_fixed_batch32_lr{INITIAL_LEARNING_RATE}_seed{SEED}"
     )
@@ -70,9 +73,14 @@ def resolve_artifacts():
         f"adaptive_batch_adaptive_lr_refLR{INITIAL_LEARNING_RATE}_seed{SEED}"
     )
 
+    e1_name = dataset_run_name(dataset, e1_name)
+    e2_name = dataset_run_name(dataset, e2_name)
+    e3_name = dataset_run_name(dataset, e3_name)
+    e4_name = dataset_run_name(dataset, e4_name)
+
     e3_dir = newest_subdir(Path(RESULTS_DIR) / e3_name)
     e4_dir = newest_subdir(Path(RESULTS_DIR) / e4_name)
-    final_test_dir = newest_subdir(Path(RESULTS_DIR) / "final_test_evaluation")
+    final_test_dir = newest_subdir(Path(RESULTS_DIR) / dataset_run_name(dataset, "final_test_evaluation"))
 
     return {
         "E1": {
@@ -158,6 +166,7 @@ def resolve_artifacts():
             ),
         },
         "_final_test_dir": final_test_dir,
+        "_dataset": dataset,
     }
 
 
@@ -173,6 +182,9 @@ def load_summary(artifacts):
     for exp in ("E1", "E2", "E3", "E4"):
         item = artifacts[exp]
         metadata = read_json(item["metadata"])
+        expected_dataset = dataset_settings(artifacts.get("_dataset", "cifar10"))[2]
+        if metadata.get("dataset") != expected_dataset:
+            raise ValueError(f"{exp} dataset mismatch: expected {expected_dataset}")
         validation = read_json(item["validation"])
         test_detail, test = unpack_test_metrics(item["test"])
 
@@ -360,7 +372,8 @@ def plot_lr_schedule(histories, output_dir):
     save_figure(fig, output_dir / "09_adaptive_learning_rate_schedule.png")
 
 
-def write_key_findings(summary, output_dir):
+def write_key_findings(summary, output_dir, dataset="cifar10"):
+    dataset_label = dataset_settings(dataset)[2]
     indexed = summary.set_index("experiment")
 
     e1 = indexed.loc["E1"]
@@ -378,7 +391,7 @@ def write_key_findings(summary, output_dir):
 
 These values come from the frozen seed-{SEED} primary experiments and the
 final test evaluation. They are descriptive results for this experiment,
-not claims about all random seeds or all CIFAR-10 training settings.
+not claims about all random seeds or all {dataset_label} training settings.
 
 ## Main observations
 
@@ -430,14 +443,18 @@ def parse_args():
         type=Path,
         default=Path(RESULTS_DIR) / "final_report_assets",
     )
-    return parser.parse_args()
+    add_dataset_argument(parser)
+    args = parser.parse_args()
+    if args.dataset == "cifar100" and args.output_dir == Path(RESULTS_DIR) / "final_report_assets":
+        args.output_dir = Path(RESULTS_DIR) / "cifar100_final_report_assets"
+    return args
 
 
 def main():
     args = parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    artifacts = resolve_artifacts()
+    artifacts = resolve_artifacts(args.dataset)
     summary = load_summary(artifacts)
     histories = load_histories(artifacts)
 
@@ -478,7 +495,7 @@ def main():
 
     plot_batch_schedule(histories, args.output_dir)
     plot_lr_schedule(histories, args.output_dir)
-    write_key_findings(summary, args.output_dir)
+    write_key_findings(summary, args.output_dir, args.dataset)
 
     print("=" * 78)
     print("FINAL REPORT ASSETS GENERATED")
