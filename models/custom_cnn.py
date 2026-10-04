@@ -31,7 +31,7 @@ def normalization_layer(num_channels):
 
 class CustomCNN(nn.Module):
     """
-    CNN used for the main CIFAR-10 experiments.
+    CNN used for the CIFAR-10 study and CIFAR-100 extension.
 
     Architecture:
         Conv(32)
@@ -40,7 +40,7 @@ class CustomCNN(nn.Module):
         Conv(128)
         MaxPool
         Global Average Pool
-        Linear(10)
+        Linear(num_classes)
     """
 
     def __init__(self, num_classes=NUM_CLASSES):

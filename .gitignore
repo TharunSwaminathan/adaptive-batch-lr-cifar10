@@ -15,22 +15,18 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
-# Dataset files
+# Downloaded datasets
 data/raw/
 data/downloads/
 
-# Model checkpoints
-checkpoints/*.pt
-checkpoints/*.pth
-checkpoints/*.ckpt
+# Model checkpoints (all nesting levels)
+checkpoints/**/*.pt
+checkpoints/**/*.pth
+checkpoints/**/*.ckpt
 
 # Generated results
-results/*.csv
-results/*.json
-results/*.png
-results/*.pdf
+results/**
 
 # OS files
 .DS_Store
 Thumbs.db
-results/**
