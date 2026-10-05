@@ -27,45 +27,9 @@ from config import (
 )
 
 from experiments.datasets import add_dataset_argument, dataset_settings, dataset_run_name
+from evaluation.eval_pipeline import run_evaluation
 from models.custom_cnn import CustomCNN
 from training.trainer import Trainer
-
-
-def completed_run_exists(run_name):
-    """
-    Return True only when the metadata file says that the
-    experiment completed successfully.
-
-    This prevents us from accidentally repeating a finished
-    experiment while still allowing interrupted runs to restart.
-    """
-
-    metadata_path = (
-        Path(RESULTS_DIR)
-        / f"{run_name}_metadata.json"
-    )
-
-    if not metadata_path.exists():
-        return False
-
-    try:
-        with open(
-            metadata_path,
-            "r",
-            encoding="utf-8",
-        ) as file:
-            metadata = json.load(file)
-
-        return (
-            metadata.get("status")
-            == "completed"
-        )
-
-    except (
-        json.JSONDecodeError,
-        OSError,
-    ):
-        return False
 
 
 def build_optimizer(model):
@@ -105,37 +69,16 @@ def run_fixed_experiment(
     )
 
     run_name = dataset_run_name(dataset, run_name)
+    started_at = datetime.now(timezone.utc)
+    run_id = started_at.strftime("%Y%m%dT%H%M%S_%fZ")
+    run_dir = Path(RESULTS_DIR) / run_name / run_id
+    run_dir.mkdir(parents=True, exist_ok=False)
+    print(f"Results directory: {run_dir}")
+
 
     print("\n" + "#" * 78)
     print(f"Experiment: {run_name}")
     print("#" * 78)
-
-    # -----------------------------------------------------
-    # Skip experiments that already finished
-    # -----------------------------------------------------
-
-    if (
-        completed_run_exists(run_name)
-        and not overwrite
-    ):
-        print(
-            "Completed results already exist."
-        )
-
-        print(
-            "Skipping this experiment."
-        )
-
-        print(
-            "Use --overwrite if you intentionally "
-            "want to run it again."
-        )
-
-        return
-
-    # -----------------------------------------------------
-    # Reset random state before EVERY experiment
-    # -----------------------------------------------------
 
     set_seed(seed)
 
@@ -204,6 +147,8 @@ def run_fixed_experiment(
 
     run_metadata = {
         "run_name": run_name,
+        "run_id": run_id,
+        "output_dir": str(run_dir),
         "experiment_type": (
             "fixed_batch_fixed_lr"
         ),
@@ -317,18 +262,33 @@ def run_fixed_experiment(
         criterion=criterion,
         optimizer=optimizer,
         device=DEVICE,
-        results_dir=RESULTS_DIR,
-        checkpoint_dir=CHECKPOINT_DIR,
+        results_dir=run_dir,
+        checkpoint_dir=run_dir,
         run_name=run_name,
         run_metadata=run_metadata,
     )
 
-    trainer.fit(
+    history = trainer.fit(
         train_loader=train_loader,
         val_loader=val_loader,
         epochs=epochs,
         batch_size=batch_size,
     )
+
+    completion_metadata = {
+        "status": "completed", "best_epoch": trainer.best_epoch,
+        "best_validation_loss": trainer.best_val_loss,
+        "total_optimizer_updates": trainer.optimizer_updates,
+        "total_training_time_seconds": trainer.total_training_seconds,
+    }
+    trainer.save_metadata({**completion_metadata, "evaluation_status": "started"})
+    result = run_evaluation(
+        model=model, data_loader=val_loader, device=DEVICE, history=history,
+        total_training_seconds=trainer.total_training_seconds,
+        checkpoint_path=run_dir / f"{run_name}_best.pt", output_dir=run_dir,
+        run_name=run_name, split="validation", class_names=class_names,
+    )
+    trainer.save_metadata({**completion_metadata, "evaluation_status": "completed"})
 
     # -----------------------------------------------------
     # Release memory before next experiment
@@ -346,6 +306,8 @@ def run_fixed_experiment(
 
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
+
+    return {"output_dir": run_dir, "history": history, "evaluation": result}
 
 
 def parse_arguments():
@@ -388,12 +350,8 @@ def parse_arguments():
     )
 
     parser.add_argument(
-        "--overwrite",
-        action="store_true",
-        help=(
-            "Repeat experiments even when completed "
-            "results already exist."
-        ),
+        "--overwrite", action="store_true",
+        help="Deprecated compatibility flag; every run creates a new timestamp directory.",
     )
 
     add_dataset_argument(parser)

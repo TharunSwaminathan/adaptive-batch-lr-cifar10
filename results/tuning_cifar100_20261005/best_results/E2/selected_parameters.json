@@ -1,0 +1,24 @@
+{
+  "label": "E2_final_ep160",
+  "experiment": "E2",
+  "epochs": 160,
+  "settings": {
+    "reference_lr": 0.01
+  },
+  "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E2_final_ep160/cifar100_adaptive_batch_fixed_lr0.01_seed42_pilot160/20261005T084614_664542Z",
+  "validation_loss": 2.24708291015625,
+  "validation_accuracy": 0.4134,
+  "validation_macro_f1": 0.40122315477677295,
+  "best_epoch": 144,
+  "optimizer_updates": 54894,
+  "training_seconds": 433.12838183199983,
+  "convergence": {
+    "epochs": 160,
+    "best_loss_before_last20": 2.248991364479065,
+    "best_loss_last20": 2.2470829074859617,
+    "absolute_improvement": 0.001908456993103158,
+    "relative_improvement": 0.0008485835131453318,
+    "last_decay_epoch": null,
+    "extend_budget": false
+  }
+}

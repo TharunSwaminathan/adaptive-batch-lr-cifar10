@@ -78,6 +78,16 @@ def resolve_artifacts(dataset="cifar10"):
     e3_name = dataset_run_name(dataset, e3_name)
     e4_name = dataset_run_name(dataset, e4_name)
 
+    def legacy_or_run(name, validation_folder):
+        root = Path(RESULTS_DIR) / name
+        if root.is_dir():
+            directory = newest_subdir(root)
+            return directory, directory / "validation_metrics.json"
+        return Path(RESULTS_DIR), Path(RESULTS_DIR) / validation_folder / name / "validation_metrics.json"
+
+    e1_dir, e1_validation = legacy_or_run(e1_name, "fixed_validation_evaluation")
+    e2_dir, e2_validation = legacy_or_run(e2_name, "adaptive_batch_validation_evaluation")
+
     e3_dir = newest_subdir(Path(RESULTS_DIR) / e3_name)
     e4_dir = newest_subdir(Path(RESULTS_DIR) / e4_name)
     final_test_dir = newest_subdir(Path(RESULTS_DIR) / dataset_run_name(dataset, "final_test_evaluation"))
@@ -86,18 +96,15 @@ def resolve_artifacts(dataset="cifar10"):
         "E1": {
             "run_name": e1_name,
             "history": require(
-                Path(RESULTS_DIR) / f"{e1_name}.csv",
+                e1_dir / f"{e1_name}.csv",
                 "E1 training history",
             ),
             "metadata": require(
-                Path(RESULTS_DIR) / f"{e1_name}_metadata.json",
+                e1_dir / f"{e1_name}_metadata.json",
                 "E1 metadata",
             ),
             "validation": require(
-                Path(RESULTS_DIR)
-                / "fixed_validation_evaluation"
-                / e1_name
-                / "validation_metrics.json",
+                e1_validation,
                 "E1 validation metrics",
             ),
             "test": require(
@@ -108,18 +115,15 @@ def resolve_artifacts(dataset="cifar10"):
         "E2": {
             "run_name": e2_name,
             "history": require(
-                Path(RESULTS_DIR) / f"{e2_name}.csv",
+                e2_dir / f"{e2_name}.csv",
                 "E2 training history",
             ),
             "metadata": require(
-                Path(RESULTS_DIR) / f"{e2_name}_metadata.json",
+                e2_dir / f"{e2_name}_metadata.json",
                 "E2 metadata",
             ),
             "validation": require(
-                Path(RESULTS_DIR)
-                / "adaptive_batch_validation_evaluation"
-                / e2_name
-                / "validation_metrics.json",
+                e2_validation,
                 "E2 validation metrics",
             ),
             "test": require(

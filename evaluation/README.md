@@ -100,3 +100,9 @@ print(f"Generalization gap: {gap:.2f} percentage points")
 ```
 
 Evaluate both datasets using the same checkpoint. The current `get_train_loader()` applies random augmentation, so it is not suitable for this training-set evaluation. The data/training module owner should provide a loader for the training subset with random augmentation disabled. Do not use training accuracy accumulated while model weights were changing to calculate the final generalization gap. Preserve negative gap values when they occur.
+
+
+Training curve figures show loss and accuracy only against epoch. Both panels overlay
+optional `batch_size` values as a dotted step curve on the right axis, using the
+batch actually used for each epoch, not `next_batch_size`. `run_evaluation`
+preserves this field when converting Trainer history. Accuracy is displayed as a percentage. Legacy histories without batch sizes are supported.

@@ -1,0 +1,849 @@
+
+CIFAR-100 dataset ready
+------------------------------------------------------------
+Training samples:   45,000
+Validation samples: 5,000
+Test samples:       10,000
+
+Training samples per class:
+[450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450]
+
+Validation samples per class:
+[50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
+------------------------------------------------------------
+==============================================================================
+E4: Adaptive Batch Size + Adaptive Learning Rate
+==============================================================================
+Results directory:    /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E4_alpha0.5_ep160/cifar100_adaptive_batch_adaptive_lr_refLR0.01_seed42_pilot160/20261005T082722_651329Z
+Device:               NVIDIA GeForce RTX 5070 Ti Laptop GPU
+Dataset:              CIFAR-100; classes: 100
+Training samples:     45,000
+Validation samples:   5,000
+Epochs:               160
+Initial batch:        32
+Allowed batches:      [32, 64, 128, 256]
+Initial LR:           0.01000000
+Reference LR:         0.01
+LR alpha:             0.5
+LR factor:            0.5
+Warmup epochs:        0
+Pilot run:            True
+==============================================================================
+
+Starting adaptive batch + adaptive LR training
+==============================================================================
+Epoch 01/160 | Train Loss: 4.1571 | Train Acc: 5.92% | Val Loss: 3.9197 | Val Acc: 9.24%  <-- best
+             Grad Mean: 2.1002 | Grad Std: 0.3240 | Grad CV: 0.1542
+             LR: 0.010000 | Batch: 32 | Updates: 1,407 | Time: 4.07s
+             Batch Controller | Stability: N/A | Plateau: False | Next Batch: 32 | Reason: insufficient_gradient_history
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 02/160 | Train Loss: 3.7520 | Train Acc: 11.28% | Val Loss: 3.6621 | Val Acc: 11.68%  <-- best
+             Grad Mean: 2.4831 | Grad Std: 0.3920 | Grad CV: 0.1579
+             LR: 0.010000 | Batch: 32 | Updates: 2,814 | Time: 3.90s
+             Batch Controller | Stability: N/A | Plateau: False | Next Batch: 32 | Reason: insufficient_gradient_history
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 03/160 | Train Loss: 3.4882 | Train Acc: 15.78% | Val Loss: 3.4979 | Val Acc: 15.62%  <-- best
+             Grad Mean: 2.8274 | Grad Std: 0.4552 | Grad CV: 0.1610
+             LR: 0.010000 | Batch: 32 | Updates: 4,221 | Time: 3.82s
+             Batch Controller | Stability: 0.1577 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 04/160 | Train Loss: 3.2997 | Train Acc: 19.31% | Val Loss: 3.4638 | Val Acc: 17.98%  <-- best
+             Grad Mean: 3.0621 | Grad Std: 0.4807 | Grad CV: 0.1570
+             LR: 0.010000 | Batch: 32 | Updates: 5,628 | Time: 3.67s
+             Batch Controller | Stability: 0.1586 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 05/160 | Train Loss: 3.1524 | Train Acc: 21.89% | Val Loss: 3.3760 | Val Acc: 19.02%  <-- best
+             Grad Mean: 3.2283 | Grad Std: 0.5150 | Grad CV: 0.1595
+             LR: 0.010000 | Batch: 32 | Updates: 7,035 | Time: 3.90s
+             Batch Controller | Stability: 0.1592 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 06/160 | Train Loss: 3.0465 | Train Acc: 24.25% | Val Loss: 3.1742 | Val Acc: 21.66%  <-- best
+             Grad Mean: 3.2690 | Grad Std: 0.4914 | Grad CV: 0.1503
+             LR: 0.010000 | Batch: 32 | Updates: 8,442 | Time: 3.82s
+             Batch Controller | Stability: 0.1556 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 07/160 | Train Loss: 2.9556 | Train Acc: 26.02% | Val Loss: 3.1293 | Val Acc: 22.80%  <-- best
+             Grad Mean: 3.3429 | Grad Std: 0.4911 | Grad CV: 0.1469
+             LR: 0.010000 | Batch: 32 | Updates: 9,849 | Time: 4.38s
+             Batch Controller | Stability: 0.1523 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 08/160 | Train Loss: 2.8818 | Train Acc: 27.49% | Val Loss: 3.1515 | Val Acc: 23.30%
+             Grad Mean: 3.3419 | Grad Std: 0.4519 | Grad CV: 0.1352
+             LR: 0.010000 | Batch: 32 | Updates: 11,256 | Time: 4.18s
+             Batch Controller | Stability: 0.1441 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 09/160 | Train Loss: 2.8308 | Train Acc: 28.80% | Val Loss: 3.1092 | Val Acc: 23.76%  <-- best
+             Grad Mean: 3.3668 | Grad Std: 0.4769 | Grad CV: 0.1417
+             LR: 0.010000 | Batch: 32 | Updates: 12,663 | Time: 3.87s
+             Batch Controller | Stability: 0.1413 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 10/160 | Train Loss: 2.7804 | Train Acc: 29.48% | Val Loss: 2.9265 | Val Acc: 26.62%  <-- best
+             Grad Mean: 3.3780 | Grad Std: 0.4534 | Grad CV: 0.1342
+             LR: 0.010000 | Batch: 32 | Updates: 14,070 | Time: 4.08s
+             Batch Controller | Stability: 0.1370 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 11/160 | Train Loss: 2.7294 | Train Acc: 30.68% | Val Loss: 3.0356 | Val Acc: 25.08%
+             Grad Mean: 3.3846 | Grad Std: 0.4214 | Grad CV: 0.1245
+             LR: 0.010000 | Batch: 32 | Updates: 15,477 | Time: 3.63s
+             Batch Controller | Stability: 0.1335 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 12/160 | Train Loss: 2.7015 | Train Acc: 30.94% | Val Loss: 2.9503 | Val Acc: 26.70%
+             Grad Mean: 3.4329 | Grad Std: 0.4645 | Grad CV: 0.1353
+             LR: 0.010000 | Batch: 32 | Updates: 16,884 | Time: 3.86s
+             Batch Controller | Stability: 0.1313 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 13/160 | Train Loss: 2.6598 | Train Acc: 31.73% | Val Loss: 2.8847 | Val Acc: 27.66%  <-- best
+             Grad Mean: 3.4534 | Grad Std: 0.4560 | Grad CV: 0.1321
+             LR: 0.010000 | Batch: 32 | Updates: 18,291 | Time: 3.87s
+             Batch Controller | Stability: 0.1306 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 14/160 | Train Loss: 2.6302 | Train Acc: 32.47% | Val Loss: 2.8623 | Val Acc: 27.68%  <-- best
+             Grad Mean: 3.4437 | Grad Std: 0.4429 | Grad CV: 0.1286
+             LR: 0.010000 | Batch: 32 | Updates: 19,698 | Time: 3.83s
+             Batch Controller | Stability: 0.1320 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 15/160 | Train Loss: 2.6066 | Train Acc: 33.03% | Val Loss: 2.8134 | Val Acc: 29.30%  <-- best
+             Grad Mean: 3.4732 | Grad Std: 0.4468 | Grad CV: 0.1286
+             LR: 0.010000 | Batch: 32 | Updates: 21,105 | Time: 3.86s
+             Batch Controller | Stability: 0.1298 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 16/160 | Train Loss: 2.5752 | Train Acc: 33.69% | Val Loss: 2.8346 | Val Acc: 29.20%
+             Grad Mean: 3.4906 | Grad Std: 0.4535 | Grad CV: 0.1299
+             LR: 0.010000 | Batch: 32 | Updates: 22,512 | Time: 3.89s
+             Batch Controller | Stability: 0.1291 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 17/160 | Train Loss: 2.5588 | Train Acc: 34.00% | Val Loss: 2.8059 | Val Acc: 29.04%  <-- best
+             Grad Mean: 3.4883 | Grad Std: 0.4560 | Grad CV: 0.1307
+             LR: 0.010000 | Batch: 32 | Updates: 23,919 | Time: 4.01s
+             Batch Controller | Stability: 0.1298 | Plateau: False | Next Batch: 32 | Reason: validation_improving
+             LR Controller | Next LR: 0.010000 | Reason: keep
+Epoch 18/160 | Train Loss: 2.5365 | Train Acc: 34.47% | Val Loss: 2.8406 | Val Acc: 29.64%
+             Grad Mean: 3.5079 | Grad Std: 0.4564 | Grad CV: 0.1301
+             LR: 0.010000 | Batch: 32 | Updates: 25,326 | Time: 3.91s
+             Batch Controller | Stability: 0.1303 | Plateau: True | Next Batch: 64 | Reason: plateau_and_stable
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 19/160 | Train Loss: 2.4429 | Train Acc: 36.86% | Val Loss: 2.7669 | Val Acc: 30.02%  <-- best
+             Grad Mean: 2.7380 | Grad Std: 0.4097 | Grad CV: 0.1496
+             LR: 0.014142 | Batch: 64 | Updates: 26,030 | Time: 2.82s
+             Batch Controller | Stability: 0.1368 | Plateau: False | Next Batch: 64 | Reason: cooldown
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 20/160 | Train Loss: 2.4303 | Train Acc: 36.90% | Val Loss: 2.7414 | Val Acc: 31.04%  <-- best
+             Grad Mean: 2.8390 | Grad Std: 0.4246 | Grad CV: 0.1496
+             LR: 0.014142 | Batch: 64 | Updates: 26,734 | Time: 2.78s
+             Batch Controller | Stability: 0.1431 | Plateau: False | Next Batch: 64 | Reason: cooldown
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 21/160 | Train Loss: 2.4197 | Train Acc: 37.31% | Val Loss: 2.6819 | Val Acc: 32.24%  <-- best
+             Grad Mean: 2.8860 | Grad Std: 0.4023 | Grad CV: 0.1394
+             LR: 0.014142 | Batch: 64 | Updates: 27,438 | Time: 2.83s
+             Batch Controller | Stability: 0.1462 | Plateau: False | Next Batch: 64 | Reason: validation_improving
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 22/160 | Train Loss: 2.4028 | Train Acc: 37.34% | Val Loss: 2.6830 | Val Acc: 32.68%
+             Grad Mean: 2.9035 | Grad Std: 0.4259 | Grad CV: 0.1467
+             LR: 0.014142 | Batch: 64 | Updates: 28,142 | Time: 3.04s
+             Batch Controller | Stability: 0.1452 | Plateau: False | Next Batch: 64 | Reason: validation_improving
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 23/160 | Train Loss: 2.3938 | Train Acc: 37.61% | Val Loss: 2.7510 | Val Acc: 30.86%
+             Grad Mean: 2.9554 | Grad Std: 0.3865 | Grad CV: 0.1308
+             LR: 0.014142 | Batch: 64 | Updates: 28,846 | Time: 3.14s
+             Batch Controller | Stability: 0.1389 | Plateau: False | Next Batch: 64 | Reason: validation_improving
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 24/160 | Train Loss: 2.3903 | Train Acc: 37.50% | Val Loss: 2.6980 | Val Acc: 31.96%
+             Grad Mean: 2.9920 | Grad Std: 0.4050 | Grad CV: 0.1354
+             LR: 0.014142 | Batch: 64 | Updates: 29,550 | Time: 3.02s
+             Batch Controller | Stability: 0.1376 | Plateau: True | Next Batch: 128 | Reason: plateau_and_stable
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 25/160 | Train Loss: 2.3137 | Train Acc: 39.50% | Val Loss: 2.5997 | Val Acc: 33.38%  <-- best
+             Grad Mean: 2.3425 | Grad Std: 0.3143 | Grad CV: 0.1342
+             LR: 0.020000 | Batch: 128 | Updates: 29,902 | Time: 2.93s
+             Batch Controller | Stability: 0.1334 | Plateau: False | Next Batch: 128 | Reason: cooldown
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 26/160 | Train Loss: 2.2962 | Train Acc: 39.82% | Val Loss: 2.5986 | Val Acc: 34.72%  <-- best
+             Grad Mean: 2.4252 | Grad Std: 0.3421 | Grad CV: 0.1411
+             LR: 0.020000 | Batch: 128 | Updates: 30,254 | Time: 2.83s
+             Batch Controller | Stability: 0.1369 | Plateau: False | Next Batch: 128 | Reason: cooldown
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 27/160 | Train Loss: 2.2856 | Train Acc: 39.92% | Val Loss: 2.5468 | Val Acc: 34.62%  <-- best
+             Grad Mean: 2.4620 | Grad Std: 0.3242 | Grad CV: 0.1317
+             LR: 0.020000 | Batch: 128 | Updates: 30,606 | Time: 2.77s
+             Batch Controller | Stability: 0.1356 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 28/160 | Train Loss: 2.2836 | Train Acc: 40.04% | Val Loss: 2.6463 | Val Acc: 33.86%
+             Grad Mean: 2.5125 | Grad Std: 0.3419 | Grad CV: 0.1361
+             LR: 0.020000 | Batch: 128 | Updates: 30,958 | Time: 2.68s
+             Batch Controller | Stability: 0.1363 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 29/160 | Train Loss: 2.2795 | Train Acc: 40.37% | Val Loss: 2.5860 | Val Acc: 33.76%
+             Grad Mean: 2.5522 | Grad Std: 0.3593 | Grad CV: 0.1408
+             LR: 0.020000 | Batch: 128 | Updates: 31,310 | Time: 2.70s
+             Batch Controller | Stability: 0.1362 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 30/160 | Train Loss: 2.2826 | Train Acc: 39.88% | Val Loss: 2.5122 | Val Acc: 34.92%  <-- best
+             Grad Mean: 2.6051 | Grad Std: 0.3655 | Grad CV: 0.1403
+             LR: 0.020000 | Batch: 128 | Updates: 31,662 | Time: 2.68s
+             Batch Controller | Stability: 0.1391 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 31/160 | Train Loss: 2.2658 | Train Acc: 40.52% | Val Loss: 2.5617 | Val Acc: 34.14%
+             Grad Mean: 2.5593 | Grad Std: 0.3672 | Grad CV: 0.1435
+             LR: 0.020000 | Batch: 128 | Updates: 32,014 | Time: 2.60s
+             Batch Controller | Stability: 0.1415 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 32/160 | Train Loss: 2.2548 | Train Acc: 40.74% | Val Loss: 2.5561 | Val Acc: 34.52%
+             Grad Mean: 2.5589 | Grad Std: 0.3503 | Grad CV: 0.1369
+             LR: 0.020000 | Batch: 128 | Updates: 32,366 | Time: 2.61s
+             Batch Controller | Stability: 0.1402 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 33/160 | Train Loss: 2.2546 | Train Acc: 40.56% | Val Loss: 2.5002 | Val Acc: 36.34%  <-- best
+             Grad Mean: 2.6453 | Grad Std: 0.3938 | Grad CV: 0.1489
+             LR: 0.020000 | Batch: 128 | Updates: 32,718 | Time: 2.75s
+             Batch Controller | Stability: 0.1431 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 34/160 | Train Loss: 2.2570 | Train Acc: 40.66% | Val Loss: 2.5572 | Val Acc: 34.44%
+             Grad Mean: 2.6583 | Grad Std: 0.3619 | Grad CV: 0.1361
+             LR: 0.020000 | Batch: 128 | Updates: 33,070 | Time: 2.80s
+             Batch Controller | Stability: 0.1406 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 35/160 | Train Loss: 2.2502 | Train Acc: 40.72% | Val Loss: 2.4858 | Val Acc: 36.56%  <-- best
+             Grad Mean: 2.6574 | Grad Std: 0.3789 | Grad CV: 0.1426
+             LR: 0.020000 | Batch: 128 | Updates: 33,422 | Time: 2.71s
+             Batch Controller | Stability: 0.1425 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 36/160 | Train Loss: 2.2437 | Train Acc: 41.03% | Val Loss: 2.4886 | Val Acc: 36.82%
+             Grad Mean: 2.6685 | Grad Std: 0.3912 | Grad CV: 0.1466
+             LR: 0.020000 | Batch: 128 | Updates: 33,774 | Time: 2.75s
+             Batch Controller | Stability: 0.1418 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 37/160 | Train Loss: 2.2253 | Train Acc: 41.48% | Val Loss: 2.5397 | Val Acc: 35.26%
+             Grad Mean: 2.6568 | Grad Std: 0.3701 | Grad CV: 0.1393
+             LR: 0.020000 | Batch: 128 | Updates: 34,126 | Time: 2.81s
+             Batch Controller | Stability: 0.1428 | Plateau: False | Next Batch: 128 | Reason: validation_improving
+             LR Controller | Next LR: 0.020000 | Reason: keep
+Epoch 38/160 | Train Loss: 2.2254 | Train Acc: 41.18% | Val Loss: 2.6166 | Val Acc: 33.80%
+             Grad Mean: 2.6573 | Grad Std: 0.3474 | Grad CV: 0.1307
+             LR: 0.020000 | Batch: 128 | Updates: 34,478 | Time: 2.84s
+             Batch Controller | Stability: 0.1389 | Plateau: True | Next Batch: 256 | Reason: plateau_and_stable
+             LR Controller | Next LR: 0.028284 | Reason: keep
+Epoch 39/160 | Train Loss: 2.1744 | Train Acc: 42.40% | Val Loss: 2.4881 | Val Acc: 36.44%
+             Grad Mean: 2.2111 | Grad Std: 0.3645 | Grad CV: 0.1649
+             LR: 0.028284 | Batch: 256 | Updates: 34,654 | Time: 2.51s
+             Batch Controller | Stability: 0.1450 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.028284 | Reason: keep
+Epoch 40/160 | Train Loss: 2.1538 | Train Acc: 43.02% | Val Loss: 2.5142 | Val Acc: 35.60%
+             Grad Mean: 2.2526 | Grad Std: 0.2789 | Grad CV: 0.1238
+             LR: 0.028284 | Batch: 256 | Updates: 34,830 | Time: 2.49s
+             Batch Controller | Stability: 0.1398 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.028284 | Reason: keep
+Epoch 41/160 | Train Loss: 2.1601 | Train Acc: 42.95% | Val Loss: 2.5895 | Val Acc: 34.88%
+             Grad Mean: 2.3040 | Grad Std: 0.3241 | Grad CV: 0.1407
+             LR: 0.028284 | Batch: 256 | Updates: 35,006 | Time: 2.47s
+             Batch Controller | Stability: 0.1431 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.014142 | Reason: worsening_decay
+Epoch 42/160 | Train Loss: 2.0620 | Train Acc: 45.29% | Val Loss: 2.3307 | Val Acc: 40.16%  <-- best
+             Grad Mean: 2.1119 | Grad Std: 0.3033 | Grad CV: 0.1436
+             LR: 0.014142 | Batch: 256 | Updates: 35,182 | Time: 2.43s
+             Batch Controller | Stability: 0.1360 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.014142 | Reason: cooldown
+Epoch 43/160 | Train Loss: 2.0529 | Train Acc: 45.48% | Val Loss: 2.3568 | Val Acc: 39.12%
+             Grad Mean: 2.2212 | Grad Std: 0.3122 | Grad CV: 0.1406
+             LR: 0.014142 | Batch: 256 | Updates: 35,358 | Time: 2.39s
+             Batch Controller | Stability: 0.1416 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.014142 | Reason: cooldown
+Epoch 44/160 | Train Loss: 2.0384 | Train Acc: 45.75% | Val Loss: 2.4438 | Val Acc: 37.80%
+             Grad Mean: 2.2223 | Grad Std: 0.2977 | Grad CV: 0.1340
+             LR: 0.014142 | Batch: 256 | Updates: 35,534 | Time: 2.47s
+             Batch Controller | Stability: 0.1394 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 45/160 | Train Loss: 2.0470 | Train Acc: 45.51% | Val Loss: 2.3821 | Val Acc: 38.30%
+             Grad Mean: 2.3748 | Grad Std: 0.3864 | Grad CV: 0.1627
+             LR: 0.014142 | Batch: 256 | Updates: 35,710 | Time: 2.49s
+             Batch Controller | Stability: 0.1458 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 46/160 | Train Loss: 2.0304 | Train Acc: 45.80% | Val Loss: 2.3552 | Val Acc: 40.10%
+             Grad Mean: 2.2492 | Grad Std: 0.2857 | Grad CV: 0.1270
+             LR: 0.014142 | Batch: 256 | Updates: 35,886 | Time: 2.51s
+             Batch Controller | Stability: 0.1412 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 47/160 | Train Loss: 2.0316 | Train Acc: 45.80% | Val Loss: 2.3693 | Val Acc: 38.68%
+             Grad Mean: 2.3677 | Grad Std: 0.3042 | Grad CV: 0.1285
+             LR: 0.014142 | Batch: 256 | Updates: 36,062 | Time: 2.57s
+             Batch Controller | Stability: 0.1394 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.014142 | Reason: keep
+Epoch 48/160 | Train Loss: 2.0272 | Train Acc: 45.95% | Val Loss: 2.3988 | Val Acc: 38.46%
+             Grad Mean: 2.4072 | Grad Std: 0.3337 | Grad CV: 0.1386
+             LR: 0.014142 | Batch: 256 | Updates: 36,238 | Time: 2.49s
+             Batch Controller | Stability: 0.1314 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: worsening_decay
+Epoch 49/160 | Train Loss: 1.9729 | Train Acc: 47.26% | Val Loss: 2.3401 | Val Acc: 39.70%
+             Grad Mean: 2.2353 | Grad Std: 0.2668 | Grad CV: 0.1194
+             LR: 0.007071 | Batch: 256 | Updates: 36,414 | Time: 2.58s
+             Batch Controller | Stability: 0.1288 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: cooldown
+Epoch 50/160 | Train Loss: 1.9575 | Train Acc: 47.83% | Val Loss: 2.3874 | Val Acc: 38.78%
+             Grad Mean: 2.2318 | Grad Std: 0.2398 | Grad CV: 0.1074
+             LR: 0.007071 | Batch: 256 | Updates: 36,590 | Time: 2.60s
+             Batch Controller | Stability: 0.1218 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: cooldown
+Epoch 51/160 | Train Loss: 1.9643 | Train Acc: 47.82% | Val Loss: 2.3229 | Val Acc: 40.32%  <-- best
+             Grad Mean: 2.3816 | Grad Std: 0.3120 | Grad CV: 0.1310
+             LR: 0.007071 | Batch: 256 | Updates: 36,766 | Time: 2.55s
+             Batch Controller | Stability: 0.1193 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 52/160 | Train Loss: 1.9528 | Train Acc: 47.69% | Val Loss: 2.3393 | Val Acc: 39.82%
+             Grad Mean: 2.2661 | Grad Std: 0.2641 | Grad CV: 0.1165
+             LR: 0.007071 | Batch: 256 | Updates: 36,942 | Time: 2.49s
+             Batch Controller | Stability: 0.1183 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 53/160 | Train Loss: 1.9584 | Train Acc: 47.71% | Val Loss: 2.4154 | Val Acc: 38.38%
+             Grad Mean: 2.4611 | Grad Std: 0.3150 | Grad CV: 0.1280
+             LR: 0.007071 | Batch: 256 | Updates: 37,118 | Time: 2.49s
+             Batch Controller | Stability: 0.1252 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 54/160 | Train Loss: 1.9560 | Train Acc: 47.74% | Val Loss: 2.3231 | Val Acc: 39.98%
+             Grad Mean: 2.4623 | Grad Std: 0.2748 | Grad CV: 0.1116
+             LR: 0.007071 | Batch: 256 | Updates: 37,294 | Time: 2.49s
+             Batch Controller | Stability: 0.1187 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 55/160 | Train Loss: 1.9476 | Train Acc: 47.82% | Val Loss: 2.3641 | Val Acc: 39.30%
+             Grad Mean: 2.4394 | Grad Std: 0.3099 | Grad CV: 0.1270
+             LR: 0.007071 | Batch: 256 | Updates: 37,470 | Time: 2.50s
+             Batch Controller | Stability: 0.1222 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 56/160 | Train Loss: 1.9423 | Train Acc: 47.94% | Val Loss: 2.3122 | Val Acc: 40.40%  <-- best
+             Grad Mean: 2.4420 | Grad Std: 0.2863 | Grad CV: 0.1172
+             LR: 0.007071 | Batch: 256 | Updates: 37,646 | Time: 2.46s
+             Batch Controller | Stability: 0.1186 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 57/160 | Train Loss: 1.9513 | Train Acc: 47.73% | Val Loss: 2.2934 | Val Acc: 40.50%  <-- best
+             Grad Mean: 2.5898 | Grad Std: 0.3059 | Grad CV: 0.1181
+             LR: 0.007071 | Batch: 256 | Updates: 37,822 | Time: 2.43s
+             Batch Controller | Stability: 0.1208 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 58/160 | Train Loss: 1.9452 | Train Acc: 47.82% | Val Loss: 2.2986 | Val Acc: 40.78%
+             Grad Mean: 2.5937 | Grad Std: 0.3648 | Grad CV: 0.1407
+             LR: 0.007071 | Batch: 256 | Updates: 37,998 | Time: 2.50s
+             Batch Controller | Stability: 0.1253 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 59/160 | Train Loss: 1.9492 | Train Acc: 47.96% | Val Loss: 2.2745 | Val Acc: 41.08%  <-- best
+             Grad Mean: 2.6387 | Grad Std: 0.3938 | Grad CV: 0.1492
+             LR: 0.007071 | Batch: 256 | Updates: 38,174 | Time: 2.49s
+             Batch Controller | Stability: 0.1360 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 60/160 | Train Loss: 1.9361 | Train Acc: 48.32% | Val Loss: 2.3229 | Val Acc: 39.92%
+             Grad Mean: 2.5851 | Grad Std: 0.3250 | Grad CV: 0.1257
+             LR: 0.007071 | Batch: 256 | Updates: 38,350 | Time: 2.48s
+             Batch Controller | Stability: 0.1385 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 61/160 | Train Loss: 1.9376 | Train Acc: 48.39% | Val Loss: 2.3502 | Val Acc: 40.04%
+             Grad Mean: 2.6193 | Grad Std: 0.3564 | Grad CV: 0.1361
+             LR: 0.007071 | Batch: 256 | Updates: 38,526 | Time: 2.48s
+             Batch Controller | Stability: 0.1370 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 62/160 | Train Loss: 1.9350 | Train Acc: 48.21% | Val Loss: 2.3232 | Val Acc: 39.94%
+             Grad Mean: 2.6351 | Grad Std: 0.3401 | Grad CV: 0.1291
+             LR: 0.007071 | Batch: 256 | Updates: 38,702 | Time: 2.57s
+             Batch Controller | Stability: 0.1303 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 63/160 | Train Loss: 1.9303 | Train Acc: 48.31% | Val Loss: 2.3215 | Val Acc: 39.88%
+             Grad Mean: 2.6226 | Grad Std: 0.3004 | Grad CV: 0.1145
+             LR: 0.007071 | Batch: 256 | Updates: 38,878 | Time: 2.58s
+             Batch Controller | Stability: 0.1266 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.007071 | Reason: keep
+Epoch 64/160 | Train Loss: 1.9307 | Train Acc: 48.43% | Val Loss: 2.3388 | Val Acc: 39.82%
+             Grad Mean: 2.6934 | Grad Std: 0.3439 | Grad CV: 0.1277
+             LR: 0.007071 | Batch: 256 | Updates: 39,054 | Time: 2.50s
+             Batch Controller | Stability: 0.1238 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: worsening_decay
+Epoch 65/160 | Train Loss: 1.8926 | Train Acc: 49.42% | Val Loss: 2.3056 | Val Acc: 40.62%
+             Grad Mean: 2.5435 | Grad Std: 0.3013 | Grad CV: 0.1185
+             LR: 0.003536 | Batch: 256 | Updates: 39,230 | Time: 2.48s
+             Batch Controller | Stability: 0.1202 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: cooldown
+Epoch 66/160 | Train Loss: 1.8878 | Train Acc: 49.48% | Val Loss: 2.2674 | Val Acc: 41.58%  <-- best
+             Grad Mean: 2.4994 | Grad Std: 0.2835 | Grad CV: 0.1134
+             LR: 0.003536 | Batch: 256 | Updates: 39,406 | Time: 2.49s
+             Batch Controller | Stability: 0.1199 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: cooldown
+Epoch 67/160 | Train Loss: 1.8835 | Train Acc: 49.50% | Val Loss: 2.2790 | Val Acc: 40.92%
+             Grad Mean: 2.5420 | Grad Std: 0.2756 | Grad CV: 0.1084
+             LR: 0.003536 | Batch: 256 | Updates: 39,582 | Time: 2.56s
+             Batch Controller | Stability: 0.1134 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: keep
+Epoch 68/160 | Train Loss: 1.8866 | Train Acc: 49.40% | Val Loss: 2.2788 | Val Acc: 40.86%
+             Grad Mean: 2.5872 | Grad Std: 0.2834 | Grad CV: 0.1095
+             LR: 0.003536 | Batch: 256 | Updates: 39,758 | Time: 2.44s
+             Batch Controller | Stability: 0.1105 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: keep
+Epoch 69/160 | Train Loss: 1.8890 | Train Acc: 49.65% | Val Loss: 2.2691 | Val Acc: 41.10%
+             Grad Mean: 2.6783 | Grad Std: 0.3224 | Grad CV: 0.1204
+             LR: 0.003536 | Batch: 256 | Updates: 39,934 | Time: 2.45s
+             Batch Controller | Stability: 0.1128 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: keep
+Epoch 70/160 | Train Loss: 1.8776 | Train Acc: 49.60% | Val Loss: 2.2546 | Val Acc: 41.44%  <-- best
+             Grad Mean: 2.5758 | Grad Std: 0.2752 | Grad CV: 0.1069
+             LR: 0.003536 | Batch: 256 | Updates: 40,110 | Time: 2.51s
+             Batch Controller | Stability: 0.1123 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: keep
+Epoch 71/160 | Train Loss: 1.8814 | Train Acc: 49.58% | Val Loss: 2.2951 | Val Acc: 40.94%
+             Grad Mean: 2.6604 | Grad Std: 0.3216 | Grad CV: 0.1209
+             LR: 0.003536 | Batch: 256 | Updates: 40,286 | Time: 2.50s
+             Batch Controller | Stability: 0.1160 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: keep
+Epoch 72/160 | Train Loss: 1.8740 | Train Acc: 49.58% | Val Loss: 2.3037 | Val Acc: 41.06%
+             Grad Mean: 2.6464 | Grad Std: 0.3125 | Grad CV: 0.1181
+             LR: 0.003536 | Batch: 256 | Updates: 40,462 | Time: 2.52s
+             Batch Controller | Stability: 0.1153 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: keep
+Epoch 73/160 | Train Loss: 1.8740 | Train Acc: 49.93% | Val Loss: 2.2906 | Val Acc: 40.50%
+             Grad Mean: 2.6592 | Grad Std: 0.2874 | Grad CV: 0.1081
+             LR: 0.003536 | Batch: 256 | Updates: 40,638 | Time: 2.48s
+             Batch Controller | Stability: 0.1157 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: keep
+Epoch 74/160 | Train Loss: 1.8804 | Train Acc: 49.31% | Val Loss: 2.2710 | Val Acc: 41.34%
+             Grad Mean: 2.7621 | Grad Std: 0.3088 | Grad CV: 0.1118
+             LR: 0.003536 | Batch: 256 | Updates: 40,814 | Time: 2.53s
+             Batch Controller | Stability: 0.1127 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.003536 | Reason: keep
+Epoch 75/160 | Train Loss: 1.8755 | Train Acc: 49.99% | Val Loss: 2.2673 | Val Acc: 41.20%
+             Grad Mean: 2.7345 | Grad Std: 0.3172 | Grad CV: 0.1160
+             LR: 0.003536 | Batch: 256 | Updates: 40,990 | Time: 2.60s
+             Batch Controller | Stability: 0.1120 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: worsening_decay
+Epoch 76/160 | Train Loss: 1.8538 | Train Acc: 50.31% | Val Loss: 2.2755 | Val Acc: 41.40%
+             Grad Mean: 2.5798 | Grad Std: 0.2704 | Grad CV: 0.1048
+             LR: 0.001768 | Batch: 256 | Updates: 41,166 | Time: 2.55s
+             Batch Controller | Stability: 0.1109 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: cooldown
+Epoch 77/160 | Train Loss: 1.8489 | Train Acc: 50.49% | Val Loss: 2.2575 | Val Acc: 41.50%
+             Grad Mean: 2.5461 | Grad Std: 0.2828 | Grad CV: 0.1111
+             LR: 0.001768 | Batch: 256 | Updates: 41,342 | Time: 2.50s
+             Batch Controller | Stability: 0.1106 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: cooldown
+Epoch 78/160 | Train Loss: 1.8445 | Train Acc: 50.45% | Val Loss: 2.2620 | Val Acc: 41.48%
+             Grad Mean: 2.6312 | Grad Std: 0.2836 | Grad CV: 0.1078
+             LR: 0.001768 | Batch: 256 | Updates: 41,518 | Time: 2.52s
+             Batch Controller | Stability: 0.1079 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: keep
+Epoch 79/160 | Train Loss: 1.8423 | Train Acc: 50.43% | Val Loss: 2.2267 | Val Acc: 41.52%  <-- best
+             Grad Mean: 2.6490 | Grad Std: 0.2813 | Grad CV: 0.1062
+             LR: 0.001768 | Batch: 256 | Updates: 41,694 | Time: 2.49s
+             Batch Controller | Stability: 0.1084 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: keep
+Epoch 80/160 | Train Loss: 1.8425 | Train Acc: 50.60% | Val Loss: 2.2313 | Val Acc: 42.42%
+             Grad Mean: 2.6519 | Grad Std: 0.3050 | Grad CV: 0.1150
+             LR: 0.001768 | Batch: 256 | Updates: 41,870 | Time: 2.47s
+             Batch Controller | Stability: 0.1097 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: keep
+Epoch 81/160 | Train Loss: 1.8414 | Train Acc: 50.62% | Val Loss: 2.2665 | Val Acc: 41.34%
+             Grad Mean: 2.6470 | Grad Std: 0.2872 | Grad CV: 0.1085
+             LR: 0.001768 | Batch: 256 | Updates: 42,046 | Time: 2.43s
+             Batch Controller | Stability: 0.1099 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: keep
+Epoch 82/160 | Train Loss: 1.8417 | Train Acc: 50.32% | Val Loss: 2.2441 | Val Acc: 41.30%
+             Grad Mean: 2.6748 | Grad Std: 0.2833 | Grad CV: 0.1059
+             LR: 0.001768 | Batch: 256 | Updates: 42,222 | Time: 2.44s
+             Batch Controller | Stability: 0.1098 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: keep
+Epoch 83/160 | Train Loss: 1.8427 | Train Acc: 50.57% | Val Loss: 2.2545 | Val Acc: 41.86%
+             Grad Mean: 2.6679 | Grad Std: 0.2598 | Grad CV: 0.0974
+             LR: 0.001768 | Batch: 256 | Updates: 42,398 | Time: 2.47s
+             Batch Controller | Stability: 0.1039 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: keep
+Epoch 84/160 | Train Loss: 1.8395 | Train Acc: 50.70% | Val Loss: 2.2439 | Val Acc: 41.60%
+             Grad Mean: 2.6835 | Grad Std: 0.2978 | Grad CV: 0.1110
+             LR: 0.001768 | Batch: 256 | Updates: 42,574 | Time: 2.48s
+             Batch Controller | Stability: 0.1048 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.001768 | Reason: keep
+Epoch 85/160 | Train Loss: 1.8423 | Train Acc: 50.56% | Val Loss: 2.2357 | Val Acc: 42.32%
+             Grad Mean: 2.7275 | Grad Std: 0.2752 | Grad CV: 0.1009
+             LR: 0.001768 | Batch: 256 | Updates: 42,750 | Time: 2.50s
+             Batch Controller | Stability: 0.1031 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000884 | Reason: worsening_decay
+Epoch 86/160 | Train Loss: 1.8257 | Train Acc: 51.18% | Val Loss: 2.2183 | Val Acc: 42.38%  <-- best
+             Grad Mean: 2.5423 | Grad Std: 0.2321 | Grad CV: 0.0913
+             LR: 0.000884 | Batch: 256 | Updates: 42,926 | Time: 2.51s
+             Batch Controller | Stability: 0.1011 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000884 | Reason: cooldown
+Epoch 87/160 | Train Loss: 1.8215 | Train Acc: 51.16% | Val Loss: 2.2390 | Val Acc: 41.90%
+             Grad Mean: 2.6020 | Grad Std: 0.2421 | Grad CV: 0.0930
+             LR: 0.000884 | Batch: 256 | Updates: 43,102 | Time: 2.50s
+             Batch Controller | Stability: 0.0951 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000884 | Reason: cooldown
+Epoch 88/160 | Train Loss: 1.8239 | Train Acc: 51.08% | Val Loss: 2.2274 | Val Acc: 41.94%
+             Grad Mean: 2.6704 | Grad Std: 0.3004 | Grad CV: 0.1125
+             LR: 0.000884 | Batch: 256 | Updates: 43,278 | Time: 2.53s
+             Batch Controller | Stability: 0.0989 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000884 | Reason: keep
+Epoch 89/160 | Train Loss: 1.8259 | Train Acc: 51.14% | Val Loss: 2.2355 | Val Acc: 41.72%
+             Grad Mean: 2.5993 | Grad Std: 0.2485 | Grad CV: 0.0956
+             LR: 0.000884 | Batch: 256 | Updates: 43,454 | Time: 2.58s
+             Batch Controller | Stability: 0.1004 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000884 | Reason: keep
+Epoch 90/160 | Train Loss: 1.8237 | Train Acc: 51.13% | Val Loss: 2.2239 | Val Acc: 42.16%
+             Grad Mean: 2.6226 | Grad Std: 0.2401 | Grad CV: 0.0916
+             LR: 0.000884 | Batch: 256 | Updates: 43,630 | Time: 2.57s
+             Batch Controller | Stability: 0.0999 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000884 | Reason: keep
+Epoch 91/160 | Train Loss: 1.8204 | Train Acc: 51.07% | Val Loss: 2.2253 | Val Acc: 41.96%
+             Grad Mean: 2.6661 | Grad Std: 0.2811 | Grad CV: 0.1054
+             LR: 0.000884 | Batch: 256 | Updates: 43,806 | Time: 2.42s
+             Batch Controller | Stability: 0.0975 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000884 | Reason: keep
+Epoch 92/160 | Train Loss: 1.8205 | Train Acc: 51.15% | Val Loss: 2.2285 | Val Acc: 42.14%
+             Grad Mean: 2.6451 | Grad Std: 0.2578 | Grad CV: 0.0975
+             LR: 0.000884 | Batch: 256 | Updates: 43,982 | Time: 2.50s
+             Batch Controller | Stability: 0.0982 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: worsening_decay
+Epoch 93/160 | Train Loss: 1.8143 | Train Acc: 51.37% | Val Loss: 2.2178 | Val Acc: 42.52%  <-- best
+             Grad Mean: 2.5953 | Grad Std: 0.2424 | Grad CV: 0.0934
+             LR: 0.000442 | Batch: 256 | Updates: 44,158 | Time: 2.45s
+             Batch Controller | Stability: 0.0988 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: cooldown
+Epoch 94/160 | Train Loss: 1.8169 | Train Acc: 51.11% | Val Loss: 2.2251 | Val Acc: 42.32%
+             Grad Mean: 2.5748 | Grad Std: 0.2532 | Grad CV: 0.0983
+             LR: 0.000442 | Batch: 256 | Updates: 44,334 | Time: 2.50s
+             Batch Controller | Stability: 0.0964 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: cooldown
+Epoch 95/160 | Train Loss: 1.8113 | Train Acc: 51.43% | Val Loss: 2.2256 | Val Acc: 42.44%
+             Grad Mean: 2.5561 | Grad Std: 0.2553 | Grad CV: 0.0999
+             LR: 0.000442 | Batch: 256 | Updates: 44,510 | Time: 2.50s
+             Batch Controller | Stability: 0.0972 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 96/160 | Train Loss: 1.8135 | Train Acc: 51.45% | Val Loss: 2.2227 | Val Acc: 42.52%
+             Grad Mean: 2.5577 | Grad Std: 0.2332 | Grad CV: 0.0912
+             LR: 0.000442 | Batch: 256 | Updates: 44,686 | Time: 2.49s
+             Batch Controller | Stability: 0.0965 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 97/160 | Train Loss: 1.8145 | Train Acc: 51.44% | Val Loss: 2.2167 | Val Acc: 42.50%  <-- best
+             Grad Mean: 2.6217 | Grad Std: 0.2492 | Grad CV: 0.0951
+             LR: 0.000442 | Batch: 256 | Updates: 44,862 | Time: 2.51s
+             Batch Controller | Stability: 0.0954 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 98/160 | Train Loss: 1.8107 | Train Acc: 51.49% | Val Loss: 2.2181 | Val Acc: 42.60%
+             Grad Mean: 2.6138 | Grad Std: 0.2161 | Grad CV: 0.0827
+             LR: 0.000442 | Batch: 256 | Updates: 45,038 | Time: 2.51s
+             Batch Controller | Stability: 0.0896 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 99/160 | Train Loss: 1.8138 | Train Acc: 51.42% | Val Loss: 2.2138 | Val Acc: 42.28%  <-- best
+             Grad Mean: 2.6228 | Grad Std: 0.2208 | Grad CV: 0.0842
+             LR: 0.000442 | Batch: 256 | Updates: 45,214 | Time: 2.53s
+             Batch Controller | Stability: 0.0873 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 100/160 | Train Loss: 1.8122 | Train Acc: 51.44% | Val Loss: 2.2219 | Val Acc: 42.44%
+             Grad Mean: 2.5833 | Grad Std: 0.2491 | Grad CV: 0.0964
+             LR: 0.000442 | Batch: 256 | Updates: 45,390 | Time: 2.55s
+             Batch Controller | Stability: 0.0878 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 101/160 | Train Loss: 1.8123 | Train Acc: 51.16% | Val Loss: 2.2172 | Val Acc: 42.48%
+             Grad Mean: 2.6491 | Grad Std: 0.2792 | Grad CV: 0.1054
+             LR: 0.000442 | Batch: 256 | Updates: 45,566 | Time: 2.70s
+             Batch Controller | Stability: 0.0953 | Plateau: False | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 102/160 | Train Loss: 1.8117 | Train Acc: 51.29% | Val Loss: 2.2223 | Val Acc: 42.32%
+             Grad Mean: 2.6487 | Grad Std: 0.2890 | Grad CV: 0.1091
+             LR: 0.000442 | Batch: 256 | Updates: 45,742 | Time: 2.51s
+             Batch Controller | Stability: 0.1036 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 103/160 | Train Loss: 1.8122 | Train Acc: 51.41% | Val Loss: 2.2291 | Val Acc: 42.00%
+             Grad Mean: 2.6174 | Grad Std: 0.2137 | Grad CV: 0.0816
+             LR: 0.000442 | Batch: 256 | Updates: 45,918 | Time: 2.49s
+             Batch Controller | Stability: 0.0987 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000442 | Reason: keep
+Epoch 104/160 | Train Loss: 1.8119 | Train Acc: 51.27% | Val Loss: 2.2386 | Val Acc: 42.00%
+             Grad Mean: 2.6127 | Grad Std: 0.2694 | Grad CV: 0.1031
+             LR: 0.000442 | Batch: 256 | Updates: 46,094 | Time: 2.47s
+             Batch Controller | Stability: 0.0980 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000221 | Reason: worsening_decay
+Epoch 105/160 | Train Loss: 1.8109 | Train Acc: 51.48% | Val Loss: 2.2135 | Val Acc: 42.32%  <-- best
+             Grad Mean: 2.6064 | Grad Std: 0.2546 | Grad CV: 0.0977
+             LR: 0.000221 | Batch: 256 | Updates: 46,270 | Time: 2.45s
+             Batch Controller | Stability: 0.0941 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000221 | Reason: cooldown
+Epoch 106/160 | Train Loss: 1.8077 | Train Acc: 51.55% | Val Loss: 2.2113 | Val Acc: 42.32%  <-- best
+             Grad Mean: 2.6281 | Grad Std: 0.2566 | Grad CV: 0.0976
+             LR: 0.000221 | Batch: 256 | Updates: 46,446 | Time: 2.48s
+             Batch Controller | Stability: 0.0995 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000221 | Reason: cooldown
+Epoch 107/160 | Train Loss: 1.8071 | Train Acc: 51.50% | Val Loss: 2.2204 | Val Acc: 42.54%
+             Grad Mean: 2.5754 | Grad Std: 0.2237 | Grad CV: 0.0869
+             LR: 0.000221 | Batch: 256 | Updates: 46,622 | Time: 2.45s
+             Batch Controller | Stability: 0.0941 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000221 | Reason: keep
+Epoch 108/160 | Train Loss: 1.8056 | Train Acc: 51.36% | Val Loss: 2.2224 | Val Acc: 42.36%
+             Grad Mean: 2.6026 | Grad Std: 0.2790 | Grad CV: 0.1072
+             LR: 0.000221 | Batch: 256 | Updates: 46,798 | Time: 2.44s
+             Batch Controller | Stability: 0.0972 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000221 | Reason: keep
+Epoch 109/160 | Train Loss: 1.8063 | Train Acc: 51.51% | Val Loss: 2.2171 | Val Acc: 42.44%
+             Grad Mean: 2.5943 | Grad Std: 0.2182 | Grad CV: 0.0841
+             LR: 0.000221 | Batch: 256 | Updates: 46,974 | Time: 2.48s
+             Batch Controller | Stability: 0.0927 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000221 | Reason: keep
+Epoch 110/160 | Train Loss: 1.8050 | Train Acc: 51.47% | Val Loss: 2.2215 | Val Acc: 42.42%
+             Grad Mean: 2.5801 | Grad Std: 0.2438 | Grad CV: 0.0945
+             LR: 0.000221 | Batch: 256 | Updates: 47,150 | Time: 2.49s
+             Batch Controller | Stability: 0.0953 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000221 | Reason: keep
+Epoch 111/160 | Train Loss: 1.8107 | Train Acc: 51.41% | Val Loss: 2.2198 | Val Acc: 42.52%
+             Grad Mean: 2.6212 | Grad Std: 0.2585 | Grad CV: 0.0986
+             LR: 0.000221 | Batch: 256 | Updates: 47,326 | Time: 2.52s
+             Batch Controller | Stability: 0.0924 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000110 | Reason: worsening_decay
+Epoch 112/160 | Train Loss: 1.8057 | Train Acc: 51.57% | Val Loss: 2.2204 | Val Acc: 42.08%
+             Grad Mean: 2.5640 | Grad Std: 0.2195 | Grad CV: 0.0856
+             LR: 0.000110 | Batch: 256 | Updates: 47,502 | Time: 2.54s
+             Batch Controller | Stability: 0.0929 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000110 | Reason: cooldown
+Epoch 113/160 | Train Loss: 1.8044 | Train Acc: 51.53% | Val Loss: 2.2153 | Val Acc: 42.62%
+             Grad Mean: 2.5795 | Grad Std: 0.2232 | Grad CV: 0.0865
+             LR: 0.000110 | Batch: 256 | Updates: 47,678 | Time: 2.57s
+             Batch Controller | Stability: 0.0903 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000110 | Reason: cooldown
+Epoch 114/160 | Train Loss: 1.8035 | Train Acc: 51.52% | Val Loss: 2.2178 | Val Acc: 42.58%
+             Grad Mean: 2.6059 | Grad Std: 0.2357 | Grad CV: 0.0904
+             LR: 0.000110 | Batch: 256 | Updates: 47,854 | Time: 2.53s
+             Batch Controller | Stability: 0.0875 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000110 | Reason: keep
+Epoch 115/160 | Train Loss: 1.8013 | Train Acc: 51.67% | Val Loss: 2.2189 | Val Acc: 42.40%
+             Grad Mean: 2.5597 | Grad Std: 0.2286 | Grad CV: 0.0893
+             LR: 0.000110 | Batch: 256 | Updates: 48,030 | Time: 2.54s
+             Batch Controller | Stability: 0.0888 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000110 | Reason: keep
+Epoch 116/160 | Train Loss: 1.8035 | Train Acc: 51.48% | Val Loss: 2.2213 | Val Acc: 42.28%
+             Grad Mean: 2.5873 | Grad Std: 0.2020 | Grad CV: 0.0781
+             LR: 0.000110 | Batch: 256 | Updates: 48,206 | Time: 2.50s
+             Batch Controller | Stability: 0.0859 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000110 | Reason: keep
+Epoch 117/160 | Train Loss: 1.8050 | Train Acc: 51.47% | Val Loss: 2.2190 | Val Acc: 42.48%
+             Grad Mean: 2.5826 | Grad Std: 0.2531 | Grad CV: 0.0980
+             LR: 0.000110 | Batch: 256 | Updates: 48,382 | Time: 2.50s
+             Batch Controller | Stability: 0.0885 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000110 | Reason: keep
+Epoch 118/160 | Train Loss: 1.8022 | Train Acc: 51.64% | Val Loss: 2.2126 | Val Acc: 42.58%
+             Grad Mean: 2.6018 | Grad Std: 0.2494 | Grad CV: 0.0959
+             LR: 0.000110 | Batch: 256 | Updates: 48,558 | Time: 2.49s
+             Batch Controller | Stability: 0.0906 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000055 | Reason: worsening_decay
+Epoch 119/160 | Train Loss: 1.8024 | Train Acc: 51.44% | Val Loss: 2.2202 | Val Acc: 42.44%
+             Grad Mean: 2.5606 | Grad Std: 0.2112 | Grad CV: 0.0825
+             LR: 0.000055 | Batch: 256 | Updates: 48,734 | Time: 2.49s
+             Batch Controller | Stability: 0.0921 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000055 | Reason: cooldown
+Epoch 120/160 | Train Loss: 1.8008 | Train Acc: 51.56% | Val Loss: 2.2176 | Val Acc: 42.60%
+             Grad Mean: 2.5767 | Grad Std: 0.2445 | Grad CV: 0.0949
+             LR: 0.000055 | Batch: 256 | Updates: 48,910 | Time: 2.49s
+             Batch Controller | Stability: 0.0911 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000055 | Reason: cooldown
+Epoch 121/160 | Train Loss: 1.8040 | Train Acc: 51.67% | Val Loss: 2.2162 | Val Acc: 42.60%
+             Grad Mean: 2.5662 | Grad Std: 0.2354 | Grad CV: 0.0917
+             LR: 0.000055 | Batch: 256 | Updates: 49,086 | Time: 2.51s
+             Batch Controller | Stability: 0.0897 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000055 | Reason: keep
+Epoch 122/160 | Train Loss: 1.8045 | Train Acc: 51.34% | Val Loss: 2.2169 | Val Acc: 42.46%
+             Grad Mean: 2.5822 | Grad Std: 0.2342 | Grad CV: 0.0907
+             LR: 0.000055 | Batch: 256 | Updates: 49,262 | Time: 2.49s
+             Batch Controller | Stability: 0.0924 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000055 | Reason: keep
+Epoch 123/160 | Train Loss: 1.8024 | Train Acc: 51.63% | Val Loss: 2.2157 | Val Acc: 42.54%
+             Grad Mean: 2.5616 | Grad Std: 0.2239 | Grad CV: 0.0874
+             LR: 0.000055 | Batch: 256 | Updates: 49,438 | Time: 2.52s
+             Batch Controller | Stability: 0.0899 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000055 | Reason: keep
+Epoch 124/160 | Train Loss: 1.8003 | Train Acc: 51.78% | Val Loss: 2.2210 | Val Acc: 42.48%
+             Grad Mean: 2.5847 | Grad Std: 0.2370 | Grad CV: 0.0917
+             LR: 0.000055 | Batch: 256 | Updates: 49,614 | Time: 2.61s
+             Batch Controller | Stability: 0.0899 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000055 | Reason: keep
+Epoch 125/160 | Train Loss: 1.8019 | Train Acc: 51.71% | Val Loss: 2.2159 | Val Acc: 42.54%
+             Grad Mean: 2.5762 | Grad Std: 0.2479 | Grad CV: 0.0962
+             LR: 0.000055 | Batch: 256 | Updates: 49,790 | Time: 2.52s
+             Batch Controller | Stability: 0.0918 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000028 | Reason: worsening_decay
+Epoch 126/160 | Train Loss: 1.8019 | Train Acc: 51.68% | Val Loss: 2.2163 | Val Acc: 42.60%
+             Grad Mean: 2.5935 | Grad Std: 0.2502 | Grad CV: 0.0965
+             LR: 0.000028 | Batch: 256 | Updates: 49,966 | Time: 2.53s
+             Batch Controller | Stability: 0.0948 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000028 | Reason: cooldown
+Epoch 127/160 | Train Loss: 1.7980 | Train Acc: 51.71% | Val Loss: 2.2151 | Val Acc: 42.62%
+             Grad Mean: 2.5806 | Grad Std: 0.2439 | Grad CV: 0.0945
+             LR: 0.000028 | Batch: 256 | Updates: 50,142 | Time: 2.53s
+             Batch Controller | Stability: 0.0957 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000028 | Reason: cooldown
+Epoch 128/160 | Train Loss: 1.7999 | Train Acc: 51.76% | Val Loss: 2.2159 | Val Acc: 42.58%
+             Grad Mean: 2.5847 | Grad Std: 0.2268 | Grad CV: 0.0878
+             LR: 0.000028 | Batch: 256 | Updates: 50,318 | Time: 2.53s
+             Batch Controller | Stability: 0.0929 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000028 | Reason: keep
+Epoch 129/160 | Train Loss: 1.7977 | Train Acc: 51.65% | Val Loss: 2.2177 | Val Acc: 42.54%
+             Grad Mean: 2.5942 | Grad Std: 0.2379 | Grad CV: 0.0917
+             LR: 0.000028 | Batch: 256 | Updates: 50,494 | Time: 2.48s
+             Batch Controller | Stability: 0.0913 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000028 | Reason: keep
+Epoch 130/160 | Train Loss: 1.8027 | Train Acc: 51.52% | Val Loss: 2.2172 | Val Acc: 42.56%
+             Grad Mean: 2.5599 | Grad Std: 0.2173 | Grad CV: 0.0849
+             LR: 0.000028 | Batch: 256 | Updates: 50,670 | Time: 2.49s
+             Batch Controller | Stability: 0.0881 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000028 | Reason: keep
+Epoch 131/160 | Train Loss: 1.8008 | Train Acc: 51.56% | Val Loss: 2.2185 | Val Acc: 42.56%
+             Grad Mean: 2.5952 | Grad Std: 0.2427 | Grad CV: 0.0935
+             LR: 0.000028 | Batch: 256 | Updates: 50,846 | Time: 2.52s
+             Batch Controller | Stability: 0.0900 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000028 | Reason: keep
+Epoch 132/160 | Train Loss: 1.8017 | Train Acc: 51.61% | Val Loss: 2.2177 | Val Acc: 42.60%
+             Grad Mean: 2.5594 | Grad Std: 0.2207 | Grad CV: 0.0862
+             LR: 0.000028 | Batch: 256 | Updates: 51,022 | Time: 2.50s
+             Batch Controller | Stability: 0.0882 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: worsening_decay
+Epoch 133/160 | Train Loss: 1.8007 | Train Acc: 51.45% | Val Loss: 2.2167 | Val Acc: 42.58%
+             Grad Mean: 2.5779 | Grad Std: 0.2238 | Grad CV: 0.0868
+             LR: 0.000014 | Batch: 256 | Updates: 51,198 | Time: 2.51s
+             Batch Controller | Stability: 0.0888 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: cooldown
+Epoch 134/160 | Train Loss: 1.7965 | Train Acc: 51.72% | Val Loss: 2.2172 | Val Acc: 42.60%
+             Grad Mean: 2.5691 | Grad Std: 0.2236 | Grad CV: 0.0870
+             LR: 0.000014 | Batch: 256 | Updates: 51,374 | Time: 2.53s
+             Batch Controller | Stability: 0.0867 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: cooldown
+Epoch 135/160 | Train Loss: 1.7996 | Train Acc: 51.91% | Val Loss: 2.2169 | Val Acc: 42.62%
+             Grad Mean: 2.5519 | Grad Std: 0.2550 | Grad CV: 0.0999
+             LR: 0.000014 | Batch: 256 | Updates: 51,550 | Time: 2.58s
+             Batch Controller | Stability: 0.0913 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 136/160 | Train Loss: 1.8006 | Train Acc: 51.71% | Val Loss: 2.2173 | Val Acc: 42.60%
+             Grad Mean: 2.5540 | Grad Std: 0.2483 | Grad CV: 0.0972
+             LR: 0.000014 | Batch: 256 | Updates: 51,726 | Time: 2.53s
+             Batch Controller | Stability: 0.0947 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 137/160 | Train Loss: 1.8010 | Train Acc: 51.48% | Val Loss: 2.2169 | Val Acc: 42.56%
+             Grad Mean: 2.5723 | Grad Std: 0.2273 | Grad CV: 0.0884
+             LR: 0.000014 | Batch: 256 | Updates: 51,902 | Time: 2.54s
+             Batch Controller | Stability: 0.0952 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 138/160 | Train Loss: 1.8012 | Train Acc: 51.54% | Val Loss: 2.2171 | Val Acc: 42.58%
+             Grad Mean: 2.5864 | Grad Std: 0.2187 | Grad CV: 0.0846
+             LR: 0.000014 | Batch: 256 | Updates: 52,078 | Time: 2.52s
+             Batch Controller | Stability: 0.0901 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 139/160 | Train Loss: 1.7995 | Train Acc: 51.63% | Val Loss: 2.2165 | Val Acc: 42.64%
+             Grad Mean: 2.6063 | Grad Std: 0.2021 | Grad CV: 0.0775
+             LR: 0.000014 | Batch: 256 | Updates: 52,254 | Time: 2.51s
+             Batch Controller | Stability: 0.0835 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 140/160 | Train Loss: 1.8013 | Train Acc: 51.83% | Val Loss: 2.2173 | Val Acc: 42.54%
+             Grad Mean: 2.5805 | Grad Std: 0.2181 | Grad CV: 0.0845
+             LR: 0.000014 | Batch: 256 | Updates: 52,430 | Time: 2.49s
+             Batch Controller | Stability: 0.0822 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 141/160 | Train Loss: 1.8014 | Train Acc: 51.53% | Val Loss: 2.2166 | Val Acc: 42.54%
+             Grad Mean: 2.6001 | Grad Std: 0.2390 | Grad CV: 0.0919
+             LR: 0.000014 | Batch: 256 | Updates: 52,606 | Time: 2.51s
+             Batch Controller | Stability: 0.0847 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 142/160 | Train Loss: 1.8006 | Train Acc: 51.64% | Val Loss: 2.2159 | Val Acc: 42.52%
+             Grad Mean: 2.5576 | Grad Std: 0.2255 | Grad CV: 0.0882
+             LR: 0.000014 | Batch: 256 | Updates: 52,782 | Time: 2.50s
+             Batch Controller | Stability: 0.0882 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 143/160 | Train Loss: 1.8008 | Train Acc: 51.70% | Val Loss: 2.2161 | Val Acc: 42.52%
+             Grad Mean: 2.5737 | Grad Std: 0.2118 | Grad CV: 0.0823
+             LR: 0.000014 | Batch: 256 | Updates: 52,958 | Time: 2.51s
+             Batch Controller | Stability: 0.0875 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000014 | Reason: keep
+Epoch 144/160 | Train Loss: 1.8012 | Train Acc: 51.45% | Val Loss: 2.2164 | Val Acc: 42.48%
+             Grad Mean: 2.5516 | Grad Std: 0.2617 | Grad CV: 0.1026
+             LR: 0.000014 | Batch: 256 | Updates: 53,134 | Time: 2.49s
+             Batch Controller | Stability: 0.0910 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000007 | Reason: worsening_decay
+Epoch 145/160 | Train Loss: 1.8022 | Train Acc: 51.51% | Val Loss: 2.2167 | Val Acc: 42.52%
+             Grad Mean: 2.5772 | Grad Std: 0.2223 | Grad CV: 0.0862
+             LR: 0.000007 | Batch: 256 | Updates: 53,310 | Time: 2.51s
+             Batch Controller | Stability: 0.0904 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000007 | Reason: cooldown
+Epoch 146/160 | Train Loss: 1.7989 | Train Acc: 51.68% | Val Loss: 2.2168 | Val Acc: 42.54%
+             Grad Mean: 2.5772 | Grad Std: 0.2021 | Grad CV: 0.0784
+             LR: 0.000007 | Batch: 256 | Updates: 53,486 | Time: 2.53s
+             Batch Controller | Stability: 0.0891 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000007 | Reason: cooldown
+Epoch 147/160 | Train Loss: 1.7982 | Train Acc: 51.56% | Val Loss: 2.2173 | Val Acc: 42.50%
+             Grad Mean: 2.5765 | Grad Std: 0.2427 | Grad CV: 0.0942
+             LR: 0.000007 | Batch: 256 | Updates: 53,662 | Time: 2.58s
+             Batch Controller | Stability: 0.0863 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000007 | Reason: keep
+Epoch 148/160 | Train Loss: 1.7985 | Train Acc: 51.76% | Val Loss: 2.2170 | Val Acc: 42.58%
+             Grad Mean: 2.5911 | Grad Std: 0.2261 | Grad CV: 0.0873
+             LR: 0.000007 | Batch: 256 | Updates: 53,838 | Time: 2.50s
+             Batch Controller | Stability: 0.0866 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000007 | Reason: keep
+Epoch 149/160 | Train Loss: 1.8011 | Train Acc: 51.50% | Val Loss: 2.2170 | Val Acc: 42.56%
+             Grad Mean: 2.5723 | Grad Std: 0.2158 | Grad CV: 0.0839
+             LR: 0.000007 | Batch: 256 | Updates: 54,014 | Time: 2.46s
+             Batch Controller | Stability: 0.0884 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000007 | Reason: keep
+Epoch 150/160 | Train Loss: 1.8004 | Train Acc: 51.68% | Val Loss: 2.2172 | Val Acc: 42.50%
+             Grad Mean: 2.5930 | Grad Std: 0.2553 | Grad CV: 0.0985
+             LR: 0.000007 | Batch: 256 | Updates: 54,190 | Time: 2.52s
+             Batch Controller | Stability: 0.0899 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000007 | Reason: keep
+Epoch 151/160 | Train Loss: 1.8008 | Train Acc: 51.52% | Val Loss: 2.2170 | Val Acc: 42.56%
+             Grad Mean: 2.5850 | Grad Std: 0.2375 | Grad CV: 0.0919
+             LR: 0.000007 | Batch: 256 | Updates: 54,366 | Time: 2.52s
+             Batch Controller | Stability: 0.0914 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000003 | Reason: worsening_decay
+Epoch 152/160 | Train Loss: 1.7969 | Train Acc: 51.67% | Val Loss: 2.2172 | Val Acc: 42.52%
+             Grad Mean: 2.5658 | Grad Std: 0.2313 | Grad CV: 0.0902
+             LR: 0.000003 | Batch: 256 | Updates: 54,542 | Time: 2.50s
+             Batch Controller | Stability: 0.0935 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000003 | Reason: cooldown
+Epoch 153/160 | Train Loss: 1.8013 | Train Acc: 51.77% | Val Loss: 2.2171 | Val Acc: 42.52%
+             Grad Mean: 2.5357 | Grad Std: 0.2323 | Grad CV: 0.0916
+             LR: 0.000003 | Batch: 256 | Updates: 54,718 | Time: 2.52s
+             Batch Controller | Stability: 0.0912 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000003 | Reason: cooldown
+Epoch 154/160 | Train Loss: 1.8014 | Train Acc: 51.49% | Val Loss: 2.2170 | Val Acc: 42.56%
+             Grad Mean: 2.6018 | Grad Std: 0.2086 | Grad CV: 0.0802
+             LR: 0.000003 | Batch: 256 | Updates: 54,894 | Time: 2.53s
+             Batch Controller | Stability: 0.0873 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000003 | Reason: keep
+Epoch 155/160 | Train Loss: 1.8040 | Train Acc: 51.66% | Val Loss: 2.2171 | Val Acc: 42.48%
+             Grad Mean: 2.5865 | Grad Std: 0.2138 | Grad CV: 0.0827
+             LR: 0.000003 | Batch: 256 | Updates: 55,070 | Time: 2.50s
+             Batch Controller | Stability: 0.0848 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000003 | Reason: keep
+Epoch 156/160 | Train Loss: 1.7971 | Train Acc: 51.79% | Val Loss: 2.2170 | Val Acc: 42.44%
+             Grad Mean: 2.5837 | Grad Std: 0.2413 | Grad CV: 0.0934
+             LR: 0.000003 | Batch: 256 | Updates: 55,246 | Time: 2.50s
+             Batch Controller | Stability: 0.0854 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000003 | Reason: keep
+Epoch 157/160 | Train Loss: 1.8021 | Train Acc: 51.56% | Val Loss: 2.2171 | Val Acc: 42.46%
+             Grad Mean: 2.5827 | Grad Std: 0.2325 | Grad CV: 0.0900
+             LR: 0.000003 | Batch: 256 | Updates: 55,422 | Time: 2.51s
+             Batch Controller | Stability: 0.0887 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000003 | Reason: keep
+Epoch 158/160 | Train Loss: 1.7986 | Train Acc: 51.71% | Val Loss: 2.2170 | Val Acc: 42.46%
+             Grad Mean: 2.5970 | Grad Std: 0.2419 | Grad CV: 0.0931
+             LR: 0.000003 | Batch: 256 | Updates: 55,598 | Time: 2.61s
+             Batch Controller | Stability: 0.0922 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000002 | Reason: worsening_decay
+Epoch 159/160 | Train Loss: 1.7997 | Train Acc: 51.67% | Val Loss: 2.2170 | Val Acc: 42.48%
+             Grad Mean: 2.5766 | Grad Std: 0.2441 | Grad CV: 0.0947
+             LR: 0.000002 | Batch: 256 | Updates: 55,774 | Time: 2.51s
+             Batch Controller | Stability: 0.0926 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000002 | Reason: cooldown
+Epoch 160/160 | Train Loss: 1.8018 | Train Acc: 51.63% | Val Loss: 2.2170 | Val Acc: 42.46%
+             Grad Mean: 2.5833 | Grad Std: 0.2162 | Grad CV: 0.0837
+             LR: 0.000002 | Batch: 256 | Updates: 55,950 | Time: 2.57s
+             Batch Controller | Stability: 0.0905 | Plateau: True | Next Batch: 256 | Reason: maximum_batch_size
+             LR Controller | Next LR: 0.000002 | Reason: cooldown
+==============================================================================
+Training complete
+Best epoch: 106
+Best validation loss: 2.2113
+Total optimizer updates: 55,950
+Total training time: 433.24 seconds
+Final batch size used: 256
+Final learning rate used: 0.000002
+Results saved to: /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E4_alpha0.5_ep160/cifar100_adaptive_batch_adaptive_lr_refLR0.01_seed42_pilot160/20261005T082722_651329Z/cifar100_adaptive_batch_adaptive_lr_refLR0.01_seed42_pilot160.csv
+Metadata saved to: /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E4_alpha0.5_ep160/cifar100_adaptive_batch_adaptive_lr_refLR0.01_seed42_pilot160/20261005T082722_651329Z/cifar100_adaptive_batch_adaptive_lr_refLR0.01_seed42_pilot160_metadata.json
+==============================================================================
+Evaluated checkpoint: epoch 106
+Validation accuracy: 42.32%
+Validation macro F1: 0.4103
+Evaluation results saved to: /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E4_alpha0.5_ep160/cifar100_adaptive_batch_adaptive_lr_refLR0.01_seed42_pilot160/20261005T082722_651329Z

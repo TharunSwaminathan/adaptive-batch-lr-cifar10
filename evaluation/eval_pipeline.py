@@ -29,6 +29,9 @@ def convert_training_history(history):
             "optimizer_updates": cumulative_updates - previous_updates,
         })
 
+        if "batch_size" in row:
+            converted[-1]["batch_size"] = row["batch_size"]
+
         previous_updates = cumulative_updates
 
     return converted

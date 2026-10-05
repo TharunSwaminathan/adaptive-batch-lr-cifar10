@@ -218,22 +218,27 @@ python -m experiments.generate_final_results --dataset cifar100
 ```
 
 It requires completed validation and final-test artifacts; it does not create
-them or run training. For CIFAR-100, E1/E2 validation artifacts retain the
-existing `fixed_validation_evaluation/<run_name>/` and
-`adaptive_batch_validation_evaluation/<run_name>/` layouts, using the prefixed
-run names. Final-test artifacts belong in
+them or run training. E1-E4 now save training CSV, metadata, best checkpoint,
+and validation artifacts together in `results/<run_name>/<UTC timestamp>/`.
+The report reader supports the new E1/E2 layout and falls back to the old flat
+CSV/metadata and separate validation directories when no timestamp run root exists.
+Final-test artifacts for CIFAR-100 belong in
 `results/cifar100_final_test_evaluation/<timestamp>/E1/` through `E4/`.
 Reports default to `results/cifar100_final_report_assets/`. E3/E4 report lookup
 uses the reference LR in `config.INITIAL_LEARNING_RATE`, so use matching LRs
 when generating a four-experiment report.
 
-
-Adaptive batch training now calls the shared `evaluation.run_evaluation`
+Adaptive batch and fixed-batch training call the shared `run_evaluation`
 pipeline after training. It evaluates the best validation-loss checkpoint and
-prints checkpoint accuracy and macro F1. Evaluation artifacts are saved under
-`results/adaptive_batch_validation_evaluation/<run_name>/`: `validation_metrics.json`,
-`evaluation_history.json`, `training_summary.json`, `training_curves.png`, and
-`validation_confusion_matrix_normalized.png`. Training CSV/metadata stay in
-`results/`, and checkpoints stay in `checkpoints/`. The metadata records
-`evaluation_status` separately from training completion. CIFAR-100 uses its
-ordered 100 class names; evaluation does not use the test set.
+prints checkpoint accuracy and macro F1. Each run directory contains
+`validation_metrics.json`, `evaluation_history.json`, `training_summary.json`,
+`training_curves.png`, and `validation_confusion_matrix_normalized.png`.
+The metadata records `evaluation_status` separately from training completion.
+CIFAR-100 uses its ordered 100 class names; evaluation does not use the test set.
+
+Every training invocation starts a fresh model, optimizer, Trainer, data shuffle
+generator and any adaptive controllers. The chosen seed is reapplied before
+initialization. No controller history or optimizer state is resumed from a previous
+run. Identical configurations are allowed to run again and produce separate UTC
+timestamp directories. E1/E2 retain `--overwrite` only as a compatibility flag;
+it no longer overwrites existing results or controls whether training runs.

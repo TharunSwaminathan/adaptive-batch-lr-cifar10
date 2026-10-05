@@ -1,8 +1,0 @@
-{
-  "training_time_seconds": 104.48996143499971,
-  "optimizer_updates": 15758,
-  "target_accuracy": 0.8,
-  "target_split": "validation",
-  "epoch_to_target": null,
-  "time_to_target_seconds": null
-}

@@ -51,39 +51,6 @@ MIN_DELTA = 0.01
 COOLDOWN_EPOCHS = 2
 
 
-def completed_run_exists(run_name):
-    """
-    Return True only when the metadata file says that the run completed.
-    """
-
-    metadata_path = (
-        Path(RESULTS_DIR)
-        / f"{run_name}_metadata.json"
-    )
-
-    if not metadata_path.exists():
-        return False
-
-    try:
-        with open(
-            metadata_path,
-            "r",
-            encoding="utf-8",
-        ) as file:
-            metadata = json.load(file)
-
-        return (
-            metadata.get("status")
-            == "completed"
-        )
-
-    except (
-        json.JSONDecodeError,
-        OSError,
-    ):
-        return False
-
-
 def build_optimizer(model):
     """
     Create the fixed-learning-rate optimizer used by E2.
@@ -159,6 +126,12 @@ def run_experiment(
     )
 
     run_name = dataset_run_name(dataset, run_name)
+    started_at = datetime.now(timezone.utc)
+    run_id = started_at.strftime("%Y%m%dT%H%M%S_%fZ")
+    run_dir = Path(RESULTS_DIR) / run_name / run_id
+    run_dir.mkdir(parents=True, exist_ok=False)
+    print(f"Results directory: {run_dir}")
+
 
     print(
         "\n"
@@ -174,29 +147,6 @@ def run_experiment(
         "#"
         * 78
     )
-
-    if (
-        completed_run_exists(run_name)
-        and not overwrite
-    ):
-        print(
-            "Completed results already exist."
-        )
-
-        print(
-            "Skipping this experiment."
-        )
-
-        print(
-            "Use --overwrite only if you intentionally "
-            "want to repeat it."
-        )
-
-        return
-
-    # -----------------------------------------------------
-    # Reproducibility
-    # -----------------------------------------------------
 
     set_seed(seed)
 
@@ -273,6 +223,8 @@ def run_experiment(
 
     run_metadata = {
         "run_name": run_name,
+        "run_id": run_id,
+        "output_dir": str(run_dir),
 
         "experiment_type": (
             "adaptive_batch_fixed_lr"
@@ -466,8 +418,8 @@ def run_experiment(
         criterion=criterion,
         optimizer=optimizer,
         device=DEVICE,
-        results_dir=RESULTS_DIR,
-        checkpoint_dir=CHECKPOINT_DIR,
+        results_dir=run_dir,
+        checkpoint_dir=run_dir,
         run_name=run_name,
         run_metadata=run_metadata,
     )
@@ -484,9 +436,7 @@ def run_experiment(
     )
 
     # Evaluate the checkpoint selected by validation loss using the shared pipeline.
-    evaluation_dir = (
-        Path(RESULTS_DIR) / "adaptive_batch_validation_evaluation" / run_name
-    )
+    evaluation_dir = run_dir
     completion_metadata = {
         "status": "completed",
         "best_epoch": trainer.best_epoch,
@@ -504,7 +454,7 @@ def run_experiment(
         device=DEVICE,
         history=history,
         total_training_seconds=trainer.total_training_seconds,
-        checkpoint_path=Path(CHECKPOINT_DIR) / f"{run_name}_best.pt",
+        checkpoint_path=run_dir / f"{run_name}_best.pt",
         output_dir=evaluation_dir,
         run_name=run_name,
         split="validation",
@@ -568,11 +518,8 @@ def parse_arguments():
     )
 
     parser.add_argument(
-        "--overwrite",
-        action="store_true",
-        help=(
-            "Repeat a completed run intentionally."
-        ),
+        "--overwrite", action="store_true",
+        help="Deprecated compatibility flag; every run creates a new timestamp directory.",
     )
 
     add_dataset_argument(parser)

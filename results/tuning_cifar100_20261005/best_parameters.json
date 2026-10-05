@@ -1,0 +1,148 @@
+{
+  "epochs": 160,
+  "dataset": "cifar100",
+  "seed": 42,
+  "selected": {
+    "E1": {
+      "label": "E1_final_ep160",
+      "experiment": "E1",
+      "epochs": 160,
+      "settings": {
+        "reference_lr": 0.01
+      },
+      "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E1_final_ep160/cifar100_fixed_fixed_batch32_lr0.01_seed42/20261005T083502_089363Z",
+      "validation_loss": 2.313321533203125,
+      "validation_accuracy": 0.3994,
+      "validation_macro_f1": 0.3822381903338357,
+      "best_epoch": 144,
+      "optimizer_updates": 225120,
+      "training_seconds": 634.4757192910001,
+      "convergence": {
+        "epochs": 160,
+        "best_loss_before_last20": 2.3454586029052735,
+        "best_loss_last20": 2.3133215354919434,
+        "absolute_improvement": 0.03213706741333011,
+        "relative_improvement": 0.013701826744468036,
+        "last_decay_epoch": null,
+        "extend_budget": true
+      }
+    },
+    "E2": {
+      "label": "E2_final_ep160",
+      "experiment": "E2",
+      "epochs": 160,
+      "settings": {
+        "reference_lr": 0.01
+      },
+      "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E2_final_ep160/cifar100_adaptive_batch_fixed_lr0.01_seed42_pilot160/20261005T084614_664542Z",
+      "validation_loss": 2.24708291015625,
+      "validation_accuracy": 0.4134,
+      "validation_macro_f1": 0.40122315477677295,
+      "best_epoch": 144,
+      "optimizer_updates": 54894,
+      "training_seconds": 433.12838183199983,
+      "convergence": {
+        "epochs": 160,
+        "best_loss_before_last20": 2.248991364479065,
+        "best_loss_last20": 2.2470829074859617,
+        "absolute_improvement": 0.001908456993103158,
+        "relative_improvement": 0.0008485835131453318,
+        "last_decay_epoch": null,
+        "extend_budget": false
+      }
+    },
+    "E3": {
+      "label": "E3_final_ep160",
+      "experiment": "E3",
+      "epochs": 160,
+      "settings": {
+        "reference_batch_size": 32,
+        "alpha": 0.2,
+        "lr_factor": 0.5,
+        "plateau_patience": 5,
+        "worsening_patience": 5,
+        "cooldown_epochs": 2,
+        "warmup_epochs": 0,
+        "min_lr": 1e-06,
+        "min_delta_loss": 0.001,
+        "min_delta_acc": 0.002,
+        "reference_lr": 0.01
+      },
+      "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E3_final_ep160/cifar100_adaptive_lr_batch32_refLR0.01_seed42/20261005T074848_613009Z",
+      "validation_loss": 2.1132968383789064,
+      "validation_accuracy": 0.442,
+      "validation_macro_f1": 0.43194688963943034,
+      "best_epoch": 127,
+      "optimizer_updates": 225120,
+      "training_seconds": 685.8377006159999,
+      "convergence": {
+        "epochs": 160,
+        "best_loss_before_last20": 2.1132968370437624,
+        "best_loss_last20": 2.120941541862488,
+        "absolute_improvement": 0.0,
+        "relative_improvement": 0.0,
+        "last_decay_epoch": 158,
+        "extend_budget": false
+      }
+    },
+    "E4": {
+      "label": "E4_alpha0.5_ep160",
+      "experiment": "E4",
+      "epochs": 160,
+      "settings": {
+        "reference_batch_size": 32,
+        "alpha": 0.5,
+        "lr_factor": 0.5,
+        "plateau_patience": 5,
+        "worsening_patience": 5,
+        "cooldown_epochs": 2,
+        "warmup_epochs": 0,
+        "min_lr": 1e-06,
+        "min_delta_loss": 0.001,
+        "min_delta_acc": 0.002,
+        "reference_lr": 0.01
+      },
+      "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E4_alpha0.5_ep160/cifar100_adaptive_batch_adaptive_lr_refLR0.01_seed42_pilot160/20261005T082722_651329Z",
+      "validation_loss": 2.2113359619140627,
+      "validation_accuracy": 0.4232,
+      "validation_macro_f1": 0.410320893654347,
+      "best_epoch": 106,
+      "optimizer_updates": 55950,
+      "training_seconds": 433.24065632600013,
+      "convergence": {
+        "epochs": 160,
+        "best_loss_before_last20": 2.2113359630584717,
+        "best_loss_last20": 2.2159473081588743,
+        "absolute_improvement": 0.0,
+        "relative_improvement": 0.0,
+        "last_decay_epoch": 158,
+        "extend_budget": false
+      }
+    }
+  },
+  "common_settings": {
+    "model": "CustomCNN (unchanged)",
+    "optimizer": "sgd",
+    "momentum": 0.9,
+    "weight_decay": 0.0005,
+    "normalization": "group",
+    "data_split_seed": 42,
+    "training_samples": 45000,
+    "validation_samples": 5000,
+    "initial_batch_size": 32,
+    "initial_learning_rate": 0.01
+  },
+  "batch_controller_E2_E4": {
+    "batch_options": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "cv_window": 3,
+    "stability_threshold": 0.25,
+    "plateau_patience": 3,
+    "min_delta": 0.01,
+    "cooldown_epochs": 2
+  }
+}
