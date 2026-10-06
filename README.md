@@ -99,14 +99,14 @@ Command-line arguments override the defaults for the current run without editing
 | `--batch-size` | Integer | `config.INITIAL_BATCH_SIZE` | Fixed training batch size; greater than 0. |
 | `--seed` | Integer | `config.SEED` | Model/global random seed and training shuffle seed; 0 through 2^32 - 1. The shared data split still uses `config.SEED`. |
 | `--reference-lr`, `--lr` | Float | `0.01` | LR at the reference batch size before feedback decay or warmup; greater than 0. |
-| `--reference-batch-size` | Integer | `32` | Batch size used as the scaling reference; greater than 0. |
-| `--alpha` | Float | `0.5` | Non-negative batch-scaling exponent. 0 disables scaling; 0.5 uses square-root scaling; 1 uses linear scaling. |
+| `--reference-batch-size` | Integer | `256` | Batch size used as the scaling reference; greater than 0. |
+| `--alpha` | Float | `0.2` | Non-negative batch-scaling exponent. 0 disables scaling; 0.5 uses square-root scaling; 1 uses linear scaling. |
 | `--lr-factor` | Float | `0.5` | Multiplier applied on each feedback decay; strictly between 0 and 1. |
-| `--plateau-patience` | Integer | `5` | Consecutive plateau epochs needed for a decay; greater than 0. |
-| `--worsening-patience` | Integer | `3` | Consecutive worsening epochs needed for a decay; greater than 0. |
+| `--plateau-patience` | Integer | `2` | Consecutive plateau epochs needed for a decay; greater than 0. |
+| `--worsening-patience` | Integer | `2` | Consecutive worsening epochs needed for a decay; greater than 0. |
 | `--cooldown-epochs` | Integer | `2` | Epochs suppressing further feedback decay after a reduction; non-negative. |
 | `--warmup-epochs` | Integer | `0` | Linear warmup duration; non-negative. 0 disables it. If greater than the total epoch budget, the run ends during warmup. |
-| `--min-lr` | Float | `1e-5` | Non-negative LR floor, also enforced during warmup. |
+| `--min-lr` | Float | `1e-8` | Non-negative LR floor, also enforced during warmup. |
 | `--min-delta-loss` | Float | `1e-3` | Non-negative absolute loss threshold for improvement and worsening. |
 | `--min-delta-acc` | Float | `0.002` | Accuracy improvement threshold in [0, 1]; 0.002 means 0.2 percentage points. |
 | `--target-accuracy` | Float | `0.80` | Validation accuracy target in [0, 1] for time/epoch reporting. It does not stop training or control LR. |
@@ -242,3 +242,24 @@ initialization. No controller history or optimizer state is resumed from a previ
 run. Identical configurations are allowed to run again and produce separate UTC
 timestamp directories. E1/E2 retain `--overwrite` only as a compatibility flag;
 it no longer overwrites existing results or controls whether training runs.
+
+
+## CIFAR-100 rerun with default LR patience
+
+`experiments.rerun_cifar100` fixes both LR patience values to the current E3
+runner defaults (2/2) for E3 and E4. It screens initial LR, decay factor and E4
+batch scaling using validation loss, checks a common epoch budget, and retains
+only the selected E1-E4 runs after verifying their artifacts. E3 and E4 use
+identical final LR controller settings. The batch controller patience stays 3.
+
+```sh
+LD_LIBRARY_PATH=/home/ams098z/miniforge3/envs/py312/lib /home/ams098z/miniforge3/envs/py312/bin/python -m experiments.rerun_cifar100 --output-dir results/rerun_cifar100_20261006
+python -m experiments.plot_comparison --results-root results/rerun_cifar100_20261006
+```
+
+The output directory must be new. `best_parameters.json`, `manifest.json` and
+`REPORT.md` record the final policy, compact screening evidence and epoch choice.
+`figures/E3_E4_training_curves.png` and `E3_E4_training_curves_time.png` preserve
+the paired comparison layout. Each loss/accuracy curve is also saved separately
+against epoch and measured time as PNG and PDF, including for each individual
+experiment. Candidate result directories are removed only after final verification.

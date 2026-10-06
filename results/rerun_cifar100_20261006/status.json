@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "phase": "complete",
+  "selected_epochs": 160,
+  "retained_experiments": [
+    "E1",
+    "E2",
+    "E3",
+    "E4"
+  ],
+  "verification_passed": true
+}

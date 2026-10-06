@@ -102,7 +102,26 @@ print(f"Generalization gap: {gap:.2f} percentage points")
 Evaluate both datasets using the same checkpoint. The current `get_train_loader()` applies random augmentation, so it is not suitable for this training-set evaluation. The data/training module owner should provide a loader for the training subset with random augmentation disabled. Do not use training accuracy accumulated while model weights were changing to calculate the final generalization gap. Preserve negative gap values when they occur.
 
 
-Training curve figures show loss and accuracy only against epoch. Both panels overlay
-optional `batch_size` values as a dotted step curve on the right axis, using the
-batch actually used for each epoch, not `next_batch_size`. `run_evaluation`
-preserves this field when converting Trainer history. Accuracy is displayed as a percentage. Legacy histories without batch sizes are supported.
+Training curve figures use both epoch and measured cumulative elapsed time.
+Both versions overlay optional `batch_size` values as a dotted step curve on the
+right axis, using the batch actually used for each epoch, not `next_batch_size`.
+`run_evaluation` preserves this field and automatically saves:
+
+- `training_curves.png` and `training_curves_time.png`: paired loss/accuracy figures.
+- `loss_epoch.png`, `accuracy_epoch.png`, `loss_time.png`, `accuracy_time.png`: separate figures.
+- The four separate figures also have vector `.pdf` versions.
+
+Accuracy is displayed as a percentage. Time uses `elapsed_seconds` directly and
+includes the training loop and validation. Curves end at each run's measured end;
+no smoothing, interpolation to a common time grid, or extrapolation is applied.
+Legacy histories without batch sizes are supported.
+
+To regenerate the E3/E4 comparison (and E1-E4 when available):
+
+```sh
+python -m experiments.plot_comparison --results-root results/rerun_cifar100_20261006
+```
+
+The input directory must contain `best_results/E3/evaluation_history.json` and
+`best_results/E4/evaluation_history.json`. Comparison figures are saved in
+`figures/`; every loss and accuracy plot is also exported separately.

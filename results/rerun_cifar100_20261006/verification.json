@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "checks": {
+    "E3": {
+      "epochs": 160,
+      "best_epoch": 123,
+      "checkpoint_sha256": "1813d3c97e8e0ff8c2f9778493ddeb4d64b25f2bada6d66a165528c1407f4e80",
+      "loss_matches_checkpoint_epoch": true
+    },
+    "E4": {
+      "epochs": 160,
+      "best_epoch": 106,
+      "checkpoint_sha256": "61efc6155797e5bd53dbff3ad55cf798035a5738ea5e2c6b75149d9c7a7cc1ec",
+      "loss_matches_checkpoint_epoch": true
+    },
+    "E1": {
+      "epochs": 160,
+      "best_epoch": 144,
+      "checkpoint_sha256": "984fc66eea67259d31a7e70f7e86296c3b1bb7fb7e159a02a86d19d11e396865",
+      "loss_matches_checkpoint_epoch": true
+    },
+    "E2": {
+      "epochs": 160,
+      "best_epoch": 144,
+      "checkpoint_sha256": "b1ac45da3747a161b5901f95aed1f4836e0b0ef6d30916a0d4f046a3983e356d",
+      "loss_matches_checkpoint_epoch": true
+    }
+  },
+  "final_test_evaluation_passed": true,
+  "curve_files_verified": 60,
+  "candidate_trials_removed": true
+}

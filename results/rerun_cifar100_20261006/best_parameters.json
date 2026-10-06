@@ -1,0 +1,152 @@
+{
+  "epochs": 160,
+  "seed": 42,
+  "dataset": "cifar100",
+  "selected": {
+    "E3": {
+      "label": "E3_budget_ep160",
+      "experiment": "E3",
+      "epochs": 160,
+      "settings": {
+        "reference_batch_size": 32,
+        "alpha": 1.0,
+        "lr_factor": 0.7,
+        "plateau_patience": 2,
+        "worsening_patience": 2,
+        "cooldown_epochs": 2,
+        "warmup_epochs": 0,
+        "min_lr": 1e-08,
+        "min_delta_loss": 0.001,
+        "min_delta_acc": 0.002,
+        "reference_lr": 0.01
+      },
+      "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/rerun_cifar100_20261006/best_results/E3",
+      "validation_loss": 2.1842907470703126,
+      "validation_accuracy": 0.4356,
+      "validation_macro_f1": 0.4224654855755223,
+      "best_epoch": 123,
+      "optimizer_updates": 225120,
+      "training_seconds": 662.1504611800001,
+      "convergence": {
+        "last20_relative_loss_improvement": 0.0,
+        "last_decay_epoch": 159,
+        "settled": true
+      },
+      "source_trial": "E3_budget_ep160"
+    },
+    "E4": {
+      "label": "E4_budget_ep160",
+      "experiment": "E4",
+      "epochs": 160,
+      "settings": {
+        "reference_batch_size": 32,
+        "alpha": 1.0,
+        "lr_factor": 0.7,
+        "plateau_patience": 2,
+        "worsening_patience": 2,
+        "cooldown_epochs": 2,
+        "warmup_epochs": 0,
+        "min_lr": 1e-08,
+        "min_delta_loss": 0.001,
+        "min_delta_acc": 0.002,
+        "reference_lr": 0.01
+      },
+      "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/rerun_cifar100_20261006/best_results/E4",
+      "validation_loss": 2.2191553344726564,
+      "validation_accuracy": 0.4254,
+      "validation_macro_f1": 0.4125511963768552,
+      "best_epoch": 106,
+      "optimizer_updates": 70018,
+      "training_seconds": 466.195977458,
+      "convergence": {
+        "last20_relative_loss_improvement": 0.0,
+        "last_decay_epoch": 160,
+        "settled": true
+      },
+      "source_trial": "E4_budget_ep160"
+    },
+    "E1": {
+      "label": "E1_final_ep160",
+      "experiment": "E1",
+      "epochs": 160,
+      "settings": {
+        "reference_lr": 0.01
+      },
+      "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/rerun_cifar100_20261006/best_results/E1",
+      "validation_loss": 2.313321533203125,
+      "validation_accuracy": 0.3994,
+      "validation_macro_f1": 0.3822381903338357,
+      "best_epoch": 144,
+      "optimizer_updates": 225120,
+      "training_seconds": 656.0648039970001,
+      "convergence": {
+        "last20_relative_loss_improvement": 0.013701826744468036,
+        "last_decay_epoch": null,
+        "settled": false
+      },
+      "source_trial": "E1_final_ep160"
+    },
+    "E2": {
+      "label": "E2_final_ep160",
+      "experiment": "E2",
+      "epochs": 160,
+      "settings": {
+        "reference_lr": 0.01
+      },
+      "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/rerun_cifar100_20261006/best_results/E2",
+      "validation_loss": 2.24708291015625,
+      "validation_accuracy": 0.4134,
+      "validation_macro_f1": 0.40122315477677295,
+      "best_epoch": 144,
+      "optimizer_updates": 54894,
+      "training_seconds": 448.2224634760005,
+      "convergence": {
+        "last20_relative_loss_improvement": 0.0008485835131453318,
+        "last_decay_epoch": null,
+        "settled": true
+      },
+      "source_trial": "E2_final_ep160"
+    }
+  },
+  "shared_lr_policy": {
+    "reference_batch_size": 32,
+    "alpha": 1.0,
+    "lr_factor": 0.7,
+    "plateau_patience": 2,
+    "worsening_patience": 2,
+    "cooldown_epochs": 2,
+    "warmup_epochs": 0,
+    "min_lr": 1e-08,
+    "min_delta_loss": 0.001,
+    "min_delta_acc": 0.002,
+    "reference_lr": 0.01
+  },
+  "patience_source": "experiments.adaptive_lr defaults",
+  "epoch_selection": {
+    "frontier": [
+      {
+        "epochs": 160,
+        "E3": {
+          "last20_relative_loss_improvement": 0.0,
+          "last_decay_epoch": 159,
+          "settled": true
+        },
+        "E4": {
+          "last20_relative_loss_improvement": 0.0,
+          "last_decay_epoch": 160,
+          "settled": true
+        }
+      }
+    ],
+    "E3": {
+      "last20_relative_loss_improvement": 0.0,
+      "last_decay_epoch": 159,
+      "settled": true
+    },
+    "E4": {
+      "last20_relative_loss_improvement": 0.0,
+      "last_decay_epoch": 160,
+      "settled": true
+    }
+  }
+}
