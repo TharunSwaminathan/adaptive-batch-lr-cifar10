@@ -261,5 +261,79 @@ The output directory must be new. `best_parameters.json`, `manifest.json` and
 `REPORT.md` record the final policy, compact screening evidence and epoch choice.
 `figures/E3_E4_training_curves.png` and `E3_E4_training_curves_time.png` preserve
 the paired comparison layout. Each loss/accuracy curve is also saved separately
-against epoch and measured time as PNG and PDF, including for each individual
+against epoch and measured time as PNG, including for each individual
 experiment. Candidate result directories are removed only after final verification.
+
+### Six-convolution CNN for E1–E4
+
+All four experiment runners accept `--model custom_cnn` (the default,
+three convolutions) or `--model deeper_cnn` (six convolutions). For example:
+
+```bash
+python -m experiments.fixed_fixed --model deeper_cnn --batch-sizes 32
+python -m experiments.adaptive_batch --model deeper_cnn
+python -m experiments.adaptive_lr --model deeper_cnn --batch-size 32
+python -m experiments.adaptive_combined --model deeper_cnn
+```
+
+Add `--dataset cifar100` to use CIFAR-100. Other experiment settings are
+unchanged. Deeper-model run names start with `deeper_cnn_`, and metadata
+records both the model class and the model selection key. These commands
+run new training experiments; existing checkpoints remain associated with
+their original architecture.
+
+### Twelve-convolution wide CNN
+
+Use `--model deeper_cnn_wide` in any E1–E4 runner for twelve convolutions:
+four with 64 channels, four with 128 channels, and four with 256 channels.
+Max pooling follows convolutions 4, 8, and 12. For 32x32 CIFAR inputs,
+the three stages produce 64x16x16, 128x8x8, and 256x4x4 feature maps.
+All convolutions use 3x3 kernels, stride 1, padding 1, configured
+normalization, and ReLU. GAP, flattening, Dropout(p=0.2), and
+Linear(256, num_classes) form the classification head.
+
+The original `deeper_cnn` remains a six-convolution model with stage
+widths `32/64/128`. Both models use dropout during training and disable
+it during evaluation. Metadata records `model_channels`, `conv_layers`, and `dropout_p`.
+Direct construction accepts `dropout_p=0.0` to disable dropout.
+
+```bash
+python -m experiments.adaptive_batch --dataset cifar100 --model deeper_cnn_wide --epochs 50 --seed 42 --pilot
+```
+
+New wide-model runs use the twelve-convolution architecture. Earlier
+six- or eight-convolution wide checkpoints require their original architecture;
+start new training for this model. Runs retain the `deeper_cnn_wide_`
+prefix and create a new timestamp directory.
+
+Comparison figures use only PNG and cover E2_E3 and the E1_E2_E3_E4 overview. Run
+`python -m experiments.plot_comparison --results-root <results-root>`
+with all four `best_results/E*/evaluation_history.json` files available.
+
+Each comparison outputs separate loss and accuracy PNGs by epoch and time
+(four per group, eight total); combined comparison plots are not generated.
+
+### Independently configured E1–E4 suite
+
+Edit `experiments/suite_config.json`: the top-level `epochs` sets a shared
+training budget for all four experiments and overrides per-experiment epochs.
+Each E1–E4 section independently sets model, dataset, seed, initial/fixed
+batch size, learning rate,
+weight decay, dropout, and momentum. E2/E4 have their own batch controller;
+E3/E4 have their own LR controller. `learning_rate` is the fixed LR for
+E1/E2 and reference LR for E3/E4. Actual adaptive LR includes batch scaling
+and optional warmup. Dropout applies to the deeper models only.
+
+```bash
+python -m experiments.run_suite --dry-run
+python -m experiments.run_suite
+```
+
+Runs execute sequentially in isolated processes. A fresh timestamp directory
+under `results/unified_experiments` contains the resolved settings, E1–E4
+logs, per-run artifacts and best checkpoints, `best_results/E*` links,
+`comparison.csv`, and eight separate comparison PNGs. The suite's E2/E4
+runs are marked as pilot runs and use the explicit independent protocol;
+standalone frozen-run checks remain enabled. No official test evaluation
+is performed. Different budgets or model settings should be considered
+when interpreting comparisons.

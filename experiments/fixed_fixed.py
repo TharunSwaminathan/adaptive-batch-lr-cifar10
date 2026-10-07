@@ -28,7 +28,7 @@ from config import (
 
 from experiments.datasets import add_dataset_argument, dataset_settings, dataset_run_name
 from evaluation.eval_pipeline import run_evaluation
-from models.custom_cnn import CustomCNN
+from models.factory import add_model_argument, create_model, model_run_name
 from training.trainer import Trainer
 
 
@@ -56,6 +56,7 @@ def run_fixed_experiment(
     seed,
     overwrite=False,
     dataset="cifar10",
+    model_name="custom_cnn",
 ):
     """
     Run one fixed-batch, fixed-learning-rate experiment.
@@ -69,6 +70,7 @@ def run_fixed_experiment(
     )
 
     run_name = dataset_run_name(dataset, run_name)
+    run_name = model_run_name(model_name, run_name)
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S_%fZ")
     run_dir = Path(RESULTS_DIR) / run_name / run_id
@@ -116,7 +118,7 @@ def run_fixed_experiment(
     # Fresh model
     # -----------------------------------------------------
 
-    model = CustomCNN(num_classes=num_classes).to(
+    model = create_model(model_name, num_classes=num_classes).to(
         DEVICE
     )
 
@@ -156,7 +158,10 @@ def run_fixed_experiment(
             timezone.utc
         ).isoformat(),
 
-        "model": "CustomCNN",
+        "model": type(model).__name__, "model_name": model_name,
+        "model_channels": getattr(model, "channels", None),
+        "conv_layers": sum(isinstance(layer, torch.nn.Conv2d) for layer in model.modules()),
+        "dropout_p": model.dropout.p if hasattr(model, "dropout") else 0.0,
         "dataset": dataset_label,
         "num_classes": num_classes,
         "class_names": class_names,
@@ -355,6 +360,7 @@ def parse_arguments():
     )
 
     add_dataset_argument(parser)
+    add_model_argument(parser)
     return parser.parse_args()
 
 
@@ -412,6 +418,7 @@ def main():
             seed=args.seed,
             overwrite=args.overwrite,
             dataset=args.dataset,
+            model_name=args.model,
         )
 
     print("\n" + "=" * 78)

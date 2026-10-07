@@ -30,7 +30,7 @@ from config import (
 )
 from experiments.datasets import dataset_settings
 from evaluation.eval_pipeline import run_evaluation
-from models.custom_cnn import CustomCNN
+from models.factory import add_model_argument, create_model, model_run_name
 from training.lr_controller import LRController
 from training.trainer import Trainer
 
@@ -56,6 +56,7 @@ def parse_arguments(argv=None):
     parser.add_argument("--min-delta-acc", type=float, default=0.002)
     parser.add_argument("--target-accuracy", type=float, default=0.80)
     parser.add_argument("--output-dir", type=Path, default=RESULTS_DIR)
+    add_model_argument(parser)
     args = parser.parse_args(argv)
     for name in ("epochs", "batch_size", "reference_batch_size", "plateau_patience", "worsening_patience"):
         if getattr(args, name) < 1:
@@ -82,9 +83,10 @@ def run_adaptive_experiment(args):
     if OPTIMIZER.lower() != "sgd":
         raise ValueError(f"Unsupported optimizer: {OPTIMIZER}")
     set_seed(args.seed)
+    model_name = getattr(args, "model", "custom_cnn")
     dataset_name = getattr(args, "dataset", "cifar10")
     data_module, num_classes, dataset_label = dataset_settings(dataset_name)
-    model = CustomCNN(num_classes=num_classes).to(DEVICE)
+    model = create_model(model_name, num_classes=num_classes).to(DEVICE)
     optimizer = torch.optim.SGD(
         model.parameters(), lr=args.reference_lr,
         momentum=MOMENTUM, weight_decay=WEIGHT_DECAY,
@@ -113,6 +115,7 @@ def run_adaptive_experiment(args):
     # Preserve existing CIFAR-10 paths used by the final-results report.
     if dataset_name != "cifar10":
         run_name = f"{dataset_name}_{run_name}"
+    run_name = model_run_name(model_name, run_name)
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S_%fZ")
     run_dir = Path(args.output_dir) / run_name / run_id
@@ -121,7 +124,10 @@ def run_adaptive_experiment(args):
         "run_name": run_name, "run_id": run_id,
         "experiment_type": "fixed_batch_adaptive_lr",
         "created_utc": started_at.isoformat(), "output_dir": str(run_dir),
-        "model": "CustomCNN", "dataset": dataset_label,
+        "model": type(model).__name__, "model_name": model_name,
+        "model_channels": getattr(model, "channels", None),
+        "conv_layers": sum(isinstance(layer, torch.nn.Conv2d) for layer in model.modules()),
+        "dropout_p": model.dropout.p if hasattr(model, "dropout") else 0.0, "dataset": dataset_label,
         "num_classes": num_classes, "class_names": class_names,
         "training_samples": len(train_loader.dataset),
         "validation_samples": len(val_loader.dataset),

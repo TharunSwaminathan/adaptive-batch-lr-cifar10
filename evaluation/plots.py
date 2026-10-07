@@ -63,16 +63,16 @@ def plot_training_curves(histories, save_path, *, x_axis="epoch", metric=None):
     return path
 
 
-def save_curve_suite(histories, output_dir, *, prefix=""):
-    """Save combined epoch/time plots plus four separate PNG and PDF plots."""
+def save_curve_suite(histories, output_dir, *, prefix="", include_combined=True):
+    """Save four separate PNG plots, optionally with combined epoch/time plots."""
     root = Path(output_dir)
     stem = f"{prefix}_" if prefix else ""
     outputs = []
     for axis in ("epoch", "time"):
         combined = "training_curves" + ("_time" if axis == "time" else "")
-        outputs.append(plot_training_curves(histories, root / f"{stem}{combined}.png", x_axis=axis))
+        if include_combined:
+            outputs.append(plot_training_curves(histories, root / f"{stem}{combined}.png", x_axis=axis))
         for metric in ("loss", "accuracy"):
-            for suffix in ("png", "pdf"):
-                outputs.append(plot_training_curves(histories, root / f"{stem}{metric}_{axis}.{suffix}",
-                                                    x_axis=axis, metric=metric))
+            outputs.append(plot_training_curves(histories, root / f"{stem}{metric}_{axis}.png",
+                                                x_axis=axis, metric=metric))
     return outputs

@@ -110,7 +110,7 @@ OPTIMIZER = "sgd"
 
 MOMENTUM = 0.9
 
-WEIGHT_DECAY = 5e-4
+WEIGHT_DECAY = 1e-3
 
 
 # ---------------------------------------------------------

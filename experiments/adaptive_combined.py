@@ -39,7 +39,7 @@ from config import (
 )
 from experiments.datasets import add_dataset_argument, dataset_settings, dataset_run_name
 from evaluation.eval_pipeline import run_evaluation
-from models.custom_cnn import CustomCNN
+from models.factory import add_model_argument, create_model, model_run_name
 from training.batch_controller import AdaptiveBatchController
 from training.lr_controller import LRController
 from training.trainer import Trainer
@@ -60,7 +60,7 @@ BATCH_MIN_DELTA = 0.01
 BATCH_COOLDOWN_EPOCHS = 2
 
 # E3 LR controller
-LR_REFERENCE_BATCH_SIZE = 256
+LR_REFERENCE_BATCH_SIZE = 32
 LR_REFERENCE_LR = 0.01
 LR_ALPHA = 0.2
 LR_FACTOR = 0.5
@@ -151,6 +151,7 @@ def parse_arguments(argv=None):
     )
 
     add_dataset_argument(parser)
+    add_model_argument(parser)
     args = parser.parse_args(argv)
 
     if args.epochs <= 0:
@@ -168,10 +169,12 @@ def parse_arguments(argv=None):
     return args
 
 
-def run_experiment(args):
+def run_experiment(args, enforce_frozen=True):
     """Run E4 and evaluate the best validation checkpoint."""
+    model_name = getattr(args, "model", "custom_cnn")
     dataset = getattr(args, "dataset", "cifar10")
-    validate_frozen_settings()
+    if enforce_frozen:
+        validate_frozen_settings()
     set_seed(args.seed)
 
     # -----------------------------------------------------
@@ -202,7 +205,7 @@ def run_experiment(args):
     # -----------------------------------------------------
     # Model + optimizer
     # -----------------------------------------------------
-    model = CustomCNN(num_classes=num_classes).to(DEVICE)
+    model = create_model(model_name, num_classes=num_classes).to(DEVICE)
     criterion = nn.CrossEntropyLoss()
     optimizer = build_optimizer(model)
 
@@ -256,6 +259,7 @@ def run_experiment(args):
         run_name += f"_pilot{args.epochs}"
 
     run_name = dataset_run_name(dataset, run_name)
+    run_name = model_run_name(model_name, run_name)
 
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S_%fZ")
@@ -275,7 +279,10 @@ def run_experiment(args):
         "primary_experiment": primary,
         "created_utc": started_at.isoformat(),
         "output_dir": str(run_dir),
-        "model": "CustomCNN",
+        "model": type(model).__name__, "model_name": model_name,
+        "model_channels": getattr(model, "channels", None),
+        "conv_layers": sum(isinstance(layer, torch.nn.Conv2d) for layer in model.modules()),
+        "dropout_p": model.dropout.p if hasattr(model, "dropout") else 0.0,
         "dataset": dataset_label,
         "num_classes": num_classes,
         "class_names": class_names,

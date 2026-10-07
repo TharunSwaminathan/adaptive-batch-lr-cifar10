@@ -256,7 +256,7 @@ def main():
             assert meta['lr_controller']['worsening_patience']==2
         for axis in ('epoch','time'):
             for metric_name in ('loss','accuracy'):
-                for extension in ('png','pdf'):
+                for extension in ('png',):
                     figure=p/f'{metric_name}_{axis}.{extension}'
                     assert figure.exists() and figure.stat().st_size>0
         checkpoint=next(p.glob('*best.pt'))

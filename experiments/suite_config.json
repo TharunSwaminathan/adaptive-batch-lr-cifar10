@@ -1,0 +1,93 @@
+{
+  "epochs": 120,
+  "E1": {
+    "dataset": "cifar100",
+    "model": "deeper_cnn_wide",
+    "seed": 42,
+    "batch_size": 32,
+    "learning_rate": 0.01,
+    "weight_decay": 0.001,
+    "dropout_p": 0.2,
+    "momentum": 0.9
+  },
+  "E2": {
+    "dataset": "cifar100",
+    "model": "deeper_cnn_wide",
+    "seed": 42,
+    "batch_size": 32,
+    "learning_rate": 0.01,
+    "weight_decay": 0.001,
+    "dropout_p": 0.2,
+    "momentum": 0.9,
+    "batch_controller": {
+      "batch_sizes": [
+        32,
+        64,
+        128,
+        256
+      ],
+      "cv_window": 3,
+      "stability_threshold": 0.25,
+      "plateau_patience": 3,
+      "min_delta": 0.01,
+      "cooldown_epochs": 2
+    }
+  },
+  "E3": {
+    "dataset": "cifar100",
+    "model": "deeper_cnn_wide",
+    "seed": 42,
+    "batch_size": 32,
+    "learning_rate": 0.01,
+    "weight_decay": 0.001,
+    "dropout_p": 0.2,
+    "momentum": 0.9,
+    "lr_controller": {
+      "reference_batch_size": 32,
+      "alpha": 0.2,
+      "lr_factor": 0.5,
+      "plateau_patience": 3,
+      "worsening_patience": 3,
+      "cooldown_epochs": 2,
+      "warmup_epochs": 0,
+      "min_lr": 1e-05,
+      "min_delta_loss": 0.001,
+      "min_delta_acc": 0.002
+    }
+  },
+  "E4": {
+    "dataset": "cifar100",
+    "model": "deeper_cnn_wide",
+    "seed": 42,
+    "batch_size": 32,
+    "learning_rate": 0.01,
+    "weight_decay": 0.001,
+    "dropout_p": 0.2,
+    "momentum": 0.9,
+    "batch_controller": {
+      "batch_sizes": [
+        32,
+        64,
+        128,
+        256
+      ],
+      "cv_window": 3,
+      "stability_threshold": 0.25,
+      "plateau_patience": 3,
+      "min_delta": 0.01,
+      "cooldown_epochs": 2
+    },
+    "lr_controller": {
+      "reference_batch_size": 32,
+      "alpha": 0.2,
+      "lr_factor": 0.5,
+      "plateau_patience": 3,
+      "worsening_patience": 3,
+      "cooldown_epochs": 2,
+      "warmup_epochs": 0,
+      "min_lr": 1e-05,
+      "min_delta_loss": 0.001,
+      "min_delta_acc": 0.002
+    }
+  }
+}

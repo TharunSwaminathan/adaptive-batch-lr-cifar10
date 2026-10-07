@@ -28,7 +28,7 @@ from config import (
 
 from experiments.datasets import add_dataset_argument, dataset_settings, dataset_run_name
 from evaluation.eval_pipeline import run_evaluation
-from models.custom_cnn import CustomCNN
+from models.factory import add_model_argument, create_model, model_run_name
 from training.batch_controller import AdaptiveBatchController
 from training.trainer import Trainer
 
@@ -98,12 +98,14 @@ def run_experiment(
     overwrite=False,
     pilot=False,
     dataset="cifar10",
+    model_name="custom_cnn",
+    enforce_frozen=True,
 ):
     """
     Run E2: adaptive batch size + fixed learning rate.
     """
 
-    if INITIAL_BATCH_SIZE != 32:
+    if enforce_frozen and INITIAL_BATCH_SIZE != 32:
         raise ValueError(
             "E2 is frozen to initial batch size 32. "
             f"Current INITIAL_BATCH_SIZE is {INITIAL_BATCH_SIZE}."
@@ -126,6 +128,7 @@ def run_experiment(
     )
 
     run_name = dataset_run_name(dataset, run_name)
+    run_name = model_run_name(model_name, run_name)
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S_%fZ")
     run_dir = Path(RESULTS_DIR) / run_name / run_id
@@ -183,7 +186,7 @@ def run_experiment(
     # Model + optimizer
     # -----------------------------------------------------
 
-    model = CustomCNN(num_classes=num_classes).to(
+    model = create_model(model_name, num_classes=num_classes).to(
         DEVICE
     )
 
@@ -240,7 +243,10 @@ def run_experiment(
             ).isoformat()
         ),
 
-        "model": "CustomCNN",
+        "model": type(model).__name__, "model_name": model_name,
+        "model_channels": getattr(model, "channels", None),
+        "conv_layers": sum(isinstance(layer, torch.nn.Conv2d) for layer in model.modules()),
+        "dropout_p": model.dropout.p if hasattr(model, "dropout") else 0.0,
 
         "dataset": dataset_label,
         "num_classes": num_classes,
@@ -523,6 +529,7 @@ def parse_arguments():
     )
 
     add_dataset_argument(parser)
+    add_model_argument(parser)
     return parser.parse_args()
 
 
@@ -556,6 +563,7 @@ def main():
         overwrite=args.overwrite,
         pilot=args.pilot,
         dataset=args.dataset,
+        model_name=args.model,
     )
 
     print(
