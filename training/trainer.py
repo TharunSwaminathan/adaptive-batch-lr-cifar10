@@ -471,6 +471,8 @@ class Trainer:
                 )
 
             if lr_controller is not None:
+                # Record the batch size passed to the LR controller for the next epoch.
+                epoch_record["lr_batch_size_input"] = next_batch_size
                 epoch_record["next_learning_rate"] = next_lr
 
                 if lr_decision is not None:
@@ -582,8 +584,16 @@ class Trainer:
 
         results_path = self.save_history()
 
+        if batch_controller is not None:
+            batch_history_path = self.results_dir / "batch_history.json"
+            batch_history_path.write_text(
+                json.dumps(batch_controller.decision_history, indent=2, allow_nan=False),
+                encoding="utf-8",
+            )
+
         completion_metadata = {
             "status": "completed",
+            "epochs_completed": len(self.history),
             "best_epoch": self.best_epoch,
             "best_validation_loss": self.best_val_loss,
             "total_optimizer_updates": self.optimizer_updates,
@@ -616,7 +626,8 @@ class Trainer:
 
         print("=" * 78)
         print("Training complete")
-        print(f"Best epoch: {self.best_epoch}")
+        print(f"Epochs completed: {len(self.history)}")
+        print(f"Best checkpoint epoch: {self.best_epoch}")
         print(f"Best validation loss: {self.best_val_loss:.4f}")
         print(f"Total optimizer updates: {self.optimizer_updates:,}")
         print(
