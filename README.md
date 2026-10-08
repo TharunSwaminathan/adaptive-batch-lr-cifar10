@@ -1,339 +1,299 @@
-# adaptive-batch-lr-cifar10
+# Adaptive Batch Size and Learning Rate Experiments
 
-CNN experiments on CIFAR-10 with fixed or adaptive batch sizes and learning rates.
-This guide describes the implemented **fixed batch size + adaptive learning rate**
-experiment in `experiments/adaptive_lr.py`.
+CNN experiments on CIFAR-10 and CIFAR-100 using four combinations of fixed or
+adaptive batch sizes and learning rates. Use the unified runner to execute
+E1–E4 together, or launch each experiment individually.
 
-## Setup
+## 1. Run the Unified Experiments
 
-Run commands from the project root, the directory containing `config.py`,
-`requirements.txt`, and `experiments/`. Activate your Python environment and
-install the project dependencies if needed:
+Run all commands from the project root:
+
+```bash
+cd /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10
+```
+
+Use a Python environment containing the project dependencies. On the current
+machine, configure the existing environment with:
+
+```bash
+export PATH="/home/ams098z/miniforge3/envs/py312/bin:$PATH"
+export LD_LIBRARY_PATH="/home/ams098z/miniforge3/envs/py312/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+```
+
+The library path addresses the possible `CXXABI_1.3.15 not found` error in this
+Conda environment. Adjust these paths on other machines. Install missing
+dependencies if needed:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-The data module downloads CIFAR-10 on first use. Dataset sizes, device selection,
-normalization, SGD momentum, and weight decay come from `config.py`. The current
-adaptive LR entry point supports SGD. It evaluates the validation set after
-training; it does not evaluate the test set or use it to adjust LR.
+### Shared Configuration
 
-## Run the Adaptive LR Experiment
+Edit [`experiments/suite_config.json`](experiments/suite_config.json).
+The top-level fields control all four experiments:
 
-Show all available command-line options without starting training:
-
-```bash
-python -m experiments.adaptive_lr --help
+```json
+{
+  "epochs": 120,
+  "model": "deeper_cnn_wide",
+  "dataset": "cifar100"
+}
 ```
 
-Run 30 epochs with a fixed batch size of 32 and reference LR of 0.01:
+This snippet shows only the shared fields. Keep the `E1`, `E2`, `E3`, and `E4`
+sections in the complete configuration file. Shared fields override fields of
+the same name within individual experiment sections.
 
-```bash
-python -m experiments.adaptive_lr \
-  --epochs 30 \
-  --batch-size 32 \
-  --reference-lr 0.01
-```
+| Field | Supported values / meaning |
+| --- | --- |
+| `epochs` | Positive integer; shared training budget for E1–E4 |
+| `dataset` | `cifar10` or `cifar100`; model output size follows the dataset |
+| `model` | `custom_cnn`, `deeper_cnn`, or `deeper_cnn_wide` |
 
-Direct script execution is also supported:
+Other settings remain independently configurable for each experiment:
 
-```bash
-python experiments/adaptive_lr.py --epochs 30 --batch-size 32 --lr 0.01
-```
+| Field | Purpose |
+| --- | --- |
+| `seed` | Model initialization and training shuffle seed; dataset splitting still uses `config.SEED` |
+| `batch_size` | Fixed batch for E1/E3; initial batch for E2/E4 |
+| `learning_rate` | Fixed LR for E1/E2; reference LR for E3/E4, subject to batch scaling and warmup |
+| `weight_decay` | SGD weight decay |
+| `momentum` | SGD momentum |
+| `dropout_p` | Dropout probability for the deeper models; `custom_cnn` has no dropout |
+| `batch_controller` | Independent batch growth policy for E2/E4 |
+| `lr_controller` | Independent LR policy for E3/E4 |
 
-`--lr` and `--reference-lr` are aliases. Use either one. **They specify the LR at
-`--reference-batch-size`, not necessarily the actual starting LR.** By default,
-reference batch size is 32 and batch scaling uses a square root. Thus, without
-warmup, reference LR 0.01 gives actual starting LR 0.01 at batch 32 and about
-0.01414 at batch 64. `config.py`'s `INITIAL_LEARNING_RATE` does not supply this
-entry point's default reference LR; its default is explicitly 0.01.
+The batch controller accepts `batch_sizes`, `cv_window`, `stability_threshold`,
+`plateau_patience`, `min_delta`, and `cooldown_epochs`. The initial batch size
+must appear in the candidate list.
 
-Enable five warmup epochs:
+The LR controller accepts `reference_batch_size`, `alpha`, `lr_factor`,
+`plateau_patience`, `worsening_patience`, `cooldown_epochs`, `warmup_epochs`,
+`min_lr`, `min_delta_loss`, and `min_delta_acc`.
 
-```bash
-python -m experiments.adaptive_lr \
-  --epochs 30 --batch-size 32 --lr 0.01 --warmup-epochs 5
-```
+### Validate and Launch
 
-At these settings, the first five training epochs use LR values 0.002, 0.004,
-0.006, 0.008, and 0.010. Warmup is included in the 30-epoch budget. Omitting
-`--warmup-epochs`, or setting it to 0, disables warmup.
-
-Customize validation feedback and the output root:
-
-```bash
-python -m experiments.adaptive_lr \
-  --epochs 50 --batch-size 64 --seed 42 \
-  --reference-lr 0.01 --reference-batch-size 32 --alpha 0.5 \
-  --lr-factor 0.5 --plateau-patience 5 --worsening-patience 3 \
-  --cooldown-epochs 2 --warmup-epochs 5 \
-  --min-lr 0.00001 --min-delta-loss 0.001 --min-delta-acc 0.002 \
-  --target-accuracy 0.80 --output-dir results
-```
-
-For a short training check, use `--epochs 2`. This reduces the number of epochs,
-not the dataset size. Batch size remains fixed throughout each run.
-
-### Local Conda Dynamic-Library Workaround
-
-If the local `py312` environment reports `CXXABI_1.3.15 not found`, the following
-command uses that environment's C++ libraries for this process only:
-
-```bash
-LD_LIBRARY_PATH=/home/ams098z/miniforge3/envs/py312/lib \
-/home/ams098z/miniforge3/envs/py312/bin/python -m experiments.adaptive_lr \
-  --epochs 30 --batch-size 32 --lr 0.01 --warmup-epochs 5
-```
-
-These paths are specific to the current machine; adjust them for other systems.
-
-## Adjustable Parameters
-
-Command-line arguments override the defaults for the current run without editing
-`config.py`. All floating-point arguments must be finite.
-
-| Argument | Type | Default | Meaning and valid values |
-| --- | --- | --- | --- |
-| `--epochs` | Integer | `config.EPOCHS` | Total training epochs, including warmup; greater than 0. |
-| `--batch-size` | Integer | `config.INITIAL_BATCH_SIZE` | Fixed training batch size; greater than 0. |
-| `--seed` | Integer | `config.SEED` | Model/global random seed and training shuffle seed; 0 through 2^32 - 1. The shared data split still uses `config.SEED`. |
-| `--reference-lr`, `--lr` | Float | `0.01` | LR at the reference batch size before feedback decay or warmup; greater than 0. |
-| `--reference-batch-size` | Integer | `256` | Batch size used as the scaling reference; greater than 0. |
-| `--alpha` | Float | `0.2` | Non-negative batch-scaling exponent. 0 disables scaling; 0.5 uses square-root scaling; 1 uses linear scaling. |
-| `--lr-factor` | Float | `0.5` | Multiplier applied on each feedback decay; strictly between 0 and 1. |
-| `--plateau-patience` | Integer | `2` | Consecutive plateau epochs needed for a decay; greater than 0. |
-| `--worsening-patience` | Integer | `2` | Consecutive worsening epochs needed for a decay; greater than 0. |
-| `--cooldown-epochs` | Integer | `2` | Epochs suppressing further feedback decay after a reduction; non-negative. |
-| `--warmup-epochs` | Integer | `0` | Linear warmup duration; non-negative. 0 disables it. If greater than the total epoch budget, the run ends during warmup. |
-| `--min-lr` | Float | `1e-8` | Non-negative LR floor, also enforced during warmup. |
-| `--min-delta-loss` | Float | `1e-3` | Non-negative absolute loss threshold for improvement and worsening. |
-| `--min-delta-acc` | Float | `0.002` | Accuracy improvement threshold in [0, 1]; 0.002 means 0.2 percentage points. |
-| `--target-accuracy` | Float | `0.80` | Validation accuracy target in [0, 1] for time/epoch reporting. It does not stop training or control LR. |
-| `--output-dir` | Path | `config.RESULTS_DIR` | Root directory for per-run artifacts; relative paths resolve from the working directory. |
-
-## Controller Behavior
-
-For batch size `B`, the base LR is:
-
-```text
-lr_base = reference_lr * (B / reference_batch_size) ** alpha
-actual_lr = max(min_lr, lr_base * decay_multiplier * warmup_factor)
-```
-
-`decay_multiplier` starts at 1.0 and is multiplied by `lr_factor` when feedback
-triggers a reduction. During warmup, `warmup_factor = min(1, epoch / warmup_epochs)`
-with epochs numbered from 1. With warmup disabled, the factor is 1.
-
-After each validation:
-
-- Loss improvement means `val_loss < best_val_loss - min_delta_loss`.
-- Accuracy improvement means `val_accuracy > best_val_accuracy + min_delta_acc`.
-- Either improvement resets both patience counters. Accuracy alone never triggers a reduction.
-- Without improvement, loss above `best_val_loss + min_delta_loss` counts as worsening; otherwise it counts as a plateau.
-- Switching between plateau and worsening resets the other counter, so patience counts consecutive epochs.
-- Reaching either patience limit triggers a decay and starts cooldown. At the LR floor, no further decay is accumulated when all groups are at the floor.
-- During warmup, best metrics are tracked but feedback counters remain zero. The first adaptive decision is after validation of epoch `warmup_epochs + 1`.
-- During cooldown, best metrics are tracked while feedback decay remains disabled.
-
-The LR chosen after validation applies to the next training epoch. The batch-size
-scaling factor remains constant in this experiment because batch size is fixed.
-No early stopping or automatic resume is implemented by this entry point.
-
-## Saved Results
-
-Each invocation creates a new timestamped directory, even when the parameters
-match a previous run:
-
-```text
-results/
-  adaptive_lr_batch32_refLR0.01_seed42/
-    <UTC timestamp>/
-      <run_name>.csv
-      <run_name>_metadata.json
-      <run_name>_best.pt
-      lr_history.json
-      evaluation_history.json
-      training_summary.json
-      validation_metrics.json
-      training_curves.png
-      validation_confusion_matrix.png
-      validation_confusion_matrix_normalized.png
-```
-
-- The CSV records losses, accuracies, gradient statistics, cumulative optimizer
-  updates, timing, and controller decisions. `learning_rate` is the LR actually
-  used in the completed epoch. `next_learning_rate` and `actual_learning_rate`
-  are the LR selected after validation for the next epoch.
-- `lr_history.json` stores the controller's per-epoch decisions, including
-  `lr_base`, `decay_multiplier`, counters, `lr_change_reason`, `warmup_active`, and
-  `next_warmup_factor`. `warmup_active` describes the completed epoch;
-  `next_warmup_factor` describes the following epoch.
-- Metadata records all controller settings, including warmup, plus run details
-  and separate training/evaluation completion status.
-- The best checkpoint is selected by the lowest validation loss. Evaluation
-  reloads this checkpoint rather than using the final epoch's weights.
-- `training_summary.json` reports training time, total updates, and the first
-  validation epoch/time reaching the target. Unreached targets are `null`.
-- Classification results include accuracy, macro precision/recall/F1, and per-class
-  metrics. This entry point generates validation results, not final test results
-  or a train-test generalization gap.
-
-Trainer CSV accuracies use percentages (0–100), while evaluation JSON accuracies
-and controller accuracy inputs use fractions (0–1). The pipeline converts these
-units and converts cumulative update counts into per-epoch counts for evaluation.
-An interrupted run may contain only partial output. All files for one run share
-the same directory.
-
-
-## Dataset Selection Across Experiments
-
-All four training runners accept `--dataset cifar10` (default) or
-`--dataset cifar100`. Model outputs, ordered evaluation class names, and
-metadata follow the selected dataset. CIFAR-100 run names have a `cifar100_`
-prefix to keep checkpoints and results separate from CIFAR-10.
-
-The existing data modules use 20,000 training / 5,000 validation images for
-CIFAR-10 and 45,000 training / 5,000 validation images for CIFAR-100. Both keep
-the official 10,000-image test set separate from training and model selection.
-Missing data is downloaded to `data/downloads/`.
-
-Run from the project root in an environment with PyTorch and torchvision:
-
-```bash
-python -m experiments.fixed_fixed --dataset cifar100 --batch-sizes 32
-python -m experiments.adaptive_batch --dataset cifar100
-python -m experiments.adaptive_lr --dataset cifar100 --reference-lr 0.1
-python -m experiments.adaptive_combined --dataset cifar100
-```
-
-The example reference LR of 0.1 matches the current shared configuration and
-combined runner. For a short check, add `--epochs 3 --pilot` to adaptive batch
-or combined; fixed and adaptive LR accept `--epochs 3` directly.
-
-The reporting-only runner also accepts `--dataset cifar100`:
-
-```bash
-python -m experiments.generate_final_results --dataset cifar100
-```
-
-It requires completed validation and final-test artifacts; it does not create
-them or run training. E1-E4 now save training CSV, metadata, best checkpoint,
-and validation artifacts together in `results/<run_name>/<UTC timestamp>/`.
-The report reader supports the new E1/E2 layout and falls back to the old flat
-CSV/metadata and separate validation directories when no timestamp run root exists.
-Final-test artifacts for CIFAR-100 belong in
-`results/cifar100_final_test_evaluation/<timestamp>/E1/` through `E4/`.
-Reports default to `results/cifar100_final_report_assets/`. E3/E4 report lookup
-uses the reference LR in `config.INITIAL_LEARNING_RATE`, so use matching LRs
-when generating a four-experiment report.
-
-Adaptive batch and fixed-batch training call the shared `run_evaluation`
-pipeline after training. It evaluates the best validation-loss checkpoint and
-prints checkpoint accuracy and macro F1. Each run directory contains
-`validation_metrics.json`, `evaluation_history.json`, `training_summary.json`,
-`training_curves.png`, and `validation_confusion_matrix_normalized.png`.
-The metadata records `evaluation_status` separately from training completion.
-CIFAR-100 uses its ordered 100 class names; evaluation does not use the test set.
-
-Every training invocation starts a fresh model, optimizer, Trainer, data shuffle
-generator and any adaptive controllers. The chosen seed is reapplied before
-initialization. No controller history or optimizer state is resumed from a previous
-run. Identical configurations are allowed to run again and produce separate UTC
-timestamp directories. E1/E2 retain `--overwrite` only as a compatibility flag;
-it no longer overwrites existing results or controls whether training runs.
-
-
-## CIFAR-100 rerun with default LR patience
-
-`experiments.rerun_cifar100` fixes both LR patience values to the current E3
-runner defaults (2/2) for E3 and E4. It screens initial LR, decay factor and E4
-batch scaling using validation loss, checks a common epoch budget, and retains
-only the selected E1-E4 runs after verifying their artifacts. E3 and E4 use
-identical final LR controller settings. The batch controller patience stays 3.
-
-```sh
-LD_LIBRARY_PATH=/home/ams098z/miniforge3/envs/py312/lib /home/ams098z/miniforge3/envs/py312/bin/python -m experiments.rerun_cifar100 --output-dir results/rerun_cifar100_20261006
-python -m experiments.plot_comparison --results-root results/rerun_cifar100_20261006
-```
-
-The output directory must be new. `best_parameters.json`, `manifest.json` and
-`REPORT.md` record the final policy, compact screening evidence and epoch choice.
-`figures/E3_E4_training_curves.png` and `E3_E4_training_curves_time.png` preserve
-the paired comparison layout. Each loss/accuracy curve is also saved separately
-against epoch and measured time as PNG, including for each individual
-experiment. Candidate result directories are removed only after final verification.
-
-### Six-convolution CNN for E1–E4
-
-All four experiment runners accept `--model custom_cnn` (the default,
-three convolutions) or `--model deeper_cnn` (six convolutions). For example:
-
-```bash
-python -m experiments.fixed_fixed --model deeper_cnn --batch-sizes 32
-python -m experiments.adaptive_batch --model deeper_cnn
-python -m experiments.adaptive_lr --model deeper_cnn --batch-size 32
-python -m experiments.adaptive_combined --model deeper_cnn
-```
-
-Add `--dataset cifar100` to use CIFAR-100. Other experiment settings are
-unchanged. Deeper-model run names start with `deeper_cnn_`, and metadata
-records both the model class and the model selection key. These commands
-run new training experiments; existing checkpoints remain associated with
-their original architecture.
-
-### Twelve-convolution wide CNN
-
-Use `--model deeper_cnn_wide` in any E1–E4 runner for twelve convolutions:
-four with 64 channels, four with 128 channels, and four with 256 channels.
-Max pooling follows convolutions 4, 8, and 12. For 32x32 CIFAR inputs,
-the three stages produce 64x16x16, 128x8x8, and 256x4x4 feature maps.
-All convolutions use 3x3 kernels, stride 1, padding 1, configured
-normalization, and ReLU. GAP, flattening, Dropout(p=0.2), and
-Linear(256, num_classes) form the classification head.
-
-The original `deeper_cnn` remains a six-convolution model with stage
-widths `32/64/128`. Both models use dropout during training and disable
-it during evaluation. Metadata records `model_channels`, `conv_layers`, and `dropout_p`.
-Direct construction accepts `dropout_p=0.0` to disable dropout.
-
-```bash
-python -m experiments.adaptive_batch --dataset cifar100 --model deeper_cnn_wide --epochs 50 --seed 42 --pilot
-```
-
-New wide-model runs use the twelve-convolution architecture. Earlier
-six- or eight-convolution wide checkpoints require their original architecture;
-start new training for this model. Runs retain the `deeper_cnn_wide_`
-prefix and create a new timestamp directory.
-
-Comparison figures use only PNG and cover E2_E3 and the E1_E2_E3_E4 overview. Run
-`python -m experiments.plot_comparison --results-root <results-root>`
-with all four `best_results/E*/evaluation_history.json` files available.
-
-Each comparison outputs separate loss and accuracy PNGs by epoch and time
-(four per group, eight total); combined comparison plots are not generated.
-
-### Independently configured E1–E4 suite
-
-Edit `experiments/suite_config.json`: the top-level `epochs` sets a shared
-training budget for all four experiments and overrides per-experiment epochs.
-Each E1–E4 section independently sets model, dataset, seed, initial/fixed
-batch size, learning rate,
-weight decay, dropout, and momentum. E2/E4 have their own batch controller;
-E3/E4 have their own LR controller. `learning_rate` is the fixed LR for
-E1/E2 and reference LR for E3/E4. Actual adaptive LR includes batch scaling
-and optional warmup. Dropout applies to the deeper models only.
+Validate settings without downloading data or starting training:
 
 ```bash
 python -m experiments.run_suite --dry-run
+```
+
+Run E1 → E2 → E3 → E4 sequentially:
+
+```bash
 python -m experiments.run_suite
 ```
 
-Runs execute sequentially in isolated processes. A fresh timestamp directory
-under `results/unified_experiments` contains the resolved settings, E1–E4
-logs, per-run artifacts and best checkpoints, `best_results/E*` links,
-`comparison.csv`, and eight separate comparison PNGs. The suite's E2/E4
-runs are marked as pilot runs and use the explicit independent protocol;
-standalone frozen-run checks remain enabled. No official test evaluation
-is performed. Different budgets or model settings should be considered
-when interpreting comparisons.
+Specify a configuration file or output root:
+
+```bash
+python -m experiments.run_suite \
+  --config experiments/suite_config.json \
+  --output-dir results/unified_experiments
+```
+
+Each experiment runs in an isolated process. Each invocation creates a new UTC
+timestamp directory. Training output goes to `E1.log` through `E4.log`; the
+terminal reports experiment starts and completions. If an experiment fails,
+the suite stops and retains completed results and logs. Automatic resume is
+not implemented.
+
+The suite runs E2/E4 under an independently configured protocol, marks them as
+pilot runs, and permits custom budgets and initial batch sizes. Pilot mode
+uses the full configured dataset. Standalone frozen-protocol checks remain
+in place.
+
+### Unified Results
+
+```text
+results/unified_experiments/<timestamp>/
+  settings.json              # Resolved settings for all four experiments
+  E1.log ... E4.log          # Training logs
+  E1_result.json ... E4_result.json
+  runs/E1/ ... runs/E4/      # Actual training and evaluation artifacts
+  best_results/E1 ... E4     # Symbolic links to actual run directories
+  comparison.csv            # Best epoch, validation accuracy/loss, F1, time
+  figures/                  # Eight comparison PNGs across two groups
+```
+
+Comparison groups are limited to `E2_E3` and `E1_E2_E3_E4`. Each group contains
+`loss_epoch.png`, `accuracy_epoch.png`, `loss_time.png`, and `accuracy_time.png`,
+with the group name as the filename prefix. No combined loss/accuracy
+comparison figures or PDFs are generated.
+
+## 2. Run Individual Experiments
+
+| Experiment | Batch policy | LR policy | Main purpose |
+| --- | --- | --- | --- |
+| E1 | Fixed | Fixed | Baseline |
+| E2 | Adaptive growth | Fixed | Compare training efficiency and validation performance |
+| E3 | Fixed | Validation feedback | Compare convergence and validation performance |
+| E4 | Adaptive growth | Validation feedback | Compare the combined policies |
+
+The examples below use CIFAR-100, the twelve-convolution CNN, seed 42, and
+60 epochs. **Individual entry points do not read `suite_config.json`.** They
+use command-line arguments, `config.py`, and constants in their runner modules.
+The standalone E4 LR policy therefore may differ from the suite's E3/E4 policy.
+
+### E1: Fixed Batch and Fixed LR
+
+```bash
+python -m experiments.fixed_fixed \
+  --dataset cifar100 --model deeper_cnn_wide \
+  --epochs 60 --seed 42 --batch-sizes 32
+```
+
+`--batch-sizes` can launch multiple runs, for example `16 32 64 128`.
+Allowed values come from `config.BATCH_SIZE_OPTIONS`. Fixed LR comes from
+`config.INITIAL_LEARNING_RATE`, currently `0.01`.
+
+### E2: Adaptive Batch and Fixed LR
+
+```bash
+python -m experiments.adaptive_batch \
+  --dataset cifar100 --model deeper_cnn_wide \
+  --epochs 60 --seed 42 --pilot
+```
+
+The current initial batch size is 32, with candidates `32/64/128/256`.
+The policy only grows batch size. Decisions use gradient-norm variability
+and validation-loss stagnation. Fixed LR comes from
+`config.INITIAL_LEARNING_RATE`.
+
+Standalone batch-controller settings are defined in
+`experiments/adaptive_batch.py` and are not exposed as CLI options.
+Without `--pilot`, the epoch budget must equal `config.EPOCHS`.
+The standalone protocol requires an initial batch size of 32.
+
+### E3: Fixed Batch and Adaptive LR
+
+```bash
+python -m experiments.adaptive_lr \
+  --dataset cifar100 --model deeper_cnn_wide \
+  --epochs 60 --seed 42 --batch-size 32 \
+  --reference-lr 0.01 --reference-batch-size 32 --alpha 0.2 \
+  --lr-factor 0.5 --plateau-patience 5 --worsening-patience 5 \
+  --cooldown-epochs 3 --warmup-epochs 0 \
+  --min-lr 1e-5 --min-delta-loss 0.001 --min-delta-acc 0.002
+```
+
+This is an example candidate policy; it does not modify the suite configuration.
+With reference and actual batch sizes both 32 and warmup disabled, the actual
+initial LR is `0.01`. `--lr` is an alias for `--reference-lr`.
+
+```text
+lr_base = reference_lr * (batch_size / reference_batch_size) ** alpha
+actual_lr = max(min_lr, lr_base * decay_multiplier * warmup_factor)
+```
+
+Significant improvement in validation loss or accuracy resets the patience
+counters. Otherwise, plateau or worsening epochs accumulate. Reaching the
+corresponding patience limit multiplies LR by `lr_factor`, then starts cooldown.
+`min_delta_acc=0.002` requires an accuracy increase exceeding 0.2 percentage
+points. The LR selected after validation applies to the following epoch.
+
+Standalone defaults include reference batch size 256, `alpha=0.2`, and
+patience 2/2; omitting these options does not reproduce the example above.
+Additional options include `--output-dir` and `--target-accuracy`. The target
+only controls time-to-target reporting, not early stopping or LR decisions.
+
+### E4: Adaptive Batch and Adaptive LR
+
+```bash
+python -m experiments.adaptive_combined \
+  --dataset cifar100 --model deeper_cnn_wide \
+  --epochs 60 --seed 42 --pilot
+```
+
+The batch and LR controllers operate together; LR also scales with batch size.
+Standalone controller settings are defined in `experiments/adaptive_combined.py`.
+Current built-in settings include reference LR `0.01`, reference batch size 32,
+patience 2/2, and five warmup epochs. Use the suite's E4 section for independent
+control over the full policy.
+
+Without `--pilot`, the budget must equal `config.EPOCHS`. The standalone runner
+also requires initial batch size 32 and matching shared baseline/reference LRs.
+
+Use `python -m experiments.<module_name> --help` to inspect each runner's options.
+Standalone weight decay, momentum, and normalization come from `config.py`;
+dropout uses model constructor defaults. JSON changes do not affect standalone
+runs.
+
+## 3. Models and Datasets
+
+| Model key | Architecture | Default dropout |
+| --- | --- | --- |
+| `custom_cnn` | Three convolutions; channels 32, 64, 128 | None |
+| `deeper_cnn` | Six convolutions; stages 32/64/128, two convolutions each | 0.2 |
+| `deeper_cnn_wide` | Twelve convolutions; stages 64/128/256, four convolutions each | 0.2 |
+
+All models use global average pooling (GAP) and a linear classifier.
+The twelve-convolution model pools after convolutions 4, 8, and 12, reducing
+spatial resolution from `32x32` to `16x16`, `8x8`, then `4x4`. Convolutions use
+3x3 kernels, stride 1, and padding 1. Normalization is selected through
+`config.NORMALIZATION`. Dropout follows GAP and flattening; it is enabled
+in training and disabled in evaluation.
+
+Earlier six- or eight-convolution `deeper_cnn_wide` checkpoints require their
+original architectures and cannot load directly into the current model.
+Models are registered in `models/factory.py`; dataset selection is defined
+in `experiments/datasets.py`.
+
+| Dataset key | Training / validation samples | Official test samples |
+| --- | --- | --- |
+| `cifar10` | 20,000 / 5,000 | 10,000 |
+| `cifar100` | 45,000 / 5,000 | 10,000 |
+
+Data downloads automatically to `data/downloads/` on first use. Training uses
+random crops and horizontal flips; validation uses no random augmentation.
+The official test set is excluded from training, LR feedback, and model selection.
+
+## 4. Best Checkpoints and Evaluation
+
+Standalone runs create `results/<run_name>/<UTC timestamp>/`. Suite runs store
+these artifacts under their unified output directory. Main files include:
+
+- `<run_name>_best.pt`: lowest-validation-loss checkpoint, including model and optimizer state, epoch, and metadata.
+- `<run_name>.csv` and `<run_name>_metadata.json`: training records and actual configuration.
+- `validation_metrics.json`: accuracy, loss, and class metrics evaluated after reloading the best checkpoint.
+- `evaluation_history.json` and `training_summary.json`: full history, timing, and target reporting.
+- `lr_history.json` for E3/E4: per-epoch LR decisions; `batch_history.json` for E2: batch decisions.
+
+The best checkpoint need not have the highest accuracy or be from the final
+epoch. Each invocation starts fresh training; automatic early stopping is not
+implemented. CSV accuracies use percentages, while evaluation JSON uses
+fractions. CSV `learning_rate` records the completed epoch's LR;
+`next_learning_rate` records the next epoch's selected LR.
+
+Individual evaluations save separate PNG curves, combined loss/accuracy PNGs,
+and a normalized confusion matrix. Cross-experiment plotting produces only the
+eight separate PNGs described above. Curves are unsmoothed and not extrapolated;
+time axes use measured cumulative elapsed time. Regenerate comparisons with:
+
+```bash
+python -m experiments.plot_comparison \
+  --results-root results/unified_experiments/<timestamp>
+```
+
+The directory must contain `evaluation_history.json` under each
+`best_results/E1` through `best_results/E4` directory. Regeneration does not
+remove existing legacy figures or PDFs.
+
+For controlled comparisons, keep the model, data split, seed, regularization,
+and training budget consistent where appropriate. Freeze settings before
+final test evaluation; the best validation score after repeated tuning is not
+a final test result.
+
+## 5. Historical Utilities
+
+`experiments.rerun_cifar100` provides an earlier parameter-screening workflow.
+`experiments.generate_final_results` builds reports from existing validation/test
+artifacts. `experiments.evaluate_selected` evaluates historically selected
+checkpoints on the test set. These utilities contain historical architecture,
+directory, or protocol assumptions and are not the recommended entry points
+for the current twelve-convolution suite. Current suite outputs should not be
+assumed compatible with those utilities without checking their requirements.
+
+See [`evaluation/README.md`](evaluation/README.md) for detailed evaluation APIs.

@@ -1,8 +1,8 @@
 {
   "epochs": 120,
+  "model": "deeper_cnn_wide",
+  "dataset": "cifar100",
   "E1": {
-    "dataset": "cifar100",
-    "model": "deeper_cnn_wide",
     "seed": 42,
     "batch_size": 32,
     "learning_rate": 0.01,
@@ -11,8 +11,6 @@
     "momentum": 0.9
   },
   "E2": {
-    "dataset": "cifar100",
-    "model": "deeper_cnn_wide",
     "seed": 42,
     "batch_size": 32,
     "learning_rate": 0.01,
@@ -34,8 +32,6 @@
     }
   },
   "E3": {
-    "dataset": "cifar100",
-    "model": "deeper_cnn_wide",
     "seed": 42,
     "batch_size": 32,
     "learning_rate": 0.01,
@@ -56,8 +52,6 @@
     }
   },
   "E4": {
-    "dataset": "cifar100",
-    "model": "deeper_cnn_wide",
     "seed": 42,
     "batch_size": 32,
     "learning_rate": 0.01,

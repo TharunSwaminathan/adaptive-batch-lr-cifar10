@@ -24,8 +24,8 @@ LR = {"reference_batch_size": 32, "alpha": 0.2, "lr_factor": 0.5,
 
 def load_settings(path):
     raw = json.loads(Path(path).read_text())
-    if set(raw) - {"epochs"} != set(MODES):
-        raise ValueError("Config must contain E1, E2, E3, E4 and optional shared epochs")
+    if set(raw) - {"epochs", "model", "dataset"} != set(MODES):
+        raise ValueError("Config must contain E1, E2, E3, E4 and optional shared epochs, model, and dataset")
     shared_epochs = raw.get("epochs")
     if "epochs" in raw and (isinstance(shared_epochs, bool)
                             or not isinstance(shared_epochs, int) or shared_epochs < 1):
@@ -37,8 +37,9 @@ def load_settings(path):
         if unknown:
             raise ValueError(f"{mode}: unknown settings {sorted(unknown)}")
         settings = {**COMMON, **raw[mode]}
-        if shared_epochs is not None:
-            settings["epochs"] = shared_epochs
+        for key in ("epochs", "model", "dataset"):
+            if key in raw:
+                settings[key] = raw[key]
         for key, defaults in (("batch_controller", BATCH), ("lr_controller", LR)):
             if key not in allowed:
                 continue
