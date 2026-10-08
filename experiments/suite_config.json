@@ -1,7 +1,7 @@
 {
-  "epochs": 120,
+  "epochs": 50,
   "model": "deeper_cnn_wide",
-  "dataset": "cifar100",
+  "dataset": "cifar10",
   "E1": {
     "seed": 42,
     "batch_size": 32,
