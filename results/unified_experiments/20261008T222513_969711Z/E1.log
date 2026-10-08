@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/experiments/run_suite.py", line 173, in <module>
+    main()
+    ~~~~^^
+  File "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/experiments/run_suite.py", line 135, in main
+    run_worker(args.worker, settings[args.worker], args.output_dir.resolve(), validate_only=args.dry_run)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/experiments/run_suite.py", line 65, in run_worker
+    import config
+  File "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/config.py", line 4, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

@@ -1,5 +1,5 @@
 {
-  "epochs": 50,
+  "epochs": 80,
   "model": "deeper_cnn_wide",
   "dataset": "cifar10",
   "E1": {
