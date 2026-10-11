@@ -6,23 +6,9 @@ E1–E4 together, or launch each experiment individually.
 
 ## 1. Run the Unified Experiments
 
-Run all commands from the project root:
-
-```bash
-cd /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10
-```
-
-Use a Python environment containing the project dependencies. On the current
-machine, configure the existing environment with:
-
-```bash
-export PATH="/home/ams098z/miniforge3/envs/py312/bin:$PATH"
-export LD_LIBRARY_PATH="/home/ams098z/miniforge3/envs/py312/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-```
-
-The library path addresses the possible `CXXABI_1.3.15 not found` error in this
-Conda environment. Adjust these paths on other machines. Install missing
-dependencies if needed:
+Run all commands from the project root (the directory containing
+`config.py`, `requirements.txt`, and `experiments/`). Activate your Python
+environment and install the project dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
