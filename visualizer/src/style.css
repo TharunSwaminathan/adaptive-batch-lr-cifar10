@@ -414,6 +414,10 @@ body {
   border-radius: 14px;
 }
 
+.elapsed-time-panel {
+  border-top: 3px solid #34d399;
+}
+
 .combined-panel h2 {
   margin: 0 0 10px;
 }
@@ -433,6 +437,31 @@ body {
   padding: 16px;
 }
 
+.elapsed-time-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.elapsed-time-chart-card {
+  min-width: 0;
+  padding: 16px;
+  background: #0b1120;
+  border: 1px solid #334155;
+  border-radius: 10px;
+}
+
+.elapsed-time-chart-card h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.elapsed-time-chart-container {
+  position: relative;
+  height: 480px;
+  width: 100%;
+}
+
 @media (max-width: 900px) {
   .view-toolbar {
     padding: 16px;
@@ -446,6 +475,10 @@ body {
 
   .combined-chart-container {
     height: 350px;
+  }
+
+  .elapsed-time-chart-container {
+    height: 360px;
   }
 }
 

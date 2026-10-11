@@ -68,9 +68,10 @@ document.querySelector('#app').innerHTML = `
 
 
     <section class="view-toolbar">
-      <label for="viewSelect">Chart View</label>
+      <label for="viewSelect">Analysis View</label>
 
       <select id="viewSelect">
+        <option value="elapsed" selected>Loss and Accuracy by Training Time</option>
         <option value="four">Four Individual Charts</option>
         <option value="combined">Combined E1–E4 Comparison</option>
       </select>
@@ -85,6 +86,26 @@ document.querySelector('#app').innerHTML = `
 
       <div class="combined-chart-container">
         <canvas id="combinedChart"></canvas>
+      </div>
+    </section>
+
+    <section id="elapsedTimePanel" class="combined-panel elapsed-time-panel" hidden>
+      <h2>Training Metrics by Elapsed Time</h2>
+      <p>Training and validation curves use the left axis; dotted lines show batch size on the right axis.</p>
+
+      <div class="elapsed-time-grid">
+        <article class="elapsed-time-chart-card">
+          <h3>Accuracy</h3>
+          <div class="elapsed-time-chart-container">
+            <canvas id="elapsedAccuracyChart" aria-label="Training and validation accuracy and batch size by elapsed training time"></canvas>
+          </div>
+        </article>
+        <article class="elapsed-time-chart-card">
+          <h3>Cross-Entropy Loss</h3>
+          <div class="elapsed-time-chart-container">
+            <canvas id="elapsedLossChart" aria-label="Training and validation cross-entropy loss and batch size by elapsed training time"></canvas>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -283,6 +304,8 @@ let experimentData = {};
 let charts = {};
 
 let combinedChart = null;
+let elapsedAccuracyChart = null;
+let elapsedLossChart = null;
 let lrChart = null;
 let batchChart = null;
 let processingChart = null;
@@ -557,6 +580,139 @@ function createCombinedChart() {
       }
     }
   });
+}
+
+function createElapsedTimeChart(canvasId, metric, metricLabel) {
+  const datasets = experiments.flatMap(experiment => {
+    const color = experiment.color;
+    const metricDatasets = ['train', 'validation'].map(split => ({
+      label: `${experiment.id}: ${split}`,
+      data: [],
+      borderColor: color,
+      backgroundColor: color,
+      borderWidth: split === 'train' ? 2 : 2.5,
+      borderDash: split === 'validation' ? [7, 4] : [],
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      tension: 0.12,
+      yAxisID: 'metric'
+    }));
+
+    return [
+      ...metricDatasets,
+      {
+        label: `${experiment.id}: batch size`,
+        data: [],
+        borderColor: color,
+        backgroundColor: color,
+        borderWidth: 1.5,
+        borderDash: [2, 4],
+        pointRadius: 0,
+        pointHoverRadius: 3,
+        stepped: 'before',
+        yAxisID: 'batchSize'
+      }
+    ];
+  });
+
+  return new Chart(document.querySelector(`#${canvasId}`), {
+    type: 'line',
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      interaction: { mode: 'nearest', axis: 'xy', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { color: '#cbd5e1', boxWidth: 12, padding: 12 }
+        },
+        tooltip: {
+          callbacks: {
+            title: items => items.length
+              ? `${items[0].parsed.x.toFixed(1)} seconds`
+              : '',
+            label: context => {
+              const value = context.parsed.y;
+              return context.dataset.yAxisID === 'batchSize'
+                ? `${context.dataset.label}: ${value}`
+                : `${context.dataset.label}: ${value.toFixed(metric === 'accuracy' ? 2 : 4)}${metric === 'accuracy' ? '%' : ''}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          title: { display: true, text: 'Elapsed training time (seconds)', color: '#94a3b8' },
+          ticks: { color: '#94a3b8', maxTicksLimit: 10 },
+          grid: { color: '#1e293b' }
+        },
+        metric: {
+          type: 'linear',
+          position: 'left',
+          beginAtZero: metric === 'accuracy',
+          title: { display: true, text: metricLabel, color: '#94a3b8' },
+          ticks: { color: '#94a3b8' },
+          grid: { color: '#334155' }
+        },
+        batchSize: {
+          type: 'linear',
+          position: 'right',
+          beginAtZero: true,
+          title: { display: true, text: 'Batch size', color: '#94a3b8' },
+          ticks: { color: '#94a3b8', precision: 0 },
+          grid: { drawOnChartArea: false }
+        }
+      }
+    }
+  });
+}
+
+function createElapsedTimeCharts() {
+  elapsedAccuracyChart?.destroy();
+  elapsedLossChart?.destroy();
+  elapsedAccuracyChart = createElapsedTimeChart('elapsedAccuracyChart', 'accuracy', 'Accuracy (%)');
+  elapsedLossChart = createElapsedTimeChart('elapsedLossChart', 'loss', 'Cross-entropy loss');
+}
+
+function updateElapsedTimeCharts() {
+  if (!elapsedAccuracyChart || !elapsedLossChart) return;
+
+  experiments.forEach((experiment, experimentIndex) => {
+    const rows = experimentData[experiment.id].slice(0, currentEpoch);
+    const datasetIndex = experimentIndex * 3;
+
+    elapsedAccuracyChart.data.datasets[datasetIndex].data = rows.map(row => ({
+      x: row.elapsedSeconds,
+      y: row.trainAccuracy
+    }));
+    elapsedAccuracyChart.data.datasets[datasetIndex + 1].data = rows.map(row => ({
+      x: row.elapsedSeconds,
+      y: row.valAccuracy
+    }));
+    elapsedAccuracyChart.data.datasets[datasetIndex + 2].data = rows.map(row => ({
+      x: row.elapsedSeconds,
+      y: row.batchSize
+    }));
+
+    elapsedLossChart.data.datasets[datasetIndex].data = rows.map(row => ({
+      x: row.elapsedSeconds,
+      y: row.trainLoss
+    }));
+    elapsedLossChart.data.datasets[datasetIndex + 1].data = rows.map(row => ({
+      x: row.elapsedSeconds,
+      y: row.valLoss
+    }));
+    elapsedLossChart.data.datasets[datasetIndex + 2].data = rows.map(row => ({
+      x: row.elapsedSeconds,
+      y: row.batchSize
+    }));
+  });
+
+  elapsedAccuracyChart.update('none');
+  elapsedLossChart.update('none');
 }
 
 function createDynamicsCharts() {
@@ -943,6 +1099,7 @@ function renderEpoch(epoch) {
     }
 
   updateDynamicsCharts();
+  updateElapsedTimeCharts();
 
 
   epochSlider.value = currentEpoch;
@@ -1064,6 +1221,7 @@ async function loadComparison() {
 
     createCharts();
     createCombinedChart();
+    createElapsedTimeCharts();
     createDynamicsCharts();
     createProcessingChart();
 
@@ -1130,10 +1288,12 @@ epochSelect.addEventListener('change', loadComparison);
 function updateChartView() {
 
   const isCombined = viewSelect.value === 'combined';
+  const isElapsed = viewSelect.value === 'elapsed';
 
   // Show the selected panel, hide the other.
-  comparisonGrid.hidden = isCombined;
+  comparisonGrid.hidden = isCombined || isElapsed;
   combinedPanel.hidden = !isCombined;
+  document.querySelector('#elapsedTimePanel').hidden = !isElapsed;
 
   // Resize charts after making their containers visible.
   if (isCombined && combinedChart) {
@@ -1141,7 +1301,13 @@ function updateChartView() {
     combinedChart.update('none');
   }
 
-  if (!isCombined) {
+  if (isElapsed) {
+    elapsedAccuracyChart?.resize();
+    elapsedLossChart?.resize();
+    updateElapsedTimeCharts();
+  }
+
+  if (!isCombined && !isElapsed) {
     Object.values(charts).forEach(chart => {
       chart.resize();
       chart.update('none');
