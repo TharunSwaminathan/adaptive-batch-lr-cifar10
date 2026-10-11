@@ -1,0 +1,523 @@
+Results directory: /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E1_final_ep160/cifar100_fixed_fixed_batch32_lr0.01_seed42/20261005T083502_089363Z
+
+##############################################################################
+Experiment: cifar100_fixed_fixed_batch32_lr0.01_seed42
+##############################################################################
+
+CIFAR-100 dataset ready
+------------------------------------------------------------
+Training samples:   45,000
+Validation samples: 5,000
+Test samples:       10,000
+
+Training samples per class:
+[450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450]
+
+Validation samples per class:
+[50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
+------------------------------------------------------------
+Dataset:             CIFAR-100; classes: 100
+Device:              NVIDIA GeForce RTX 5070 Ti Laptop GPU
+Training samples:    45,000
+Validation samples:  5,000
+Batch size:          32
+Learning rate:       0.01
+Epochs:              160
+Updates per epoch:   1,407
+Expected updates:    225,120
+
+Starting fixed baseline training
+==============================================================================
+Epoch 01/160 | Train Loss: 4.1571 | Train Acc: 5.92% | Val Loss: 3.9197 | Val Acc: 9.24%  <-- best
+             Grad Mean: 2.1002 | Grad Std: 0.3240 | Grad CV: 0.1542
+             LR: 0.010000 | Batch: 32 | Updates: 1,407 | Time: 4.22s
+Epoch 02/160 | Train Loss: 3.7520 | Train Acc: 11.28% | Val Loss: 3.6621 | Val Acc: 11.68%  <-- best
+             Grad Mean: 2.4831 | Grad Std: 0.3920 | Grad CV: 0.1579
+             LR: 0.010000 | Batch: 32 | Updates: 2,814 | Time: 3.89s
+Epoch 03/160 | Train Loss: 3.4882 | Train Acc: 15.78% | Val Loss: 3.4979 | Val Acc: 15.62%  <-- best
+             Grad Mean: 2.8274 | Grad Std: 0.4552 | Grad CV: 0.1610
+             LR: 0.010000 | Batch: 32 | Updates: 4,221 | Time: 3.74s
+Epoch 04/160 | Train Loss: 3.2997 | Train Acc: 19.31% | Val Loss: 3.4638 | Val Acc: 17.98%  <-- best
+             Grad Mean: 3.0621 | Grad Std: 0.4807 | Grad CV: 0.1570
+             LR: 0.010000 | Batch: 32 | Updates: 5,628 | Time: 3.92s
+Epoch 05/160 | Train Loss: 3.1524 | Train Acc: 21.89% | Val Loss: 3.3760 | Val Acc: 19.02%  <-- best
+             Grad Mean: 3.2283 | Grad Std: 0.5150 | Grad CV: 0.1595
+             LR: 0.010000 | Batch: 32 | Updates: 7,035 | Time: 3.91s
+Epoch 06/160 | Train Loss: 3.0465 | Train Acc: 24.25% | Val Loss: 3.1742 | Val Acc: 21.66%  <-- best
+             Grad Mean: 3.2690 | Grad Std: 0.4914 | Grad CV: 0.1503
+             LR: 0.010000 | Batch: 32 | Updates: 8,442 | Time: 3.76s
+Epoch 07/160 | Train Loss: 2.9556 | Train Acc: 26.02% | Val Loss: 3.1293 | Val Acc: 22.80%  <-- best
+             Grad Mean: 3.3429 | Grad Std: 0.4911 | Grad CV: 0.1469
+             LR: 0.010000 | Batch: 32 | Updates: 9,849 | Time: 3.91s
+Epoch 08/160 | Train Loss: 2.8818 | Train Acc: 27.49% | Val Loss: 3.1515 | Val Acc: 23.30%
+             Grad Mean: 3.3419 | Grad Std: 0.4519 | Grad CV: 0.1352
+             LR: 0.010000 | Batch: 32 | Updates: 11,256 | Time: 3.92s
+Epoch 09/160 | Train Loss: 2.8308 | Train Acc: 28.80% | Val Loss: 3.1092 | Val Acc: 23.76%  <-- best
+             Grad Mean: 3.3668 | Grad Std: 0.4769 | Grad CV: 0.1417
+             LR: 0.010000 | Batch: 32 | Updates: 12,663 | Time: 4.04s
+Epoch 10/160 | Train Loss: 2.7804 | Train Acc: 29.48% | Val Loss: 2.9265 | Val Acc: 26.62%  <-- best
+             Grad Mean: 3.3780 | Grad Std: 0.4534 | Grad CV: 0.1342
+             LR: 0.010000 | Batch: 32 | Updates: 14,070 | Time: 4.21s
+Epoch 11/160 | Train Loss: 2.7294 | Train Acc: 30.68% | Val Loss: 3.0356 | Val Acc: 25.08%
+             Grad Mean: 3.3846 | Grad Std: 0.4214 | Grad CV: 0.1245
+             LR: 0.010000 | Batch: 32 | Updates: 15,477 | Time: 4.04s
+Epoch 12/160 | Train Loss: 2.7015 | Train Acc: 30.94% | Val Loss: 2.9503 | Val Acc: 26.70%
+             Grad Mean: 3.4329 | Grad Std: 0.4645 | Grad CV: 0.1353
+             LR: 0.010000 | Batch: 32 | Updates: 16,884 | Time: 4.11s
+Epoch 13/160 | Train Loss: 2.6598 | Train Acc: 31.73% | Val Loss: 2.8847 | Val Acc: 27.66%  <-- best
+             Grad Mean: 3.4534 | Grad Std: 0.4560 | Grad CV: 0.1321
+             LR: 0.010000 | Batch: 32 | Updates: 18,291 | Time: 3.86s
+Epoch 14/160 | Train Loss: 2.6302 | Train Acc: 32.47% | Val Loss: 2.8623 | Val Acc: 27.68%  <-- best
+             Grad Mean: 3.4437 | Grad Std: 0.4429 | Grad CV: 0.1286
+             LR: 0.010000 | Batch: 32 | Updates: 19,698 | Time: 4.00s
+Epoch 15/160 | Train Loss: 2.6066 | Train Acc: 33.03% | Val Loss: 2.8134 | Val Acc: 29.30%  <-- best
+             Grad Mean: 3.4732 | Grad Std: 0.4468 | Grad CV: 0.1286
+             LR: 0.010000 | Batch: 32 | Updates: 21,105 | Time: 3.79s
+Epoch 16/160 | Train Loss: 2.5752 | Train Acc: 33.69% | Val Loss: 2.8346 | Val Acc: 29.20%
+             Grad Mean: 3.4906 | Grad Std: 0.4535 | Grad CV: 0.1299
+             LR: 0.010000 | Batch: 32 | Updates: 22,512 | Time: 3.89s
+Epoch 17/160 | Train Loss: 2.5588 | Train Acc: 34.00% | Val Loss: 2.8059 | Val Acc: 29.04%  <-- best
+             Grad Mean: 3.4883 | Grad Std: 0.4560 | Grad CV: 0.1307
+             LR: 0.010000 | Batch: 32 | Updates: 23,919 | Time: 3.83s
+Epoch 18/160 | Train Loss: 2.5365 | Train Acc: 34.47% | Val Loss: 2.8406 | Val Acc: 29.64%
+             Grad Mean: 3.5079 | Grad Std: 0.4564 | Grad CV: 0.1301
+             LR: 0.010000 | Batch: 32 | Updates: 25,326 | Time: 4.11s
+Epoch 19/160 | Train Loss: 2.5145 | Train Acc: 35.01% | Val Loss: 2.7667 | Val Acc: 29.88%  <-- best
+             Grad Mean: 3.5032 | Grad Std: 0.4413 | Grad CV: 0.1260
+             LR: 0.010000 | Batch: 32 | Updates: 26,733 | Time: 4.24s
+Epoch 20/160 | Train Loss: 2.4964 | Train Acc: 35.48% | Val Loss: 2.8928 | Val Acc: 27.82%
+             Grad Mean: 3.5395 | Grad Std: 0.4560 | Grad CV: 0.1288
+             LR: 0.010000 | Batch: 32 | Updates: 28,140 | Time: 4.10s
+Epoch 21/160 | Train Loss: 2.4791 | Train Acc: 35.90% | Val Loss: 2.6894 | Val Acc: 31.88%  <-- best
+             Grad Mean: 3.5380 | Grad Std: 0.4558 | Grad CV: 0.1288
+             LR: 0.010000 | Batch: 32 | Updates: 29,547 | Time: 3.90s
+Epoch 22/160 | Train Loss: 2.4656 | Train Acc: 35.89% | Val Loss: 2.6807 | Val Acc: 31.46%  <-- best
+             Grad Mean: 3.5566 | Grad Std: 0.4520 | Grad CV: 0.1271
+             LR: 0.010000 | Batch: 32 | Updates: 30,954 | Time: 4.06s
+Epoch 23/160 | Train Loss: 2.4545 | Train Acc: 36.15% | Val Loss: 2.7126 | Val Acc: 31.18%
+             Grad Mean: 3.5435 | Grad Std: 0.4317 | Grad CV: 0.1218
+             LR: 0.010000 | Batch: 32 | Updates: 32,361 | Time: 3.97s
+Epoch 24/160 | Train Loss: 2.4390 | Train Acc: 36.47% | Val Loss: 2.6388 | Val Acc: 32.68%  <-- best
+             Grad Mean: 3.5499 | Grad Std: 0.4526 | Grad CV: 0.1275
+             LR: 0.010000 | Batch: 32 | Updates: 33,768 | Time: 3.92s
+Epoch 25/160 | Train Loss: 2.4256 | Train Acc: 36.58% | Val Loss: 2.6787 | Val Acc: 32.38%
+             Grad Mean: 3.5640 | Grad Std: 0.4440 | Grad CV: 0.1246
+             LR: 0.010000 | Batch: 32 | Updates: 35,175 | Time: 3.97s
+Epoch 26/160 | Train Loss: 2.4122 | Train Acc: 37.40% | Val Loss: 2.7624 | Val Acc: 30.18%
+             Grad Mean: 3.5917 | Grad Std: 0.4628 | Grad CV: 0.1289
+             LR: 0.010000 | Batch: 32 | Updates: 36,582 | Time: 4.09s
+Epoch 27/160 | Train Loss: 2.3991 | Train Acc: 37.44% | Val Loss: 2.7483 | Val Acc: 30.78%
+             Grad Mean: 3.5676 | Grad Std: 0.4540 | Grad CV: 0.1272
+             LR: 0.010000 | Batch: 32 | Updates: 37,989 | Time: 3.98s
+Epoch 28/160 | Train Loss: 2.3922 | Train Acc: 37.61% | Val Loss: 2.7213 | Val Acc: 31.56%
+             Grad Mean: 3.5917 | Grad Std: 0.4449 | Grad CV: 0.1239
+             LR: 0.010000 | Batch: 32 | Updates: 39,396 | Time: 4.03s
+Epoch 29/160 | Train Loss: 2.3793 | Train Acc: 37.84% | Val Loss: 2.7463 | Val Acc: 31.06%
+             Grad Mean: 3.6078 | Grad Std: 0.4536 | Grad CV: 0.1257
+             LR: 0.010000 | Batch: 32 | Updates: 40,803 | Time: 3.98s
+Epoch 30/160 | Train Loss: 2.3788 | Train Acc: 38.05% | Val Loss: 2.6952 | Val Acc: 32.04%
+             Grad Mean: 3.6102 | Grad Std: 0.4475 | Grad CV: 0.1240
+             LR: 0.010000 | Batch: 32 | Updates: 42,210 | Time: 3.97s
+Epoch 31/160 | Train Loss: 2.3704 | Train Acc: 38.28% | Val Loss: 2.5334 | Val Acc: 35.40%  <-- best
+             Grad Mean: 3.6126 | Grad Std: 0.4478 | Grad CV: 0.1239
+             LR: 0.010000 | Batch: 32 | Updates: 43,617 | Time: 3.89s
+Epoch 32/160 | Train Loss: 2.3576 | Train Acc: 38.18% | Val Loss: 2.6799 | Val Acc: 32.28%
+             Grad Mean: 3.6417 | Grad Std: 0.4591 | Grad CV: 0.1261
+             LR: 0.010000 | Batch: 32 | Updates: 45,024 | Time: 3.80s
+Epoch 33/160 | Train Loss: 2.3505 | Train Acc: 38.34% | Val Loss: 2.5753 | Val Acc: 35.06%
+             Grad Mean: 3.6171 | Grad Std: 0.4483 | Grad CV: 0.1239
+             LR: 0.010000 | Batch: 32 | Updates: 46,431 | Time: 3.93s
+Epoch 34/160 | Train Loss: 2.3379 | Train Acc: 38.75% | Val Loss: 2.7133 | Val Acc: 32.10%
+             Grad Mean: 3.6190 | Grad Std: 0.4519 | Grad CV: 0.1249
+             LR: 0.010000 | Batch: 32 | Updates: 47,838 | Time: 3.73s
+Epoch 35/160 | Train Loss: 2.3419 | Train Acc: 38.73% | Val Loss: 2.5731 | Val Acc: 34.66%
+             Grad Mean: 3.6427 | Grad Std: 0.4556 | Grad CV: 0.1251
+             LR: 0.010000 | Batch: 32 | Updates: 49,245 | Time: 3.91s
+Epoch 36/160 | Train Loss: 2.3278 | Train Acc: 38.62% | Val Loss: 2.6429 | Val Acc: 33.66%
+             Grad Mean: 3.6414 | Grad Std: 0.4571 | Grad CV: 0.1255
+             LR: 0.010000 | Batch: 32 | Updates: 50,652 | Time: 3.80s
+Epoch 37/160 | Train Loss: 2.3210 | Train Acc: 39.09% | Val Loss: 2.5740 | Val Acc: 35.02%
+             Grad Mean: 3.6535 | Grad Std: 0.4626 | Grad CV: 0.1266
+             LR: 0.010000 | Batch: 32 | Updates: 52,059 | Time: 3.93s
+Epoch 38/160 | Train Loss: 2.3178 | Train Acc: 39.29% | Val Loss: 2.6294 | Val Acc: 33.84%
+             Grad Mean: 3.6339 | Grad Std: 0.4515 | Grad CV: 0.1242
+             LR: 0.010000 | Batch: 32 | Updates: 53,466 | Time: 4.05s
+Epoch 39/160 | Train Loss: 2.3113 | Train Acc: 39.15% | Val Loss: 2.5704 | Val Acc: 33.80%
+             Grad Mean: 3.6507 | Grad Std: 0.4683 | Grad CV: 0.1283
+             LR: 0.010000 | Batch: 32 | Updates: 54,873 | Time: 4.11s
+Epoch 40/160 | Train Loss: 2.3106 | Train Acc: 39.31% | Val Loss: 2.6106 | Val Acc: 34.84%
+             Grad Mean: 3.6688 | Grad Std: 0.4526 | Grad CV: 0.1234
+             LR: 0.010000 | Batch: 32 | Updates: 56,280 | Time: 4.07s
+Epoch 41/160 | Train Loss: 2.3039 | Train Acc: 39.61% | Val Loss: 2.5346 | Val Acc: 34.72%
+             Grad Mean: 3.6692 | Grad Std: 0.4715 | Grad CV: 0.1285
+             LR: 0.010000 | Batch: 32 | Updates: 57,687 | Time: 4.00s
+Epoch 42/160 | Train Loss: 2.2937 | Train Acc: 39.52% | Val Loss: 2.5963 | Val Acc: 35.06%
+             Grad Mean: 3.6620 | Grad Std: 0.4551 | Grad CV: 0.1243
+             LR: 0.010000 | Batch: 32 | Updates: 59,094 | Time: 4.00s
+Epoch 43/160 | Train Loss: 2.2955 | Train Acc: 39.45% | Val Loss: 2.5405 | Val Acc: 35.30%
+             Grad Mean: 3.6602 | Grad Std: 0.4478 | Grad CV: 0.1223
+             LR: 0.010000 | Batch: 32 | Updates: 60,501 | Time: 3.85s
+Epoch 44/160 | Train Loss: 2.2883 | Train Acc: 39.93% | Val Loss: 2.5585 | Val Acc: 33.92%
+             Grad Mean: 3.6897 | Grad Std: 0.4374 | Grad CV: 0.1185
+             LR: 0.010000 | Batch: 32 | Updates: 61,908 | Time: 3.85s
+Epoch 45/160 | Train Loss: 2.2814 | Train Acc: 40.03% | Val Loss: 2.5675 | Val Acc: 34.48%
+             Grad Mean: 3.6701 | Grad Std: 0.4668 | Grad CV: 0.1272
+             LR: 0.010000 | Batch: 32 | Updates: 63,315 | Time: 3.86s
+Epoch 46/160 | Train Loss: 2.2836 | Train Acc: 39.70% | Val Loss: 2.5780 | Val Acc: 34.56%
+             Grad Mean: 3.6921 | Grad Std: 0.4447 | Grad CV: 0.1205
+             LR: 0.010000 | Batch: 32 | Updates: 64,722 | Time: 4.08s
+Epoch 47/160 | Train Loss: 2.2767 | Train Acc: 40.07% | Val Loss: 2.5849 | Val Acc: 34.10%
+             Grad Mean: 3.6727 | Grad Std: 0.4673 | Grad CV: 0.1272
+             LR: 0.010000 | Batch: 32 | Updates: 66,129 | Time: 4.01s
+Epoch 48/160 | Train Loss: 2.2772 | Train Acc: 39.95% | Val Loss: 2.5750 | Val Acc: 34.70%
+             Grad Mean: 3.6904 | Grad Std: 0.4647 | Grad CV: 0.1259
+             LR: 0.010000 | Batch: 32 | Updates: 67,536 | Time: 3.97s
+Epoch 49/160 | Train Loss: 2.2750 | Train Acc: 40.03% | Val Loss: 2.4981 | Val Acc: 36.26%  <-- best
+             Grad Mean: 3.6981 | Grad Std: 0.4663 | Grad CV: 0.1261
+             LR: 0.010000 | Batch: 32 | Updates: 68,943 | Time: 3.97s
+Epoch 50/160 | Train Loss: 2.2650 | Train Acc: 40.60% | Val Loss: 2.5474 | Val Acc: 35.46%
+             Grad Mean: 3.6681 | Grad Std: 0.4499 | Grad CV: 0.1227
+             LR: 0.010000 | Batch: 32 | Updates: 70,350 | Time: 4.06s
+Epoch 51/160 | Train Loss: 2.2673 | Train Acc: 40.43% | Val Loss: 2.5476 | Val Acc: 34.64%
+             Grad Mean: 3.6829 | Grad Std: 0.4652 | Grad CV: 0.1263
+             LR: 0.010000 | Batch: 32 | Updates: 71,757 | Time: 4.00s
+Epoch 52/160 | Train Loss: 2.2541 | Train Acc: 40.65% | Val Loss: 2.4907 | Val Acc: 35.58%  <-- best
+             Grad Mean: 3.6965 | Grad Std: 0.4395 | Grad CV: 0.1189
+             LR: 0.010000 | Batch: 32 | Updates: 73,164 | Time: 3.89s
+Epoch 53/160 | Train Loss: 2.2539 | Train Acc: 40.47% | Val Loss: 2.5898 | Val Acc: 33.14%
+             Grad Mean: 3.7186 | Grad Std: 0.4593 | Grad CV: 0.1235
+             LR: 0.010000 | Batch: 32 | Updates: 74,571 | Time: 3.89s
+Epoch 54/160 | Train Loss: 2.2504 | Train Acc: 40.50% | Val Loss: 2.5228 | Val Acc: 35.58%
+             Grad Mean: 3.6889 | Grad Std: 0.4567 | Grad CV: 0.1238
+             LR: 0.010000 | Batch: 32 | Updates: 75,978 | Time: 3.96s
+Epoch 55/160 | Train Loss: 2.2562 | Train Acc: 40.24% | Val Loss: 2.5380 | Val Acc: 34.90%
+             Grad Mean: 3.7091 | Grad Std: 0.4648 | Grad CV: 0.1253
+             LR: 0.010000 | Batch: 32 | Updates: 77,385 | Time: 4.06s
+Epoch 56/160 | Train Loss: 2.2437 | Train Acc: 40.61% | Val Loss: 2.4870 | Val Acc: 36.32%  <-- best
+             Grad Mean: 3.6870 | Grad Std: 0.4645 | Grad CV: 0.1260
+             LR: 0.010000 | Batch: 32 | Updates: 78,792 | Time: 3.90s
+Epoch 57/160 | Train Loss: 2.2517 | Train Acc: 40.64% | Val Loss: 2.5004 | Val Acc: 35.16%
+             Grad Mean: 3.7403 | Grad Std: 0.4945 | Grad CV: 0.1322
+             LR: 0.010000 | Batch: 32 | Updates: 80,199 | Time: 4.04s
+Epoch 58/160 | Train Loss: 2.2418 | Train Acc: 40.67% | Val Loss: 2.4878 | Val Acc: 34.98%
+             Grad Mean: 3.6879 | Grad Std: 0.4392 | Grad CV: 0.1191
+             LR: 0.010000 | Batch: 32 | Updates: 81,606 | Time: 3.84s
+Epoch 59/160 | Train Loss: 2.2340 | Train Acc: 41.00% | Val Loss: 2.5150 | Val Acc: 36.04%
+             Grad Mean: 3.7156 | Grad Std: 0.4524 | Grad CV: 0.1217
+             LR: 0.010000 | Batch: 32 | Updates: 83,013 | Time: 3.99s
+Epoch 60/160 | Train Loss: 2.2349 | Train Acc: 40.97% | Val Loss: 2.4503 | Val Acc: 36.80%  <-- best
+             Grad Mean: 3.7256 | Grad Std: 0.4503 | Grad CV: 0.1209
+             LR: 0.010000 | Batch: 32 | Updates: 84,420 | Time: 3.93s
+Epoch 61/160 | Train Loss: 2.2279 | Train Acc: 41.24% | Val Loss: 2.5886 | Val Acc: 34.88%
+             Grad Mean: 3.7283 | Grad Std: 0.4482 | Grad CV: 0.1202
+             LR: 0.010000 | Batch: 32 | Updates: 85,827 | Time: 4.00s
+Epoch 62/160 | Train Loss: 2.2317 | Train Acc: 41.08% | Val Loss: 2.5389 | Val Acc: 35.68%
+             Grad Mean: 3.7234 | Grad Std: 0.4688 | Grad CV: 0.1259
+             LR: 0.010000 | Batch: 32 | Updates: 87,234 | Time: 4.10s
+Epoch 63/160 | Train Loss: 2.2318 | Train Acc: 41.01% | Val Loss: 2.6282 | Val Acc: 31.86%
+             Grad Mean: 3.7200 | Grad Std: 0.4426 | Grad CV: 0.1190
+             LR: 0.010000 | Batch: 32 | Updates: 88,641 | Time: 3.96s
+Epoch 64/160 | Train Loss: 2.2231 | Train Acc: 41.11% | Val Loss: 2.5699 | Val Acc: 34.30%
+             Grad Mean: 3.7158 | Grad Std: 0.4427 | Grad CV: 0.1191
+             LR: 0.010000 | Batch: 32 | Updates: 90,048 | Time: 4.05s
+Epoch 65/160 | Train Loss: 2.2252 | Train Acc: 41.08% | Val Loss: 2.4786 | Val Acc: 36.18%
+             Grad Mean: 3.7322 | Grad Std: 0.4379 | Grad CV: 0.1173
+             LR: 0.010000 | Batch: 32 | Updates: 91,455 | Time: 4.23s
+Epoch 66/160 | Train Loss: 2.2233 | Train Acc: 41.23% | Val Loss: 2.4921 | Val Acc: 36.36%
+             Grad Mean: 3.7398 | Grad Std: 0.4461 | Grad CV: 0.1193
+             LR: 0.010000 | Batch: 32 | Updates: 92,862 | Time: 4.11s
+Epoch 67/160 | Train Loss: 2.2147 | Train Acc: 41.65% | Val Loss: 2.5972 | Val Acc: 33.68%
+             Grad Mean: 3.7382 | Grad Std: 0.4544 | Grad CV: 0.1216
+             LR: 0.010000 | Batch: 32 | Updates: 94,269 | Time: 3.97s
+Epoch 68/160 | Train Loss: 2.2123 | Train Acc: 41.60% | Val Loss: 2.5804 | Val Acc: 34.62%
+             Grad Mean: 3.7188 | Grad Std: 0.4662 | Grad CV: 0.1254
+             LR: 0.010000 | Batch: 32 | Updates: 95,676 | Time: 3.98s
+Epoch 69/160 | Train Loss: 2.2157 | Train Acc: 41.79% | Val Loss: 2.5199 | Val Acc: 35.42%
+             Grad Mean: 3.7484 | Grad Std: 0.4749 | Grad CV: 0.1267
+             LR: 0.010000 | Batch: 32 | Updates: 97,083 | Time: 4.04s
+Epoch 70/160 | Train Loss: 2.2076 | Train Acc: 41.46% | Val Loss: 2.4817 | Val Acc: 35.52%
+             Grad Mean: 3.7307 | Grad Std: 0.4427 | Grad CV: 0.1187
+             LR: 0.010000 | Batch: 32 | Updates: 98,490 | Time: 3.78s
+Epoch 71/160 | Train Loss: 2.2097 | Train Acc: 41.63% | Val Loss: 2.4919 | Val Acc: 35.58%
+             Grad Mean: 3.7412 | Grad Std: 0.4568 | Grad CV: 0.1221
+             LR: 0.010000 | Batch: 32 | Updates: 99,897 | Time: 3.77s
+Epoch 72/160 | Train Loss: 2.2123 | Train Acc: 41.58% | Val Loss: 2.5425 | Val Acc: 35.56%
+             Grad Mean: 3.7428 | Grad Std: 0.4451 | Grad CV: 0.1189
+             LR: 0.010000 | Batch: 32 | Updates: 101,304 | Time: 4.05s
+Epoch 73/160 | Train Loss: 2.1995 | Train Acc: 41.88% | Val Loss: 2.5631 | Val Acc: 34.88%
+             Grad Mean: 3.7439 | Grad Std: 0.4413 | Grad CV: 0.1179
+             LR: 0.010000 | Batch: 32 | Updates: 102,711 | Time: 3.86s
+Epoch 74/160 | Train Loss: 2.2026 | Train Acc: 41.64% | Val Loss: 2.4564 | Val Acc: 36.14%
+             Grad Mean: 3.7463 | Grad Std: 0.4482 | Grad CV: 0.1196
+             LR: 0.010000 | Batch: 32 | Updates: 104,118 | Time: 3.95s
+Epoch 75/160 | Train Loss: 2.1977 | Train Acc: 41.80% | Val Loss: 2.5528 | Val Acc: 33.80%
+             Grad Mean: 3.7389 | Grad Std: 0.4788 | Grad CV: 0.1281
+             LR: 0.010000 | Batch: 32 | Updates: 105,525 | Time: 3.97s
+Epoch 76/160 | Train Loss: 2.1991 | Train Acc: 41.70% | Val Loss: 2.4190 | Val Acc: 37.22%  <-- best
+             Grad Mean: 3.7640 | Grad Std: 0.4720 | Grad CV: 0.1254
+             LR: 0.010000 | Batch: 32 | Updates: 106,932 | Time: 3.82s
+Epoch 77/160 | Train Loss: 2.1948 | Train Acc: 41.97% | Val Loss: 2.4656 | Val Acc: 36.66%
+             Grad Mean: 3.7392 | Grad Std: 0.4566 | Grad CV: 0.1221
+             LR: 0.010000 | Batch: 32 | Updates: 108,339 | Time: 3.91s
+Epoch 78/160 | Train Loss: 2.1884 | Train Acc: 42.10% | Val Loss: 2.5057 | Val Acc: 36.40%
+             Grad Mean: 3.7785 | Grad Std: 0.4587 | Grad CV: 0.1214
+             LR: 0.010000 | Batch: 32 | Updates: 109,746 | Time: 3.82s
+Epoch 79/160 | Train Loss: 2.1867 | Train Acc: 41.91% | Val Loss: 2.4618 | Val Acc: 36.48%
+             Grad Mean: 3.7571 | Grad Std: 0.4583 | Grad CV: 0.1220
+             LR: 0.010000 | Batch: 32 | Updates: 111,153 | Time: 3.71s
+Epoch 80/160 | Train Loss: 2.1940 | Train Acc: 41.91% | Val Loss: 2.5277 | Val Acc: 35.22%
+             Grad Mean: 3.7706 | Grad Std: 0.4693 | Grad CV: 0.1245
+             LR: 0.010000 | Batch: 32 | Updates: 112,560 | Time: 3.82s
+Epoch 81/160 | Train Loss: 2.1935 | Train Acc: 42.01% | Val Loss: 2.4756 | Val Acc: 36.12%
+             Grad Mean: 3.7686 | Grad Std: 0.4876 | Grad CV: 0.1294
+             LR: 0.010000 | Batch: 32 | Updates: 113,967 | Time: 4.00s
+Epoch 82/160 | Train Loss: 2.1902 | Train Acc: 41.93% | Val Loss: 2.5063 | Val Acc: 35.78%
+             Grad Mean: 3.7660 | Grad Std: 0.4755 | Grad CV: 0.1263
+             LR: 0.010000 | Batch: 32 | Updates: 115,374 | Time: 4.19s
+Epoch 83/160 | Train Loss: 2.1850 | Train Acc: 42.21% | Val Loss: 2.5004 | Val Acc: 35.44%
+             Grad Mean: 3.7384 | Grad Std: 0.4609 | Grad CV: 0.1233
+             LR: 0.010000 | Batch: 32 | Updates: 116,781 | Time: 4.05s
+Epoch 84/160 | Train Loss: 2.1780 | Train Acc: 42.64% | Val Loss: 2.4753 | Val Acc: 35.70%
+             Grad Mean: 3.7567 | Grad Std: 0.4573 | Grad CV: 0.1217
+             LR: 0.010000 | Batch: 32 | Updates: 118,188 | Time: 4.22s
+Epoch 85/160 | Train Loss: 2.1870 | Train Acc: 42.05% | Val Loss: 2.5289 | Val Acc: 35.62%
+             Grad Mean: 3.7676 | Grad Std: 0.4621 | Grad CV: 0.1227
+             LR: 0.010000 | Batch: 32 | Updates: 119,595 | Time: 4.14s
+Epoch 86/160 | Train Loss: 2.1749 | Train Acc: 42.24% | Val Loss: 2.4511 | Val Acc: 36.20%
+             Grad Mean: 3.7635 | Grad Std: 0.4336 | Grad CV: 0.1152
+             LR: 0.010000 | Batch: 32 | Updates: 121,002 | Time: 4.21s
+Epoch 87/160 | Train Loss: 2.1801 | Train Acc: 42.28% | Val Loss: 2.4298 | Val Acc: 37.18%
+             Grad Mean: 3.7621 | Grad Std: 0.4567 | Grad CV: 0.1214
+             LR: 0.010000 | Batch: 32 | Updates: 122,409 | Time: 4.16s
+Epoch 88/160 | Train Loss: 2.1757 | Train Acc: 42.33% | Val Loss: 2.4488 | Val Acc: 38.00%
+             Grad Mean: 3.7648 | Grad Std: 0.4454 | Grad CV: 0.1183
+             LR: 0.010000 | Batch: 32 | Updates: 123,816 | Time: 3.98s
+Epoch 89/160 | Train Loss: 2.1758 | Train Acc: 42.40% | Val Loss: 2.4630 | Val Acc: 37.10%
+             Grad Mean: 3.7726 | Grad Std: 0.4603 | Grad CV: 0.1220
+             LR: 0.010000 | Batch: 32 | Updates: 125,223 | Time: 3.96s
+Epoch 90/160 | Train Loss: 2.1780 | Train Acc: 42.32% | Val Loss: 2.4416 | Val Acc: 36.60%
+             Grad Mean: 3.7812 | Grad Std: 0.4718 | Grad CV: 0.1248
+             LR: 0.010000 | Batch: 32 | Updates: 126,630 | Time: 3.97s
+Epoch 91/160 | Train Loss: 2.1725 | Train Acc: 42.30% | Val Loss: 2.3948 | Val Acc: 37.94%  <-- best
+             Grad Mean: 3.7744 | Grad Std: 0.4386 | Grad CV: 0.1162
+             LR: 0.010000 | Batch: 32 | Updates: 128,037 | Time: 4.28s
+Epoch 92/160 | Train Loss: 2.1673 | Train Acc: 42.66% | Val Loss: 2.4882 | Val Acc: 36.20%
+             Grad Mean: 3.7676 | Grad Std: 0.4546 | Grad CV: 0.1207
+             LR: 0.010000 | Batch: 32 | Updates: 129,444 | Time: 4.16s
+Epoch 93/160 | Train Loss: 2.1717 | Train Acc: 42.59% | Val Loss: 2.4398 | Val Acc: 37.60%
+             Grad Mean: 3.7764 | Grad Std: 0.4644 | Grad CV: 0.1230
+             LR: 0.010000 | Batch: 32 | Updates: 130,851 | Time: 4.04s
+Epoch 94/160 | Train Loss: 2.1701 | Train Acc: 42.54% | Val Loss: 2.5341 | Val Acc: 35.10%
+             Grad Mean: 3.7628 | Grad Std: 0.4452 | Grad CV: 0.1183
+             LR: 0.010000 | Batch: 32 | Updates: 132,258 | Time: 4.07s
+Epoch 95/160 | Train Loss: 2.1670 | Train Acc: 42.50% | Val Loss: 2.4757 | Val Acc: 36.28%
+             Grad Mean: 3.7872 | Grad Std: 0.4637 | Grad CV: 0.1224
+             LR: 0.010000 | Batch: 32 | Updates: 133,665 | Time: 4.12s
+Epoch 96/160 | Train Loss: 2.1697 | Train Acc: 42.37% | Val Loss: 2.5632 | Val Acc: 33.84%
+             Grad Mean: 3.7740 | Grad Std: 0.4366 | Grad CV: 0.1157
+             LR: 0.010000 | Batch: 32 | Updates: 135,072 | Time: 4.02s
+Epoch 97/160 | Train Loss: 2.1683 | Train Acc: 42.29% | Val Loss: 2.5378 | Val Acc: 35.38%
+             Grad Mean: 3.7969 | Grad Std: 0.4591 | Grad CV: 0.1209
+             LR: 0.010000 | Batch: 32 | Updates: 136,479 | Time: 3.94s
+Epoch 98/160 | Train Loss: 2.1647 | Train Acc: 42.60% | Val Loss: 2.4494 | Val Acc: 37.46%
+             Grad Mean: 3.7697 | Grad Std: 0.4426 | Grad CV: 0.1174
+             LR: 0.010000 | Batch: 32 | Updates: 137,886 | Time: 4.03s
+Epoch 99/160 | Train Loss: 2.1666 | Train Acc: 42.72% | Val Loss: 2.4375 | Val Acc: 36.90%
+             Grad Mean: 3.7924 | Grad Std: 0.4701 | Grad CV: 0.1240
+             LR: 0.010000 | Batch: 32 | Updates: 139,293 | Time: 3.93s
+Epoch 100/160 | Train Loss: 2.1540 | Train Acc: 42.68% | Val Loss: 2.4891 | Val Acc: 36.90%
+             Grad Mean: 3.7612 | Grad Std: 0.4700 | Grad CV: 0.1250
+             LR: 0.010000 | Batch: 32 | Updates: 140,700 | Time: 3.84s
+Epoch 101/160 | Train Loss: 2.1605 | Train Acc: 42.72% | Val Loss: 2.4571 | Val Acc: 37.32%
+             Grad Mean: 3.8086 | Grad Std: 0.4844 | Grad CV: 0.1272
+             LR: 0.010000 | Batch: 32 | Updates: 142,107 | Time: 3.86s
+Epoch 102/160 | Train Loss: 2.1626 | Train Acc: 42.40% | Val Loss: 2.4722 | Val Acc: 36.68%
+             Grad Mean: 3.7756 | Grad Std: 0.4652 | Grad CV: 0.1232
+             LR: 0.010000 | Batch: 32 | Updates: 143,514 | Time: 3.75s
+Epoch 103/160 | Train Loss: 2.1601 | Train Acc: 42.81% | Val Loss: 2.4756 | Val Acc: 36.18%
+             Grad Mean: 3.7908 | Grad Std: 0.4561 | Grad CV: 0.1203
+             LR: 0.010000 | Batch: 32 | Updates: 144,921 | Time: 3.73s
+Epoch 104/160 | Train Loss: 2.1535 | Train Acc: 42.96% | Val Loss: 2.4772 | Val Acc: 36.62%
+             Grad Mean: 3.7794 | Grad Std: 0.4580 | Grad CV: 0.1212
+             LR: 0.010000 | Batch: 32 | Updates: 146,328 | Time: 3.87s
+Epoch 105/160 | Train Loss: 2.1515 | Train Acc: 42.75% | Val Loss: 2.5335 | Val Acc: 34.94%
+             Grad Mean: 3.7830 | Grad Std: 0.4650 | Grad CV: 0.1229
+             LR: 0.010000 | Batch: 32 | Updates: 147,735 | Time: 3.86s
+Epoch 106/160 | Train Loss: 2.1549 | Train Acc: 42.51% | Val Loss: 2.4856 | Val Acc: 37.24%
+             Grad Mean: 3.7907 | Grad Std: 0.4654 | Grad CV: 0.1228
+             LR: 0.010000 | Batch: 32 | Updates: 149,142 | Time: 3.87s
+Epoch 107/160 | Train Loss: 2.1576 | Train Acc: 42.66% | Val Loss: 2.4566 | Val Acc: 37.02%
+             Grad Mean: 3.7743 | Grad Std: 0.4484 | Grad CV: 0.1188
+             LR: 0.010000 | Batch: 32 | Updates: 150,549 | Time: 3.99s
+Epoch 108/160 | Train Loss: 2.1584 | Train Acc: 42.54% | Val Loss: 2.4857 | Val Acc: 36.52%
+             Grad Mean: 3.7854 | Grad Std: 0.4613 | Grad CV: 0.1219
+             LR: 0.010000 | Batch: 32 | Updates: 151,956 | Time: 3.72s
+Epoch 109/160 | Train Loss: 2.1575 | Train Acc: 42.60% | Val Loss: 2.4066 | Val Acc: 37.38%
+             Grad Mean: 3.7899 | Grad Std: 0.4486 | Grad CV: 0.1184
+             LR: 0.010000 | Batch: 32 | Updates: 153,363 | Time: 3.73s
+Epoch 110/160 | Train Loss: 2.1460 | Train Acc: 43.02% | Val Loss: 2.4992 | Val Acc: 35.16%
+             Grad Mean: 3.7873 | Grad Std: 0.4385 | Grad CV: 0.1158
+             LR: 0.010000 | Batch: 32 | Updates: 154,770 | Time: 3.70s
+Epoch 111/160 | Train Loss: 2.1556 | Train Acc: 42.79% | Val Loss: 2.5463 | Val Acc: 33.78%
+             Grad Mean: 3.8067 | Grad Std: 0.4735 | Grad CV: 0.1244
+             LR: 0.010000 | Batch: 32 | Updates: 156,177 | Time: 3.64s
+Epoch 112/160 | Train Loss: 2.1503 | Train Acc: 42.83% | Val Loss: 2.4260 | Val Acc: 37.50%
+             Grad Mean: 3.7915 | Grad Std: 0.4531 | Grad CV: 0.1195
+             LR: 0.010000 | Batch: 32 | Updates: 157,584 | Time: 4.02s
+Epoch 113/160 | Train Loss: 2.1556 | Train Acc: 42.84% | Val Loss: 2.3723 | Val Acc: 38.04%  <-- best
+             Grad Mean: 3.8175 | Grad Std: 0.4937 | Grad CV: 0.1293
+             LR: 0.010000 | Batch: 32 | Updates: 158,991 | Time: 4.34s
+Epoch 114/160 | Train Loss: 2.1421 | Train Acc: 42.99% | Val Loss: 2.4061 | Val Acc: 38.00%
+             Grad Mean: 3.7748 | Grad Std: 0.4401 | Grad CV: 0.1166
+             LR: 0.010000 | Batch: 32 | Updates: 160,398 | Time: 4.28s
+Epoch 115/160 | Train Loss: 2.1453 | Train Acc: 42.81% | Val Loss: 2.3908 | Val Acc: 38.06%
+             Grad Mean: 3.8001 | Grad Std: 0.4310 | Grad CV: 0.1134
+             LR: 0.010000 | Batch: 32 | Updates: 161,805 | Time: 4.11s
+Epoch 116/160 | Train Loss: 2.1445 | Train Acc: 42.98% | Val Loss: 2.4047 | Val Acc: 37.32%
+             Grad Mean: 3.8031 | Grad Std: 0.4700 | Grad CV: 0.1236
+             LR: 0.010000 | Batch: 32 | Updates: 163,212 | Time: 4.12s
+Epoch 117/160 | Train Loss: 2.1396 | Train Acc: 43.18% | Val Loss: 2.5237 | Val Acc: 35.42%
+             Grad Mean: 3.8020 | Grad Std: 0.4552 | Grad CV: 0.1197
+             LR: 0.010000 | Batch: 32 | Updates: 164,619 | Time: 4.03s
+Epoch 118/160 | Train Loss: 2.1445 | Train Acc: 42.76% | Val Loss: 2.3899 | Val Acc: 37.74%
+             Grad Mean: 3.8153 | Grad Std: 0.4480 | Grad CV: 0.1174
+             LR: 0.010000 | Batch: 32 | Updates: 166,026 | Time: 3.84s
+Epoch 119/160 | Train Loss: 2.1463 | Train Acc: 42.99% | Val Loss: 2.4014 | Val Acc: 38.80%
+             Grad Mean: 3.8099 | Grad Std: 0.4557 | Grad CV: 0.1196
+             LR: 0.010000 | Batch: 32 | Updates: 167,433 | Time: 3.91s
+Epoch 120/160 | Train Loss: 2.1460 | Train Acc: 43.11% | Val Loss: 2.4514 | Val Acc: 36.08%
+             Grad Mean: 3.8112 | Grad Std: 0.4854 | Grad CV: 0.1274
+             LR: 0.010000 | Batch: 32 | Updates: 168,840 | Time: 3.93s
+Epoch 121/160 | Train Loss: 2.1393 | Train Acc: 43.17% | Val Loss: 2.3675 | Val Acc: 39.08%  <-- best
+             Grad Mean: 3.8012 | Grad Std: 0.4799 | Grad CV: 0.1262
+             LR: 0.010000 | Batch: 32 | Updates: 170,247 | Time: 3.89s
+Epoch 122/160 | Train Loss: 2.1384 | Train Acc: 43.14% | Val Loss: 2.4394 | Val Acc: 36.90%
+             Grad Mean: 3.8045 | Grad Std: 0.4625 | Grad CV: 0.1216
+             LR: 0.010000 | Batch: 32 | Updates: 171,654 | Time: 3.88s
+Epoch 123/160 | Train Loss: 2.1381 | Train Acc: 43.38% | Val Loss: 2.5445 | Val Acc: 35.48%
+             Grad Mean: 3.8046 | Grad Std: 0.4854 | Grad CV: 0.1276
+             LR: 0.010000 | Batch: 32 | Updates: 173,061 | Time: 4.02s
+Epoch 124/160 | Train Loss: 2.1404 | Train Acc: 43.08% | Val Loss: 2.4425 | Val Acc: 37.10%
+             Grad Mean: 3.8240 | Grad Std: 0.4705 | Grad CV: 0.1230
+             LR: 0.010000 | Batch: 32 | Updates: 174,468 | Time: 4.15s
+Epoch 125/160 | Train Loss: 2.1415 | Train Acc: 43.20% | Val Loss: 2.3718 | Val Acc: 37.52%
+             Grad Mean: 3.8089 | Grad Std: 0.4712 | Grad CV: 0.1237
+             LR: 0.010000 | Batch: 32 | Updates: 175,875 | Time: 4.04s
+Epoch 126/160 | Train Loss: 2.1381 | Train Acc: 43.19% | Val Loss: 2.4672 | Val Acc: 35.98%
+             Grad Mean: 3.8195 | Grad Std: 0.4661 | Grad CV: 0.1220
+             LR: 0.010000 | Batch: 32 | Updates: 177,282 | Time: 3.86s
+Epoch 127/160 | Train Loss: 2.1398 | Train Acc: 43.05% | Val Loss: 2.4482 | Val Acc: 37.30%
+             Grad Mean: 3.7992 | Grad Std: 0.4592 | Grad CV: 0.1209
+             LR: 0.010000 | Batch: 32 | Updates: 178,689 | Time: 4.06s
+Epoch 128/160 | Train Loss: 2.1413 | Train Acc: 43.10% | Val Loss: 2.3942 | Val Acc: 38.16%
+             Grad Mean: 3.8245 | Grad Std: 0.4581 | Grad CV: 0.1198
+             LR: 0.010000 | Batch: 32 | Updates: 180,096 | Time: 4.00s
+Epoch 129/160 | Train Loss: 2.1290 | Train Acc: 43.48% | Val Loss: 2.4393 | Val Acc: 37.08%
+             Grad Mean: 3.8128 | Grad Std: 0.4637 | Grad CV: 0.1216
+             LR: 0.010000 | Batch: 32 | Updates: 181,503 | Time: 3.90s
+Epoch 130/160 | Train Loss: 2.1379 | Train Acc: 43.48% | Val Loss: 2.3455 | Val Acc: 38.72%  <-- best
+             Grad Mean: 3.8230 | Grad Std: 0.4573 | Grad CV: 0.1196
+             LR: 0.010000 | Batch: 32 | Updates: 182,910 | Time: 4.00s
+Epoch 131/160 | Train Loss: 2.1382 | Train Acc: 43.12% | Val Loss: 2.3731 | Val Acc: 38.24%
+             Grad Mean: 3.8050 | Grad Std: 0.4722 | Grad CV: 0.1241
+             LR: 0.010000 | Batch: 32 | Updates: 184,317 | Time: 3.92s
+Epoch 132/160 | Train Loss: 2.1296 | Train Acc: 43.18% | Val Loss: 2.3638 | Val Acc: 38.28%
+             Grad Mean: 3.8136 | Grad Std: 0.4660 | Grad CV: 0.1222
+             LR: 0.010000 | Batch: 32 | Updates: 185,724 | Time: 3.86s
+Epoch 133/160 | Train Loss: 2.1310 | Train Acc: 43.04% | Val Loss: 2.3812 | Val Acc: 38.14%
+             Grad Mean: 3.8257 | Grad Std: 0.4843 | Grad CV: 0.1266
+             LR: 0.010000 | Batch: 32 | Updates: 187,131 | Time: 3.66s
+Epoch 134/160 | Train Loss: 2.1348 | Train Acc: 43.36% | Val Loss: 2.3985 | Val Acc: 37.82%
+             Grad Mean: 3.8272 | Grad Std: 0.4850 | Grad CV: 0.1267
+             LR: 0.010000 | Batch: 32 | Updates: 188,538 | Time: 3.85s
+Epoch 135/160 | Train Loss: 2.1226 | Train Acc: 43.41% | Val Loss: 2.5702 | Val Acc: 32.98%
+             Grad Mean: 3.7947 | Grad Std: 0.4643 | Grad CV: 0.1223
+             LR: 0.010000 | Batch: 32 | Updates: 189,945 | Time: 3.70s
+Epoch 136/160 | Train Loss: 2.1340 | Train Acc: 43.06% | Val Loss: 2.4551 | Val Acc: 37.36%
+             Grad Mean: 3.8279 | Grad Std: 0.4526 | Grad CV: 0.1182
+             LR: 0.010000 | Batch: 32 | Updates: 191,352 | Time: 3.83s
+Epoch 137/160 | Train Loss: 2.1292 | Train Acc: 43.24% | Val Loss: 2.5405 | Val Acc: 34.98%
+             Grad Mean: 3.8353 | Grad Std: 0.4767 | Grad CV: 0.1243
+             LR: 0.010000 | Batch: 32 | Updates: 192,759 | Time: 3.93s
+Epoch 138/160 | Train Loss: 2.1296 | Train Acc: 43.26% | Val Loss: 2.4120 | Val Acc: 37.54%
+             Grad Mean: 3.8481 | Grad Std: 0.4817 | Grad CV: 0.1252
+             LR: 0.010000 | Batch: 32 | Updates: 194,166 | Time: 3.82s
+Epoch 139/160 | Train Loss: 2.1316 | Train Acc: 43.15% | Val Loss: 2.3527 | Val Acc: 38.48%
+             Grad Mean: 3.8129 | Grad Std: 0.4625 | Grad CV: 0.1213
+             LR: 0.010000 | Batch: 32 | Updates: 195,573 | Time: 3.99s
+Epoch 140/160 | Train Loss: 2.1281 | Train Acc: 43.61% | Val Loss: 2.4519 | Val Acc: 36.74%
+             Grad Mean: 3.8255 | Grad Std: 0.4666 | Grad CV: 0.1220
+             LR: 0.010000 | Batch: 32 | Updates: 196,980 | Time: 3.84s
+Epoch 141/160 | Train Loss: 2.1327 | Train Acc: 43.29% | Val Loss: 2.3935 | Val Acc: 39.14%
+             Grad Mean: 3.8168 | Grad Std: 0.4459 | Grad CV: 0.1168
+             LR: 0.010000 | Batch: 32 | Updates: 198,387 | Time: 3.97s
+Epoch 142/160 | Train Loss: 2.1261 | Train Acc: 43.56% | Val Loss: 2.3843 | Val Acc: 38.92%
+             Grad Mean: 3.8009 | Grad Std: 0.4527 | Grad CV: 0.1191
+             LR: 0.010000 | Batch: 32 | Updates: 199,794 | Time: 4.07s
+Epoch 143/160 | Train Loss: 2.1268 | Train Acc: 43.46% | Val Loss: 2.4339 | Val Acc: 37.30%
+             Grad Mean: 3.8355 | Grad Std: 0.4849 | Grad CV: 0.1264
+             LR: 0.010000 | Batch: 32 | Updates: 201,201 | Time: 3.97s
+Epoch 144/160 | Train Loss: 2.1246 | Train Acc: 43.36% | Val Loss: 2.3133 | Val Acc: 39.94%  <-- best
+             Grad Mean: 3.8249 | Grad Std: 0.4667 | Grad CV: 0.1220
+             LR: 0.010000 | Batch: 32 | Updates: 202,608 | Time: 4.03s
+Epoch 145/160 | Train Loss: 2.1212 | Train Acc: 43.47% | Val Loss: 2.3511 | Val Acc: 39.46%
+             Grad Mean: 3.8343 | Grad Std: 0.4659 | Grad CV: 0.1215
+             LR: 0.010000 | Batch: 32 | Updates: 204,015 | Time: 3.88s
+Epoch 146/160 | Train Loss: 2.1245 | Train Acc: 43.33% | Val Loss: 2.3607 | Val Acc: 38.74%
+             Grad Mean: 3.8349 | Grad Std: 0.4970 | Grad CV: 0.1296
+             LR: 0.010000 | Batch: 32 | Updates: 205,422 | Time: 3.92s
+Epoch 147/160 | Train Loss: 2.1230 | Train Acc: 43.58% | Val Loss: 2.3740 | Val Acc: 38.62%
+             Grad Mean: 3.8208 | Grad Std: 0.4664 | Grad CV: 0.1221
+             LR: 0.010000 | Batch: 32 | Updates: 206,829 | Time: 4.24s
+Epoch 148/160 | Train Loss: 2.1162 | Train Acc: 43.51% | Val Loss: 2.4517 | Val Acc: 37.52%
+             Grad Mean: 3.8328 | Grad Std: 0.4648 | Grad CV: 0.1213
+             LR: 0.010000 | Batch: 32 | Updates: 208,236 | Time: 4.33s
+Epoch 149/160 | Train Loss: 2.1266 | Train Acc: 43.40% | Val Loss: 2.4070 | Val Acc: 37.72%
+             Grad Mean: 3.8352 | Grad Std: 0.4591 | Grad CV: 0.1197
+             LR: 0.010000 | Batch: 32 | Updates: 209,643 | Time: 4.05s
+Epoch 150/160 | Train Loss: 2.1241 | Train Acc: 43.50% | Val Loss: 2.4325 | Val Acc: 37.48%
+             Grad Mean: 3.8169 | Grad Std: 0.4684 | Grad CV: 0.1227
+             LR: 0.010000 | Batch: 32 | Updates: 211,050 | Time: 3.84s
+Epoch 151/160 | Train Loss: 2.1314 | Train Acc: 43.36% | Val Loss: 2.5904 | Val Acc: 34.50%
+             Grad Mean: 3.8214 | Grad Std: 0.4806 | Grad CV: 0.1258
+             LR: 0.010000 | Batch: 32 | Updates: 212,457 | Time: 4.05s
+Epoch 152/160 | Train Loss: 2.1266 | Train Acc: 43.28% | Val Loss: 2.4587 | Val Acc: 36.84%
+             Grad Mean: 3.8211 | Grad Std: 0.4725 | Grad CV: 0.1237
+             LR: 0.010000 | Batch: 32 | Updates: 213,864 | Time: 3.98s
+Epoch 153/160 | Train Loss: 2.1222 | Train Acc: 43.55% | Val Loss: 2.4475 | Val Acc: 37.04%
+             Grad Mean: 3.8193 | Grad Std: 0.4532 | Grad CV: 0.1187
+             LR: 0.010000 | Batch: 32 | Updates: 215,271 | Time: 3.85s
+Epoch 154/160 | Train Loss: 2.1201 | Train Acc: 43.78% | Val Loss: 2.4570 | Val Acc: 36.80%
+             Grad Mean: 3.8152 | Grad Std: 0.4886 | Grad CV: 0.1281
+             LR: 0.010000 | Batch: 32 | Updates: 216,678 | Time: 3.91s
+Epoch 155/160 | Train Loss: 2.1218 | Train Acc: 43.62% | Val Loss: 2.4447 | Val Acc: 37.34%
+             Grad Mean: 3.8131 | Grad Std: 0.4395 | Grad CV: 0.1153
+             LR: 0.010000 | Batch: 32 | Updates: 218,085 | Time: 3.98s
+Epoch 156/160 | Train Loss: 2.1180 | Train Acc: 43.55% | Val Loss: 2.3956 | Val Acc: 38.04%
+             Grad Mean: 3.8268 | Grad Std: 0.4725 | Grad CV: 0.1235
+             LR: 0.010000 | Batch: 32 | Updates: 219,492 | Time: 3.95s
+Epoch 157/160 | Train Loss: 2.1236 | Train Acc: 43.52% | Val Loss: 2.4351 | Val Acc: 36.90%
+             Grad Mean: 3.8479 | Grad Std: 0.4758 | Grad CV: 0.1236
+             LR: 0.010000 | Batch: 32 | Updates: 220,899 | Time: 4.14s
+Epoch 158/160 | Train Loss: 2.1260 | Train Acc: 43.20% | Val Loss: 2.3890 | Val Acc: 38.86%
+             Grad Mean: 3.8323 | Grad Std: 0.4708 | Grad CV: 0.1228
+             LR: 0.010000 | Batch: 32 | Updates: 222,306 | Time: 3.92s
+Epoch 159/160 | Train Loss: 2.1233 | Train Acc: 43.70% | Val Loss: 2.4001 | Val Acc: 38.02%
+             Grad Mean: 3.8253 | Grad Std: 0.4834 | Grad CV: 0.1264
+             LR: 0.010000 | Batch: 32 | Updates: 223,713 | Time: 3.85s
+Epoch 160/160 | Train Loss: 2.1198 | Train Acc: 43.43% | Val Loss: 2.4474 | Val Acc: 36.94%
+             Grad Mean: 3.8261 | Grad Std: 0.4567 | Grad CV: 0.1194
+             LR: 0.010000 | Batch: 32 | Updates: 225,120 | Time: 3.66s
+==============================================================================
+Training complete
+Best epoch: 144
+Best validation loss: 2.3133
+Total optimizer updates: 225,120
+Total training time: 634.48 seconds
+Results saved to: /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E1_final_ep160/cifar100_fixed_fixed_batch32_lr0.01_seed42/20261005T083502_089363Z/cifar100_fixed_fixed_batch32_lr0.01_seed42.csv
+Metadata saved to: /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E1_final_ep160/cifar100_fixed_fixed_batch32_lr0.01_seed42/20261005T083502_089363Z/cifar100_fixed_fixed_batch32_lr0.01_seed42_metadata.json
+==============================================================================
+Evaluated checkpoint: epoch 144
+Validation accuracy: 39.94%
+Validation macro F1: 0.3822
+Evaluation results saved to: /home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/tuning_cifar100_20261005/trials/E1_final_ep160/cifar100_fixed_fixed_batch32_lr0.01_seed42/20261005T083502_089363Z

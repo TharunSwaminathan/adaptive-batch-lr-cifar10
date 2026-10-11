@@ -101,6 +101,12 @@ def main():
         f"_lr{INITIAL_LEARNING_RATE}"
         f"_seed{SEED}"
     )
+    
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
+    run_dir = RESULTS_DIR / run_name / run_id
+    run_dir.mkdir(parents=True, exist_ok=False)
+
+    print(f"Results directory: {run_dir}")
 
     # -----------------------------------------------------
     # Run metadata
@@ -156,8 +162,8 @@ def main():
         criterion=criterion,
         optimizer=optimizer,
         device=DEVICE,
-        results_dir=RESULTS_DIR,
-        checkpoint_dir=CHECKPOINT_DIR,
+        results_dir=run_dir,
+        checkpoint_dir=run_dir,
         run_name=run_name,
         run_metadata=run_metadata,
     )
@@ -179,8 +185,8 @@ def main():
         device=DEVICE,
         history=history,
         total_training_seconds=trainer.total_training_seconds,
-        checkpoint_path=CHECKPOINT_DIR / f"{run_name}_best.pt",
-        output_dir=RESULTS_DIR / run_name,
+        checkpoint_path=run_dir / f"{run_name}_best.pt",
+        output_dir=run_dir,
         run_name=run_name,
         split="validation",
         target_accuracy=0.80,

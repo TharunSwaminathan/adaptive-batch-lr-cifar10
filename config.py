@@ -104,13 +104,13 @@ INITIAL_LEARNING_RATE = 0.01
 #
 # All primary experiments will use the same epoch budget
 # so that their training behavior can be compared fairly.
-EPOCHS =20
+EPOCHS =80
 
 OPTIMIZER = "sgd"
 
 MOMENTUM = 0.9
 
-WEIGHT_DECAY = 5e-4
+WEIGHT_DECAY = 1e-3
 
 
 # ---------------------------------------------------------

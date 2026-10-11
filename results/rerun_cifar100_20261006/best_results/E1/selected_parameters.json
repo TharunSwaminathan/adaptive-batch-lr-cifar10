@@ -1,0 +1,21 @@
+{
+  "label": "E1_final_ep160",
+  "experiment": "E1",
+  "epochs": 160,
+  "settings": {
+    "reference_lr": 0.01
+  },
+  "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/rerun_cifar100_20261006/best_results/E1",
+  "validation_loss": 2.313321533203125,
+  "validation_accuracy": 0.3994,
+  "validation_macro_f1": 0.3822381903338357,
+  "best_epoch": 144,
+  "optimizer_updates": 225120,
+  "training_seconds": 656.0648039970001,
+  "convergence": {
+    "last20_relative_loss_improvement": 0.013701826744468036,
+    "last_decay_epoch": null,
+    "settled": false
+  },
+  "source_trial": "E1_final_ep160"
+}

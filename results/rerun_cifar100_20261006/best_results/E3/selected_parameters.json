@@ -1,0 +1,31 @@
+{
+  "label": "E3_budget_ep160",
+  "experiment": "E3",
+  "epochs": 160,
+  "settings": {
+    "reference_batch_size": 32,
+    "alpha": 1.0,
+    "lr_factor": 0.7,
+    "plateau_patience": 2,
+    "worsening_patience": 2,
+    "cooldown_epochs": 2,
+    "warmup_epochs": 0,
+    "min_lr": 1e-08,
+    "min_delta_loss": 0.001,
+    "min_delta_acc": 0.002,
+    "reference_lr": 0.01
+  },
+  "output_dir": "/home/ams098z/Courses/CSCE5218/MidetermProj/adaptive-batch-lr-cifar10/results/rerun_cifar100_20261006/best_results/E3",
+  "validation_loss": 2.1842907470703126,
+  "validation_accuracy": 0.4356,
+  "validation_macro_f1": 0.4224654855755223,
+  "best_epoch": 123,
+  "optimizer_updates": 225120,
+  "training_seconds": 662.1504611800001,
+  "convergence": {
+    "last20_relative_loss_improvement": 0.0,
+    "last_decay_epoch": 159,
+    "settled": true
+  },
+  "source_trial": "E3_budget_ep160"
+}

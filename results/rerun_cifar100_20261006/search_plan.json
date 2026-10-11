@@ -1,0 +1,35 @@
+{
+  "dataset": "CIFAR-100",
+  "seed": 42,
+  "started_utc": "2026-10-06T06:47:40.966936+00:00",
+  "patience_fixed": [
+    2,
+    2
+  ],
+  "initial_lr_candidates": [
+    0.006597539553864471,
+    0.01,
+    0.02
+  ],
+  "decay_factor_candidates": [
+    0.5,
+    0.7
+  ],
+  "joint_initial_lr_decay_check": true,
+  "E4_alpha_candidates": [
+    0,
+    0.2,
+    0.5,
+    1.0
+  ],
+  "epoch_budgets": [
+    80,
+    120,
+    160,
+    200
+  ],
+  "selection": "minimum validation loss, accuracy breaks ties",
+  "epoch_rule": "first common budget with <=0.5% running-best val-loss gain in last20 for E3 and E4",
+  "reference_batch_reparameterization": "B_ref=32; first candidate matches current default initial LR",
+  "test_set_used": false
+}

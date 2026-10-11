@@ -1,0 +1,8 @@
+{
+  "status": "completed",
+  "phase": "complete",
+  "trial": "E2_final_ep160",
+  "epochs": 160,
+  "current_epoch": 160,
+  "selected_epochs": 160
+}
