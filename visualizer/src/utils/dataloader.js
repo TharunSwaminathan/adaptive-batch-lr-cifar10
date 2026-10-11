@@ -1,6 +1,6 @@
 
 export async function loadExperiment(dataset, epochs, experiment) {
-  const path = `/data/${dataset}/${epochs}epochs/${experiment.toLowerCase()}.csv`;
+  const path = `${import.meta.env.BASE_URL}data/${dataset}/${epochs}epochs/${experiment.toLowerCase()}.csv`;
 
   const response = await fetch(path);
 
